@@ -18,6 +18,22 @@
 .env.test.local
 .env.production.local
 
+*/env
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+*.exe
+*.cmd
+
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+*.code-workspace
+*.ps1
