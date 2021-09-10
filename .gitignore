@@ -32,6 +32,7 @@ __pycache__/
 
 *.exe
 *.cmd
+*.ini
 
 .vscode/*
 !.vscode/tasks.json

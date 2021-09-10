@@ -1,2 +1,4 @@
 fastapi[all]
 pytest
+sqlalchemy
+psycopg2
