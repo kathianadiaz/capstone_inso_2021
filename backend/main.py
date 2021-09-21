@@ -1,9 +1,11 @@
 import models
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import engine, get_db
+from user import UserCreate, User
+from user.repository import UserRepository
 
 app = FastAPI()
 
@@ -17,8 +19,20 @@ app.add_middleware(
 
 models.Base.metadata.create_all(bind=engine)
 
-
-
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+@app.post("/register", response_model=User)
+def register(user: UserCreate, db: Session = Depends(get_db)):
+    #TODO: verify for duplicates
+    # if duplicate:
+        # raise HTTPException(status_code=400, detail="Email already registered")
+    return UserRepository.add_user(db, user)
+
+@app.get("/user/{id}", response_model=User)
+def get_user(user_id: str, db: Session = Depends(get_db)):
+    user = UserRepository.get_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
