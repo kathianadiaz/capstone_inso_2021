@@ -25,10 +25,10 @@ async def root():
 
 @app.post("/register", response_model=User)
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    #TODO: verify for duplicates
-    # if duplicate:
-        # raise HTTPException(status_code=400, detail="Email already registered")
-    return UserRepository.add_user(db, user)
+    if UserRepository.user_already_exists(db, user.username, user.email):
+        raise HTTPException(status_code=400, detail="Email or username already registered")
+    else:
+        return UserRepository.add_user(db, user)
 
 @app.get("/user/{id}", response_model=User)
 def get_user(user_id: str, db: Session = Depends(get_db)):

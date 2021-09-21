@@ -22,6 +22,7 @@ Base = declarative_base()
 
 # Dependency
 def get_db():
+    """Dependency to establish a database session"""
     db = SessionLocal()
     try:
         yield db
