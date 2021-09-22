@@ -22,9 +22,9 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
-          POSTGRES_USER: capstone_test
-          POSTGRES_DB: capstone_test
-          POSTGRES_PASSWORD: capstonetesting
+          POSTGRES_USER: $USERNAME
+          POSTGRES_DB: $NAME
+          POSTGRES_PASSWORD: $PASSWORD
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
