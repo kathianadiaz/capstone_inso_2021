@@ -3,7 +3,6 @@ import "./App.css";
 import Homepage from "./Components/Homepage";
 import SignIn from "./Components/Sign-in";
 import SignUp from "./Components/Sign-up";
-import Test from "./Components/test";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -11,7 +10,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Switch>
-          <Route exact path="/Homepage">
+          <Route exact path="/">
             <Homepage />
           </Route>
           <Route path="/SignIn">
