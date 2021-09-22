@@ -1,16 +1,16 @@
-import configparser
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
 
-config = configparser.ConfigParser()
+load_dotenv()
+username = os.getenv('USERNAME')
+password = os.getenv('PASSWORD')
+url = os.getenv('URL')
+name = os.getenv('NAME')
 
-with open('config.ini') as f:
-    config.read_file(f)
-
-db = config['dev-database']
-
-SQLALCHEMY_DATABASE_URL = f'postgresql://{db["username"]}:{db["password"]}@{db["url"]}/{db["name"]}'
+SQLALCHEMY_DATABASE_URL = f'postgresql://{username}:{password}@{url}/{name}'
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}

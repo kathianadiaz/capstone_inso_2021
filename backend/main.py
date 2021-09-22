@@ -31,8 +31,8 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         return UserRepository.add_user(db, user)
 
 @app.get("/user/{id}", response_model=User)
-def get_user(user_id: str, db: Session = Depends(get_db)):
-    user = UserRepository.get_user(db, user_id)
+def get_user(id: str, db: Session = Depends(get_db)):
+    user = UserRepository.get_user(db, id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
