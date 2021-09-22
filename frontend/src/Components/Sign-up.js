@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
-import "./Sign-in.scss";
+import FormInput from "./Form";
 
 function Signup(props) {
   return (
@@ -19,18 +19,9 @@ function Signup(props) {
             <Form.Label className="form-name" column="lg" lg={2}>
               Sign-up
             </Form.Label>
-            <Form.Group className="mb-3" controlId="formBasicName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder="Name" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email:</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
+            <FormInput type="text" inputName="Name" />
+            <FormInput type="email" inputName="Email" />
+            <FormInput type="password" inputName="Password" />
             <Button variant="continue-btn" type="submit">
               Continue
             </Button>

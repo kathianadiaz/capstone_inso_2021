@@ -2,6 +2,8 @@ import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import Container from "react-bootstrap";
 import "./Navbar.scss";
+import { Router, Link } from "react-router-dom";
+import SignIn from "./Sign-in";
 
 function NavigationBar() {
   return (
@@ -24,8 +26,12 @@ function NavigationBar() {
             <Nav.Link href="#pricing">Contact us</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">Sign up</Nav.Link>
-            <Nav.Link href="#deets">Login</Nav.Link>
+            <Nav.Link as={Link} to="/SignUp">
+              Sign Up
+            </Nav.Link>{" "}
+            <Nav.Link as={Link} to="/SignIn">
+              Sign In
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
