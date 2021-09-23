@@ -16,7 +16,7 @@ function App() {
             <Homepage />
           </Route>
           <Route path="/SignIn">
-            <SignIn />
+            <SignUp />
           </Route>
           <Route path="/SignUp">
             <OrgCreation />
