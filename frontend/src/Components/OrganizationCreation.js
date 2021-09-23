@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormInput from "./Form";
 import InputTag from "./InputTag";
-function OrganzitionCreation(props) {
+function OrganizationCreation(props) {
   const [state, setState] = useState([]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <>
       <div className="Formcontainer">
@@ -16,7 +19,7 @@ function OrganzitionCreation(props) {
           />{" "}
         </div>
         {/* <button onClick={setState("BAH")}>HERE</button> */}
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Form.Label className="form-name" column="lg" lg={2}>
             Create an organization
           </Form.Label>
@@ -44,4 +47,4 @@ function OrganzitionCreation(props) {
   );
 }
 
-export default OrganzitionCreation;
+export default OrganizationCreation;

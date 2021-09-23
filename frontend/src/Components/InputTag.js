@@ -10,7 +10,7 @@ function InputTag(props) {
   function inputKeyDown(e) {
     console.log(e.target.value);
 
-    if (e.key === "Shift" && e.target.value) {
+    if (e.key === "Enter" && e.target.value) {
       if (
         tags.find((tag) => tag.toLowerCase() === e.target.value.toLowerCase())
       ) {
