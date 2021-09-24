@@ -14,26 +14,25 @@ jobs:
 
     runs-on: ubuntu-latest
 
-# TODO add testing database data base to backend app
-#     # Service containers to run with `container-job`
-#     services:
-#       # Label used to access the service container
-#       postgres:
-#         # Docker Hub image
-#         image: postgres
-#         # Provide the password for postgres
-#         env:
-#           POSTGRES_USER: TODO
-#           POSTGRES_DB: TODO
-#           POSTGRES_PASSWORD: TODO
-#         ports:
-#           - 5432:5432
-#         # Set health checks to wait until postgres has started
-#         options: >-
-#           --health-cmd pg_isready
-#           --health-interval 10s
-#           --health-timeout 5s
-#           --health-retries 5
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: capstone_test
+          POSTGRES_DB: capstone_test
+          POSTGRES_PASSWORD: capstonetesting
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
 
     steps:
@@ -55,6 +54,13 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      env:
+        NAME: ${{ secrets.NAME }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        PORT: ${{ secrets.PORT }}
+        URL: ${{ secrets.URL }}
       run: |
         cd backend
         python -m pytest tests/
+
