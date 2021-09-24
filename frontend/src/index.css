@@ -23,6 +23,9 @@ body {
   --t-bright-green: #3be957;
   --t-royal-blue: #00315f;
   --t-blue-purple: #324574;
+
+  /* Shape colors */
+  --s-dark-gray: #afafaf;
 }
 
 /* body {

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import "./Sign-in.scss";
 import FormInput from "./Form";
+import InputTag from "./InputTag";
+function OrganizationCreation(props) {
+  const [state, setState] = useState([]);
 
-function SignForm(props) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <>
       <div className="Formcontainer">
@@ -14,18 +18,22 @@ function SignForm(props) {
             alt="React Bootstrap logo"
           />{" "}
         </div>
-
-        <Form>
+        {/* <button onClick={setState("BAH")}>HERE</button> */}
+        <Form onSubmit={handleSubmit}>
           <Form.Label className="form-name" column="lg" lg={2}>
-            Sign-in
+            Create an organization
           </Form.Label>
           <FormInput type="text" inputName="Name" />
-          <FormInput type="email" inputName="Email" />
+          <FormInput type="text" inputName="Description" />
+          <FormInput type="text" inputName="Department" />
+          <FormInput type="email" inputName="Contact - Email" />
+          <InputTag tagsType="Tags" />
+          <InputTag tagsType="Links" />
+
           <Button variant="continue-btn" type="submit">
             Continue
           </Button>
         </Form>
-
         <div className="Formcontainer-options">
           <a href="">Forgot your password?</a>
           <a href="">New? Sign up</a>
@@ -33,10 +41,10 @@ function SignForm(props) {
         <p>Copyright © 2021</p>
       </div>
       {/* <footer className="c-right">
-          <p>Copyright © 2021</p>
-        </footer> */}
+        <p>Copyright © 2021</p>
+      </footer> */}
     </>
   );
 }
 
-export default SignForm;
+export default OrganizationCreation;

@@ -3,6 +3,8 @@ import "./App.css";
 import Homepage from "./Components/Homepage";
 import SignIn from "./Components/Sign-in";
 import SignUp from "./Components/Sign-up";
+import OrgCreation from "./Components/OrganizationCreation";
+
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -14,10 +16,10 @@ function App() {
             <Homepage />
           </Route>
           <Route path="/SignIn">
-            <SignIn />
+            <SignUp />
           </Route>
           <Route path="/SignUp">
-            <SignUp />
+            <OrgCreation />
           </Route>
         </Switch>
       </BrowserRouter>
