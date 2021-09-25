@@ -1,20 +1,34 @@
 html,
 body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
-
+.white-text {
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 13px;
+}
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   scroll-behavior: smooth;
   margin: 0;
-  overflow-x: hidden;
+}
+a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+  color: inherit;
 }
 :root {
   /*Primary color */
   --p-light-blue: #e0f1ff;
   --p-light-royal-blue: #3e5f8f;
+  --p-background-color: #f2f2f2;
 
   /*Secondary color */
   --s-white: #ffff;
@@ -28,7 +42,7 @@ body {
   --s-dark-gray: #afafaf;
 }
 
-/* body {
+/*= body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
