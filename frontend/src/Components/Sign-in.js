@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
-import "./Sign-in.scss";
 import FormInput from "./Form";
 
 function SignForm(props) {

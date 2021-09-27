@@ -4,6 +4,7 @@ import Homepage from "./Components/Homepage";
 import SignIn from "./Components/Sign-in";
 import SignUp from "./Components/Sign-up";
 import OrgCreation from "./Components/OrganizationCreation";
+import UserPage from "./Components/UserProfile";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -16,10 +17,14 @@ function App() {
             <Homepage />
           </Route>
           <Route path="/SignIn">
-            <SignUp />
+            <OrgCreation />
           </Route>
           <Route path="/SignUp">
-            <OrgCreation />
+            <UserPage
+              name="Josh Walker Hernandez"
+              email="joshwalker44@gmail.com"
+              phone="787-450-4934"
+            />
           </Route>
         </Switch>
       </BrowserRouter>
