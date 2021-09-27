@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Boolean
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from database import Base
 from uuid import uuid4
@@ -20,6 +20,7 @@ class Organization(Base):
     description = Column(String)
     tags = Column(ARRAY(String))
     department = Column(String)
+    status = Column(Boolean, default=False, nullable=False)
     #TODO: add foreing keys 
 
 
