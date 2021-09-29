@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import Homepage from "./Components/Homepage";
+import SignIn from "./Components/Sign-in";
+import SignUp from "./Components/Sign-up";
+import OrgCreation from "./Components/OrganizationCreation";
+import UserPage from "./Components/UserProfile";
+
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <Homepage />
+          </Route>
+          <Route path="/SignIn">
+            <OrgCreation />
+          </Route>
+          <Route path="/SignUp">
+            <UserPage
+              name="Josh Walker Hernandez"
+              email="joshwalker44@gmail.com"
+              phone="787-450-4934"
+            />
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }
