@@ -3,6 +3,7 @@ import models
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from typing import List
 from database import engine, get_db
 from user import UserCreate, User
 from user.repository import UserRepository

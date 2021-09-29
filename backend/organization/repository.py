@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional,List
 from sqlalchemy.orm import Session
 from organization import Organization
 import models
