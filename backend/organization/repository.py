@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy.orm import Session
 from organization import Organization
 import models
@@ -38,3 +39,38 @@ class OrganizationRepository:
     def get_organizations_by_user(u_id: str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all the organizations that belong to a specific user'''
         pass
+
+    @staticmethod
+    def get_organization_by_keyword(keywords:List[str], db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+        '''Get all organizations that conatain a specific keyword in their description or name'''
+        pass
+
+    @staticmethod
+    def get_organization_by_tags(tags: List[str], db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+        '''Get all organizations that contain the given tags'''
+        pass
+
+    @staticmethod
+    def delete_organization(o_id: str, db: Session) -> Optional[Organization]:
+        '''Delete a specific `Organization` with the give id'''
+        organization = OrganizationRepository.get_organization_by_id(o_id, db)
+
+        if not organization:
+            return None
+        
+        db.delete(organization)
+        db.commit()
+        return organization
+
+    @staticmethod
+    def edit_organization(new_organization: Organization, db: Session) -> Optional[Organization]:
+        '''Edit the information for a specific `Organization`'''
+        updated_organization = db.query(models.Organization).filter(models.Organization.o_id == new_organization.o_id).first()
+
+        if not updated_organization:
+            return None
+
+        updated_organization = new_organization
+        db.commit()
+
+        return updated_organization
