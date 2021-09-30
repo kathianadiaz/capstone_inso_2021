@@ -62,9 +62,6 @@ function UserProfile(props) {
                 imageLocation="/testPerson.jpg"
               />
             </div>
-
-            {/* <OrgIcon organizationName="Lorem" />
-          <OrgIcon organizationName="Lorem" /> */}
           </div>
         </div>
       </div>

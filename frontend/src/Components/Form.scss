@@ -35,6 +35,7 @@
     // min-height: 200px;
     border: solid 1.5px var(--t-royal-blue);
     padding: 0.7rem;
+    gap: 0.5rem;
   }
 
   label {
@@ -68,4 +69,10 @@
   margin: 0 auto;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
+}
+
+.error-message {
+  text-align: left;
+  color: var(--t-royal-blue);
+  font-weight: bold;
 }

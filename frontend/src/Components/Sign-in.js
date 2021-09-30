@@ -1,8 +1,34 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
 import FormInput from "./Form";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import "./Form.scss";
 
 function SignForm(props) {
+  const schema = Yup.object()
+    .shape({
+      username: Yup.string().required("Username required"),
+      password: Yup.string()
+        .min(6, "Password has to be of atleast 6 characters")
+        .max(15, "Password can not be more than 15 characters")
+        .required("Password required"),
+    })
+    .required();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmission = (data) => {
+    console.log(JSON.stringify(data, null, 2));
+  };
+
   return (
     <>
       <div className="Formcontainer">
@@ -14,12 +40,26 @@ function SignForm(props) {
           />{" "}
         </div>
 
-        <Form>
+        <Form onSubmit={handleSubmit(onSubmission)}>
           <Form.Label className="form-name" column="lg" lg={2}>
             Sign-in
           </Form.Label>
-          <FormInput type="text" inputName="Name" />
-          <FormInput type="email" inputName="Email" />
+          <Form.Label>Username:</Form.Label>
+          <Form.Control
+            type="text"
+            {...register("username")}
+            placeholder={"Username"}
+          />
+          <p className="error-message">{errors.username?.message}</p>
+
+          <Form.Label>Password:</Form.Label>
+          <Form.Control
+            type="password"
+            {...register("password")}
+            placeholder={"Password"}
+          />
+          <p className="error-message">{errors.password?.message}</p>
+
           <Button variant="continue-btn" type="submit">
             Continue
           </Button>
@@ -31,9 +71,6 @@ function SignForm(props) {
         </div>
         <p>Copyright © 2021</p>
       </div>
-      {/* <footer className="c-right">
-          <p>Copyright © 2021</p>
-        </footer> */}
     </>
   );
 }
