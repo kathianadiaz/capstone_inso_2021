@@ -2,13 +2,14 @@ from pydantic import BaseModel
 from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jwt import JWTError, jwt
+from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from user import UserInDB, User
 from user.repository import UserRepository
 from database import get_db
 from . import verify_password
+from datetime import datetime, timedelta
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -54,7 +55,7 @@ def authenticate_user(db: Session, username: str, password: str):
     user: UserInDB = UserRepository.get_user_by_username(db, username)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.password):
         return False
     return user
 

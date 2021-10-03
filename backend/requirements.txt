@@ -3,3 +3,5 @@ pytest
 sqlalchemy
 psycopg2
 python-dotenv
+passlib[bcrypt]
+python-jose[cryptography]

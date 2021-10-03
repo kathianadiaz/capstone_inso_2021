@@ -11,7 +11,7 @@ class UserRepository:
     def add_user(db: Session, user: UserCreate) -> User:
         '''Add a `User` to the repository given a `UserCreate`'''
         hashed_password = get_password_hash(user.password)
-        db_user = models.User(name=user.name, username=user.username, email=user.email, hashed_password=hashed_password)
+        db_user = models.User(name=user.name, username=user.username, email=user.email, password=hashed_password)
         db.add(db_user)
         db.commit()
         db.refresh(db_user)

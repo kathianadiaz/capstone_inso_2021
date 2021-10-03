@@ -5,12 +5,12 @@ from datetime import date
 
 class Organization(BaseModel):
     '''Organization class'''
-    o_id: uuid.UUID
+    o_id: Optional[uuid.UUID]
     name: str
     description: Optional[str]
     tags: List[str]
     department: Optional[str]
-    status: bool
+    status: Optional[bool]
 
     class Config:
         orm_mode = True
