@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
+import axios from "axios";
 
 const schema = Yup.object()
   .shape({
@@ -21,6 +22,7 @@ function OrganizationCreation(props) {
   const [state, setState] = useState([]);
   const [tagData, setTagData] = useState([]);
   const [linkData, setLinkData] = useState([]);
+  const [toggleRedirect, setToggleRedirect] = useState(false);
 
   const handleSubmit1 = (e) => {
     e.preventDefault();
@@ -35,6 +37,30 @@ function OrganizationCreation(props) {
   });
   // console.log(watch());
   console.log(tagData);
+
+  const createOrganization = async (data) => {
+    // const parameters = new URLSearchParams();
+    // parameters.append("name", data.name);
+    // parameters.append("username", data.username);
+    // parameters.append("email", data.email);
+    // parameters.append("password", data.password);
+    let json = {
+      name: data.name,
+      description: data.description,
+      department: data.department,
+      password: data.password,
+    };
+    await axios
+      .post("http://localhost:8000/register", json)
+      .then((response) => {
+        console.log(response);
+        setToggleRedirect(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        // If error notify user
+      });
+  };
 
   const onSubmission = (data) => {
     // append tagData data

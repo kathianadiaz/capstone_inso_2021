@@ -4,7 +4,7 @@ import NavigationBar from "./Navbar";
 import { Button } from "react-bootstrap";
 function Homepage() {
   return (
-    <>
+    <div className="homepage-container">
       <NavigationBar />
       <div className="welcome" id="about">
         <div className="welcome-image">
@@ -50,7 +50,7 @@ function Homepage() {
           </p>
         </div>
       </div>
-      <div className="features">
+      <div className="features" id="feature">
         <h2>Features Provided</h2>
         <div className="features-wrapper">
           <div className="features-box">
@@ -120,7 +120,7 @@ function Homepage() {
           <img src="/TempLogo.png" className="navigation-logo" alt="" />
         </div>
       </footer>
-    </>
+    </div>
   );
 }
 

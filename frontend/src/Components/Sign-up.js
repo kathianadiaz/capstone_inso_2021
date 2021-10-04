@@ -20,7 +20,7 @@ const schema = Yup.object()
   .required();
 
 function Signup(props) {
-  const [toggleRedirect, setToggleRedirect] = React.useState(false)
+  const [toggleRedirect, setToggleRedirect] = React.useState(false);
 
   const {
     register,
@@ -30,11 +30,10 @@ function Signup(props) {
     resolver: yupResolver(schema),
   });
 
-
   // const getUser = () => {
-    // axios.get("http://localhost:8000/user/94f60f5f-0b62-49d1-b647-7e03105cae33").then((response) => {
-      // console.log(response.data);
-    // });
+  // axios.get("http://localhost:8000/user/94f60f5f-0b62-49d1-b647-7e03105cae33").then((response) => {
+  // console.log(response.data);
+  // });
   // };
 
   const add_new_user = async (data) => {
@@ -44,16 +43,16 @@ function Signup(props) {
     // parameters.append("email", data.email);
     // parameters.append("password", data.password);
     let json = {
-      "name": data.name,
-      "username": data.username,
-      "email": data.email,
-      "password": data.password
-    } 
+      name: data.name,
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    };
     await axios
       .post("http://localhost:8000/register", json)
       .then((response) => {
         console.log(response);
-        setToggleRedirect(true)
+        setToggleRedirect(true);
       })
       .catch((error) => {
         console.log(error);
@@ -68,7 +67,7 @@ function Signup(props) {
 
   return (
     <>
-      {toggleRedirect && <Redirect to="/"/>}
+      {toggleRedirect && <Redirect to="/" />}
       <div className="Formcontainer">
         <div className="Formcontainer-logo">
           <img

@@ -25,8 +25,7 @@ function App() {
               email="joshwalker44@gmail.com"
               phone="787-450-4934"
             /> */}
-            <SignUp />
-
+            <OrgCreation />
           </Route>
         </Switch>
       </BrowserRouter>
