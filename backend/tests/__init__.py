@@ -3,9 +3,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import Base, get_db
 from main import app 
+from user import User
 import json
 
-SQLALCHEMY_DATABASE_URL = f'postgresql://capstone_test:capstonetesting@localhost/capstone_test'
+SQLALCHEMY_DATABASE_URL = 'postgresql://capstone_test:capstonetesting@localhost:5432/capstone_test'
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}
@@ -26,8 +27,3 @@ def override_get_db():
 app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
-
-def test_root():
-    response = client.get('/')
-    assert response.status_code == 200
-    assert response.json() == {'message': 'Hello World'}
