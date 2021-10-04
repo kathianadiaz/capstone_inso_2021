@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import Base, get_db
 from main import app 
+from user import User
 import json
 
 SQLALCHEMY_DATABASE_URL = 'postgresql://capstone_test:capstonetesting@localhost:5432/capstone_test'

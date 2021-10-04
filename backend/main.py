@@ -9,7 +9,7 @@ from user import UserCreate, User
 from user.repository import UserRepository
 from organization import Organization
 from organization.repository import OrganizationRepository
-from authentication.authentication import Token, OAuth2PasswordRequestForm, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
+from authentication.authentication import Token, OAuth2PasswordRequestForm, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from datetime import timedelta
 
 app = FastAPI()
@@ -63,9 +63,8 @@ def get_user(id: str, db: Session = Depends(get_db)):
     return user
 
 @app.post("/organization", response_model=Organization)
-def create_organization(organization: Organization, db: Session = Depends(get_db)):
-    # TODO: add authentication dependency
-    return OrganizationRepository.add_organization(organization, db)
+def create_organization(organization: Organization, user: User = Depends(get_current_user) ,db: Session = Depends(get_db)):
+    return OrganizationRepository.add_organization(organization, user, db)
 
 @app.get("/organization", response_model=List[Organization])
 def get_organizations(db: Session = Depends(get_db)):
@@ -99,3 +98,7 @@ def edit_organization(organization: Organization, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail="Organization not found")
 
     return organization
+
+@app.get("/my-organizations", response_model=List[Organization])
+def get_administrators_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return OrganizationRepository.get_organizations_by_user(user.u_id,db)

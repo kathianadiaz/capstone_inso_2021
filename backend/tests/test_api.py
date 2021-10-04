@@ -1,5 +1,7 @@
 from tests import client
 
+TOKEN = ''
+
 def test_root():
     response = client.get('/')
     assert response.status_code == 200
@@ -46,12 +48,16 @@ def test_get_user_by_id():
     assert data['username'] == 'tester1'
 
 def test_login():
+    global TOKEN
+
     response = client.post(
         '/token',
         data={'username':'tester', 'password':'testing'}
     )
 
     assert response.status_code == 200, response.text
+
+    TOKEN = response.json()['access_token']
 
     response = client.post(
         '/token',
@@ -64,6 +70,7 @@ def test_login():
 def test_create_organizations():
     response = client.post(
         '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
         json={'name':'testers', 'description':'testing org', 'tags':['software','testing'], 'department':'INSO', 'status': False}
     )
 
@@ -78,11 +85,11 @@ def test_create_organizations():
 
     response = client.post(
         '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
         json={'name':'testers2', 'description':'testing org2', 'tags':['software','testing'], 'department': 'INSO'}
     )
 
     organization = response.json()
-    print(response.json())
     assert response.status_code == 200
     assert 'o_id' in organization
     assert organization['name'] == 'testers2'
@@ -104,6 +111,7 @@ def test_get_all_organizations():
 def test_get_organization_by_id():
     response = client.post(
         '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
         json={'name':'testers3', 'description':'testing org3', 'tags':['software','testing'], 'department': 'INSO'}
     )
 
@@ -118,3 +126,16 @@ def test_get_organization_by_id():
     assert organization['tags'] == ['software', 'testing']
     assert organization['department'] == 'INSO'
     assert organization['status'] == False
+
+def test_get_administrators_organizations():
+    response = client.get(
+        '/my-organizations',
+        headers= {"Authorization" : f"Bearer {TOKEN}"}
+    )
+
+    organizations = response.json()
+    assert response.status_code == 200
+    assert len(organizations) == 3
+    assert organizations[0]['name'] == 'testers'
+    assert organizations[1]['name'] == 'testers2'
+    assert organizations[2]['name'] == 'testers3'

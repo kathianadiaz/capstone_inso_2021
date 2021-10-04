@@ -45,11 +45,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
     return user
 
-def get_current_active_user(current_user: User = Depends(get_current_user)):
-    if not current_user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
-
 # Authenticates and returns the User
 def authenticate_user(db: Session, username: str, password: str):
     user: UserInDB = UserRepository.get_user_by_username(db, username)
