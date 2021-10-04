@@ -1,8 +1,8 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
-import FormInput from "./Form";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import * as Yup from "yup";
 import "./Form.scss";
 
@@ -27,8 +27,31 @@ function Signup(props) {
     resolver: yupResolver(schema),
   });
 
+  const getUser = () => {
+    axios.get("http://localhost:8000/user/1").then((response) => {
+      console.log(response);
+    });
+  };
+
+  const add_new_user = (data) => {
+    const parameters = new URLSearchParams();
+    parameters.append("name", data.name);
+    parameters.append("username", data.username);
+    parameters.append("email", data.email);
+    parameters.append("password", data.password);
+    axios
+      .post("http://localhost:8000/register", parameters)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const onSubmission = (data) => {
     console.log(JSON.stringify(data, null, 2));
+    add_new_user(data);
   };
 
   // console.log(watch());
@@ -55,7 +78,7 @@ function Signup(props) {
             placeholder={"Name"}
           />
           <p className="error-message">{errors.name?.message}</p>
-
+          <button onClick={getUser}>Click me</button>
           <Form.Label>Username:</Form.Label>
           <Form.Control
             type="text"

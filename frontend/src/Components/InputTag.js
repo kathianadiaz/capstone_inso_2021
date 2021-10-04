@@ -13,8 +13,14 @@ function InputTag(props) {
       ) {
         return;
       }
+
       setTags([...tags, e.target.value]);
-      // SendTagdata([...tags, e.target.value]);
+      if (props.tagsType === "Tags") {
+        SendTagdata([...tags, e.target.value]);
+      } else {
+        SendLinkdata([...tags, e.target.value]);
+      }
+
       e.target.value = "";
     } else if (e.key === "Backspace" && !e.target.value) {
       removeTag(tags.length - 1);
@@ -24,13 +30,15 @@ function InputTag(props) {
     props.tagData(data);
   };
 
+  const SendLinkdata = (data) => {
+    props.linkData(data);
+  };
+
   function removeTag(i) {
     const newTagsArray = [...tags];
     newTagsArray.splice(i, 1);
     setTags([...newTagsArray]);
   }
-
-  // console.log(tags);
 
   return (
     <div className="input-tags">
@@ -40,6 +48,7 @@ function InputTag(props) {
         <li className="input-tags-input">
           <Form.Control
             type="text"
+            name="tags"
             placeholder={"Add or remove " + props.tagsType}
             onKeyDown={inputKeyDown}
           />

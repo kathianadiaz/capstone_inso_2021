@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import FormInput from "./Form";
 import InputTag from "./InputTag";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
@@ -13,29 +12,38 @@ const schema = Yup.object()
     description: Yup.string().required("Description required"),
     department: Yup.string().required("Department required"),
     email: Yup.string().email().required("Email required"),
-    tags: Yup.array().min(1, "Atleast 1 tag required").required(),
-    links: Yup.array().min(1, "Atleast 1 link required").required(),
+    // tags: Yup.array().min(2, "Atleast 1 tag required").required(),
+    // links: Yup.array().min(1, "Atleast 1 link required").required(),
   })
   .required();
 
 function OrganizationCreation(props) {
   const [state, setState] = useState([]);
   const [tagData, setTagData] = useState([]);
+  const [linkData, setLinkData] = useState([]);
+
   const handleSubmit1 = (e) => {
     e.preventDefault();
   };
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
+  // console.log(watch());
+  console.log(tagData);
 
   const onSubmission = (data) => {
+    // append tagData data
+    data.tags = tagData;
+    data.links = linkData;
     console.log(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(tagData));
   };
-  console.log(tagData);
+  // console.log(linkData);
   return (
     <div className="Formcontainer">
       <div className="Formcontainer-logo">
@@ -78,16 +86,16 @@ function OrganizationCreation(props) {
         <p className="error-message">{errors.department?.message}</p>
         <Form.Label>Contact-email:</Form.Label>
         <Form.Control
-          type="text"
+          type="Email"
           {...register("email")}
           placeholder={"Contact-Email"}
         />
         <p className="error-message">{errors.email?.message}</p>
-
         <InputTag tagData={setTagData} tagsType="Tags" />
-        {/* {console.log(tagData)} */}
-        <InputTag tagsType="Links" />
+        <InputTag linkData={setLinkData} tagsType="Links" />
 
+        {/* {console.log(tagData)} */}
+        {/* <InputTag linkData={setLinkData} tagsType="Links" /> */}
         <Button variant="continue-btn" type="submit">
           Continue
         </Button>

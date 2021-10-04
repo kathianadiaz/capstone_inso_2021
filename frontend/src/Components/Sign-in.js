@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
+import axios from "axios";
 
 function SignForm(props) {
   const schema = Yup.object()
@@ -24,6 +25,19 @@ function SignForm(props) {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const verifyUser = (data) => {
+    axios.get("http://localhost:8000/users").then((response) => {
+      response.data.map((user) => {
+        if (
+          user.username === data.username &&
+          user.password === data.password
+        ) {
+          return;
+        }
+      });
+    });
+  };
 
   const onSubmission = (data) => {
     console.log(JSON.stringify(data, null, 2));
