@@ -1,5 +1,6 @@
 import React from "react";
 import { Form, Button } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
@@ -19,6 +20,8 @@ const schema = Yup.object()
   .required();
 
 function Signup(props) {
+  const [toggleRedirect, setToggleRedirect] = React.useState(false)
+
   const {
     register,
     handleSubmit,
@@ -27,25 +30,34 @@ function Signup(props) {
     resolver: yupResolver(schema),
   });
 
-  const getUser = () => {
-    axios.get("http://localhost:8000/user/1").then((response) => {
-      console.log(response);
-    });
-  };
 
-  const add_new_user = (data) => {
-    const parameters = new URLSearchParams();
-    parameters.append("name", data.name);
-    parameters.append("username", data.username);
-    parameters.append("email", data.email);
-    parameters.append("password", data.password);
-    axios
-      .post("http://localhost:8000/register", parameters)
+  // const getUser = () => {
+    // axios.get("http://localhost:8000/user/94f60f5f-0b62-49d1-b647-7e03105cae33").then((response) => {
+      // console.log(response.data);
+    // });
+  // };
+
+  const add_new_user = async (data) => {
+    // const parameters = new URLSearchParams();
+    // parameters.append("name", data.name);
+    // parameters.append("username", data.username);
+    // parameters.append("email", data.email);
+    // parameters.append("password", data.password);
+    let json = {
+      "name": data.name,
+      "username": data.username,
+      "email": data.email,
+      "password": data.password
+    } 
+    await axios
+      .post("http://localhost:8000/register", json)
       .then((response) => {
         console.log(response);
+        setToggleRedirect(true)
       })
       .catch((error) => {
         console.log(error);
+        // If error notify user
       });
   };
 
@@ -54,10 +66,9 @@ function Signup(props) {
     add_new_user(data);
   };
 
-  // console.log(watch());
-
   return (
     <>
+      {toggleRedirect && <Redirect to="/"/>}
       <div className="Formcontainer">
         <div className="Formcontainer-logo">
           <img
@@ -78,7 +89,7 @@ function Signup(props) {
             placeholder={"Name"}
           />
           <p className="error-message">{errors.name?.message}</p>
-          <button onClick={getUser}>Click me</button>
+          {/* <button onClick={getUser}>Click me</button> */}
           <Form.Label>Username:</Form.Label>
           <Form.Control
             type="text"

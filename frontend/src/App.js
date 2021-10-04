@@ -17,14 +17,16 @@ function App() {
             <Homepage />
           </Route>
           <Route path="/SignIn">
-            <SignUp />
+            <SignIn />
           </Route>
           <Route path="/SignUp">
-            <UserPage
+            {/* <UserPage
               name="Josh Walker Hernandez"
               email="joshwalker44@gmail.com"
               phone="787-450-4934"
-            />
+            /> */}
+            <SignUp />
+
           </Route>
         </Switch>
       </BrowserRouter>

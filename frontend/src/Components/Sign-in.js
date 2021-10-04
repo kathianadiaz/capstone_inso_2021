@@ -2,21 +2,26 @@ import React from "react";
 import { Form, Button } from "react-bootstrap";
 import FormInput from "./Form";
 import { useForm, Controller } from "react-hook-form";
+import { Redirect } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
 import axios from "axios";
 
+const schema = Yup.object()
+
+.shape({
+  username: Yup.string().required("Username required"),
+  password: Yup.string()
+    .min(6, "Password has to be of atleast 6 characters")
+    .max(15, "Password can not be more than 15 characters")
+    .required("Password required"),
+})
+.required();
+
 function SignForm(props) {
-  const schema = Yup.object()
-    .shape({
-      username: Yup.string().required("Username required"),
-      password: Yup.string()
-        .min(6, "Password has to be of atleast 6 characters")
-        .max(15, "Password can not be more than 15 characters")
-        .required("Password required"),
-    })
-    .required();
+
+  const [toggleRedirect, setToggleRedirect] = React.useState(false)
 
   const {
     register,
@@ -26,25 +31,33 @@ function SignForm(props) {
     resolver: yupResolver(schema),
   });
 
-  const verifyUser = (data) => {
-    axios.get("http://localhost:8000/users").then((response) => {
-      response.data.map((user) => {
-        if (
-          user.username === data.username &&
-          user.password === data.password
-        ) {
-          return;
-        }
+  const verifyUser = async (data) => {
+    const parameters = new URLSearchParams();
+    parameters.append("username", data.username);
+    parameters.append("password", data.password);
+    
+    await axios 
+      .post("http://localhost:8000/token", parameters)
+      .then((response) => {
+        console.log(response);
+        setToggleRedirect(true);
+
+        // TODO: save JWT token and other data
+      })
+      .catch((error) => {
+        console.log(error);
+        // If error notify user
       });
-    });
   };
 
   const onSubmission = (data) => {
     console.log(JSON.stringify(data, null, 2));
+    verifyUser(data);
   };
 
   return (
     <>
+      {toggleRedirect && <Redirect to="/"/>}
       <div className="Formcontainer">
         <div className="Formcontainer-logo">
           <img
