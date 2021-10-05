@@ -5,8 +5,10 @@ import SignIn from "./Components/Sign-in";
 import SignUp from "./Components/Sign-up";
 import OrgCreation from "./Components/OrganizationCreation";
 import UserPage from "./Components/UserProfile";
+import OrganizationProfile from "./Components/OrganizationProfile";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import UserProfile from "./Components/UserProfile";
 
 function App() {
   return (
@@ -17,7 +19,11 @@ function App() {
             <Homepage />
           </Route>
           <Route path="/SignIn">
-            <SignIn />
+            <UserPage
+              name="Josh Walker Hernandez"
+              email="joshwalker44@gmail.com"
+              phone="787-450-4934"
+            />
           </Route>
           <Route path="/SignUp">
             {/* <UserPage
@@ -25,7 +31,10 @@ function App() {
               email="joshwalker44@gmail.com"
               phone="787-450-4934"
             /> */}
-            <OrgCreation />
+            <OrganizationProfile
+              status="Recruiting"
+              description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
+            />
           </Route>
         </Switch>
       </BrowserRouter>
