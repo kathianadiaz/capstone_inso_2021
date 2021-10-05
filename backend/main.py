@@ -1,5 +1,4 @@
 import models
-
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -43,7 +42,7 @@ def signup(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-
+    # response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True)
     return {"access_token": access_token, "token_type": "Bearer"}
 
 @app.post("/register", response_model=User)

@@ -7,21 +7,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const schema = Yup.object()
 
-.shape({
-  username: Yup.string().required("Username required"),
-  password: Yup.string()
-    .min(6, "Password has to be of atleast 6 characters")
-    .max(15, "Password can not be more than 15 characters")
-    .required("Password required"),
-})
-.required();
+  .shape({
+    username: Yup.string().required("Username required"),
+    password: Yup.string()
+      .min(6, "Password has to be of atleast 6 characters")
+      .max(15, "Password can not be more than 15 characters")
+      .required("Password required"),
+  })
+  .required();
 
 function SignForm(props) {
-
-  const [toggleRedirect, setToggleRedirect] = React.useState(false)
+  const [toggleRedirect, setToggleRedirect] = React.useState(false);
 
   const {
     register,
@@ -35,13 +35,33 @@ function SignForm(props) {
     const parameters = new URLSearchParams();
     parameters.append("username", data.username);
     parameters.append("password", data.password);
-    
-    await axios 
+
+    // Check if user is logged in.
+    // (function () {
+    //   let usertoken = Cookies.get("usertoken");
+
+    //   if (Cookies.get("usertoken") === null) {
+    //     // This means that there's no JWT and no user is logged in.
+    //     axios.defaults.headers.common.Authorization = null;
+    //   } else {
+    //     // This means that there's a JWT so someone must be logged in.
+    //     axios.defaults.headers.common.Authorization = `Bearer ${usertoken}`;
+    //   }
+    // })();
+
+    await axios
       .post("http://localhost:8000/token", parameters)
       .then((response) => {
         console.log(response);
+        // let usertoken = response.data.access_token;
         setToggleRedirect(true);
-
+        // Cookies.set(
+        //   "usertoken",
+        //   usertoken,
+        //   { secure: true },
+        //   { sameSite: "Lax" }
+        // );
+        // axios.defaults.headers.common.Authorization = "`Bearer ${user}`";
         // TODO: save JWT token and other data
       })
       .catch((error) => {
@@ -57,7 +77,7 @@ function SignForm(props) {
 
   return (
     <>
-      {toggleRedirect && <Redirect to="/"/>}
+      {toggleRedirect && <Redirect to="/" />}
       <div className="Formcontainer">
         <div className="Formcontainer-logo">
           <img
