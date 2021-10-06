@@ -1,6 +1,6 @@
 .organizationpage-container {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   padding: 1rem;
   background-color: var(--p-background-color);
   overflow: auto;
@@ -33,11 +33,15 @@
 .organization-events {
   border-bottom: none;
 }
+
 .section-heading {
   color: var(--t-royal-blue);
   font-size: 25px;
   text-align: left;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
 }
 .organization-heading {
   display: flex;

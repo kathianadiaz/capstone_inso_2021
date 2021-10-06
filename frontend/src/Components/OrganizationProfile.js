@@ -1,13 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar.js";
-import { Image, Button } from "react-bootstrap";
+import { Image, Button, Modal, Form } from "react-bootstrap";
 import OrgHighlight from "./OrganizationHighlight.js";
 import OrgEvent from "./OrganizationEvent.js";
 import "./OrganizationProfile.scss";
+import { get } from "js-cookie";
+import { useForm } from "react-hook-form";
+import EditM from "./EditModal.js";
 function OrganizationProfile(props) {
+  const [highlightInfo, setHighlightInfo] = useState("test");
+
+  const changehighlightInfo = () => {
+    setHighlightInfo("OH MY GOD ITS KANE");
+  };
+
+  // const [show, setShow] = useState(false);
+  // const [modalData, setModalData] = useState("");
+  // const handleShow = () => setShow(true);
+
+  // const handleClose = () => setShow(false);
+
+  // const [eventdata, setEventData] = useState([]);
+  // const { register, handleSubmit } = useForm();
+
+  // const getEventdata = (data) => {
+  //   setEventData([...eventdata, data]);
+  //   console.log(JSON.stringify(data, null, 2));
+  //   console.log(eventdata);
+  //   setShow(false);
+  // };
+
+  const [eventData, setEventData] = useState([]);
+  const [highlightData, setHighlightData] = useState([]);
+
+  console.log(highlightData);
   return (
     <div className="organizationpage-wrapper">
-      <Navbar />
       <div className="organizationpage-container">
         <div className="organization-container">
           <div className="organization-heading">
@@ -34,11 +62,24 @@ function OrganizationProfile(props) {
             <p>{props.description}</p>
           </div>
           <div className="organization-highlights organization-layout">
-            <h3 className="section-heading">Organization's highlights:</h3>
-            <OrgHighlight
+            <h3 className="section-heading">
+              Organization's highlights:{" "}
+              <EditM
+                mdata={highlightData}
+                setdata={setHighlightData}
+                type="Highlight"
+              />
+            </h3>
+            {highlightData.map((data, i) => (
+              <OrgEvent
+                key={i}
+                type={data.award}
+                description={data.highlight_description}
+              />
+            ))}
+            {/* <OrgHighlight
               award="Competition 2015"
-              description="   Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe quam
-				magni quasi natus dicta nesciunt? "
+              description={highlightInfo}
             />
             <OrgHighlight
               award="Competition 2010"
@@ -49,28 +90,55 @@ function OrganizationProfile(props) {
               award="First place at UPRM"
               description="   Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe quam
 						magni quasi natus dicta nesciunt? "
-            />
+            /> */}
           </div>
           <div className="organization-events organization-layout">
-            <h3 className="section-heading">Organization's Events:</h3>
-            <OrgEvent
-              event="Pizza- august 2015"
-              description=" Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe quam
-		  magni quasi natus dicta nesciunt?"
-            />
-            <OrgEvent
-              event="Chocolate sale- august 2020"
-              description=" Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe quam
-		  magni quasi natus dicta nesciunt?"
-            />
-            <OrgEvent
-              event="Guacamole sale- October 2020"
-              description=" Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe quam
-		  magni quasi natus dicta nesciunt?"
-            />
+            <h3 className="section-heading">
+              Organization's Events:{" "}
+              <EditM mdata={eventData} setdata={setEventData} type="Event" />
+            </h3>
+
+            {eventData.map((data, i) => (
+              <OrgEvent
+                key={i}
+                type={data.event}
+                description={data.description}
+              />
+            ))}
           </div>
         </div>
       </div>
+      {/* '     <Modal show={show}>
+        <Form onSubmit={handleSubmit(getEventdata)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add a new event</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Label>Event name: </Form.Label>
+
+            <Form.Control
+              type="text"
+              {...register("event")}
+              placeholder={"Event"}
+            />
+            <Form.Label>Event Description: </Form.Label>
+            <Form.Control
+              type="text"
+              {...register("description")}
+              placeholder={"Description"}
+            />
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleSubmit(getEventdata)}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>' */}
     </div>
   );
 }

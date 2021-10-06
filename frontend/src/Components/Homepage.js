@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 function Homepage() {
   return (
     <div className="homepage-container">
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <div className="welcome" id="about">
         <div className="welcome-image">
           <img src="/WelcomeImage.png" alt="" className="girl-studying" />
