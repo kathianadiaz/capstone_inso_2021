@@ -50,15 +50,15 @@ function App() {
               <Homepage />
             </Route>
             <Route path="/SignUp">
-              {/* <UserPage
-                name="test"
+              <UserPage
+                name="Josh Walker"
                 email="joshwalker44@gmail.com"
-                phone="787-450-4934"
-              /> */}
-              <OrganizationProfile
+                phone="7874504934"
+              />
+              {/* <OrganizationProfile
                 status="Recruiting"
                 description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
-              />
+              /> */}
             </Route>
           </>
         </Switch>
