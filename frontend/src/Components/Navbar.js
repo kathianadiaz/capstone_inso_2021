@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import "./Navbar.scss";
-import { Router, Link } from "react-router-dom";
+import { Router, Link, Redirect } from "react-router-dom";
 import SignIn from "./Sign-in";
 
 function NavigationBar(props) {
@@ -14,7 +14,8 @@ function NavigationBar(props) {
   if (props.navbartoggle === false) {
     return (
       <Navbar collapseOnSelect expand="lg" bg="light">
-        <Navbar.Brand href="#home">
+        <Nav.Link as={Link} to="/">
+          {" "}
           <img
             src="/TempLogo.png"
             width="30"
@@ -22,7 +23,7 @@ function NavigationBar(props) {
             className="navigation-logo"
             alt="React Bootstrap logo"
           />
-        </Navbar.Brand>{" "}
+        </Nav.Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
