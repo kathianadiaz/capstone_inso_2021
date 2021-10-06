@@ -61,7 +61,7 @@ function Signup(props) {
   };
 
   const onSubmission = (data) => {
-    console.log(JSON.stringify(data, null, 2));
+    console.log(data);
     add_new_user(data);
   };
 

@@ -54,8 +54,9 @@ function SignForm(props) {
       .then((response) => {
         console.log(response);
         // let usertoken = response.data.access_token;
-        setToggleRedirect(true);
-        // Cookies.set(
+        setToggleRedirect(true); // Cookies.set(
+        userData(response.data);
+        togglenavbar();
         //   "usertoken",
         //   usertoken,
         //   { secure: true },
@@ -70,9 +71,17 @@ function SignForm(props) {
       });
   };
 
+  const userData = (data) => {
+    props.userData(data);
+  };
+
   const onSubmission = (data) => {
     console.log(JSON.stringify(data, null, 2));
     verifyUser(data);
+  };
+
+  const togglenavbar = () => {
+    props.navbartoggle(true);
   };
 
   return (
