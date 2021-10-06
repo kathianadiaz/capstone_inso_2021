@@ -30,8 +30,6 @@ function UserProfile(props) {
     reader.onerror = () => {
       console.log("file errors", reader.error);
     };
-    if (e.target.files.length !== 0) {
-    }
   };
 
   let resumeDoc = "";
