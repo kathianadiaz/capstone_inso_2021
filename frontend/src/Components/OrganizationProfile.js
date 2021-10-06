@@ -8,12 +8,6 @@ import { get } from "js-cookie";
 import { useForm } from "react-hook-form";
 import EditM from "./EditModal.js";
 function OrganizationProfile(props) {
-  const [highlightInfo, setHighlightInfo] = useState("test");
-
-  const changehighlightInfo = () => {
-    setHighlightInfo("OH MY GOD ITS KANE");
-  };
-
   // const [show, setShow] = useState(false);
   // const [modalData, setModalData] = useState("");
   // const handleShow = () => setShow(true);
@@ -71,9 +65,9 @@ function OrganizationProfile(props) {
               />
             </h3>
             {highlightData.map((data, i) => (
-              <OrgEvent
+              <OrgHighlight
                 key={i}
-                type={data.award}
+                award={data.award}
                 description={data.highlight_description}
               />
             ))}
@@ -101,7 +95,8 @@ function OrganizationProfile(props) {
             {eventData.map((data, i) => (
               <OrgEvent
                 key={i}
-                type={data.event}
+                eventname={data.event}
+                date={data.date.toLocaleDateString()}
                 description={data.description}
               />
             ))}

@@ -9,6 +9,7 @@ const eventSchema = Yup.object()
   .shape({
     event: Yup.string().required("Event name required"),
     description: Yup.string().required("Description required"),
+    date: Yup.date().required("Date required"),
   })
   .required();
 
@@ -62,6 +63,14 @@ function EditModal(props) {
             placeholder={props.type}
           />
           <p className="error-message">{errors.event?.message}</p>
+          <Form.Label>{props.type} date: </Form.Label>
+
+          <Form.Control
+            type="date"
+            {...register("date")}
+            placeholder={"Date"}
+          />
+          <p className="error-message">{errors.date?.message}</p>
 
           <Form.Label>{props.type} Description: </Form.Label>
           <Form.Control
