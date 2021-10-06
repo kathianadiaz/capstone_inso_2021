@@ -7,7 +7,7 @@ from typing import List
 from database import engine, get_db
 from user import UserCreate, User
 from user.repository import UserRepository
-from organization import Organization
+from organization import Organization, OrganizationHighlight
 from organization.repository import OrganizationRepository
 from authentication.authentication import Token, OAuth2PasswordRequestForm, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from datetime import timedelta
@@ -80,9 +80,8 @@ def get_organization_by_id(id: str, db: Session = Depends(get_db)):
     return organization
 
 @app.delete("/organization/{id}", response_model=Organization)
-def delete_organization(id: str, db: Session = Depends(get_db)):
-    # TODO: add authentication
-    organization = OrganizationRepository.delete_organization(id, db)
+def delete_organization(id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.delete_organization(id, user, db)
 
     if not organization:
         raise HTTPException(status_code=404, detail="Organization not found")
@@ -98,6 +97,13 @@ def edit_organization(organization: Organization, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail="Organization not found")
 
     return organization
+
+@app.post("/organization/{id}/highlight", response_model=Organization)
+def add_organization_highlight(id: str, highlight: OrganizationHighlight, db: Session = Depends(get_db)):
+    return OrganizationRepository.add_highlight(highlight,id,db)
+
+# @app.delete("/organization/{id}/highlight", response_model=Organization)
+
 
 @app.get("/my-organizations", response_model=List[Organization])
 def get_administrators_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
