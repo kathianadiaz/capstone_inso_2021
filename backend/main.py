@@ -89,9 +89,8 @@ def delete_organization(id: str, user: User = Depends(get_current_user), db: Ses
     return organization
 
 @app.put("/organization", response_model=Organization)
-def edit_organization(organization: Organization, db: Session = Depends(get_db)):
-    # TODO: authentication
-    organization = OrganizationRepository.edit_organization(organization, db)
+def edit_organization(organization: Organization, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.edit_organization(organization, user, db)
 
     if not organization:
         raise HTTPException(status_code=404, detail="Organization not found")

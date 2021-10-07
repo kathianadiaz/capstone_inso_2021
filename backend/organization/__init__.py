@@ -24,7 +24,7 @@ class Organization(BaseModel):
     description: Optional[str]
     tags: List[str] = []
     department: Optional[str]
-    status: Optional[bool]
+    status: Optional[bool] = False
     highlights: List[OrganizationHighlight] = []
 
     class Config:

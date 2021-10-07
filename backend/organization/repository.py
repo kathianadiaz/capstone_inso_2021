@@ -82,18 +82,25 @@ class OrganizationRepository:
         return organization
 
     @staticmethod
-    def edit_organization(new_organization: Organization, db: Session) -> Optional[Organization]:
+    def edit_organization(new_organization: Organization, user: User, db: Session) -> Optional[Organization]:
         '''Edit the information for a specific `Organization`'''
-        # TODO: verify that organization belongs to user
-        updated_organization = db.query(models.Organization).filter(models.Organization.o_id == new_organization.o_id).first()
+        administrator = db.query(models.Administrator).\
+            filter(models.Administrator.u_id == user.u_id).\
+            filter(models.Administrator.o_id == new_organization.o_id).\
+            first()
 
-        if not updated_organization:
+        if not administrator:
             return None
 
-        updated_organization = new_organization
+        # NOTE: error prone. There might be a better way to implement it
+        administrator.organization.name = new_organization.name
+        administrator.organization.description = new_organization.description
+        administrator.organization.tags = new_organization.tags
+        administrator.organization.status = new_organization.status
+        administrator.organization.highlight = new_organization.highlights
         db.commit()
 
-        return updated_organization
+        return new_organization
 
     # NOTE: Is there a way to implement this interface in a more idiomatic way such as my_orga.add_highlight(my_highlight) ?
     # TODO: add user authentication to verifiy that user is administrator for this specific organization

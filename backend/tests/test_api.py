@@ -183,6 +183,27 @@ def test_delete_organization():
     response.status_code == 200
     assert len(response.json()) == 3
 
+def test_edit_organization():
+    response = client.post(
+        '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        json={'name':'testers4', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+    )
+
+    assert response.status_code == 200
+    o_id = response.json()['o_id']
+
+    response = client.put(
+        '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        json={'o_id':o_id,'name':'test_edit', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+    ) 
+
+
+    assert response.status_code == 200
+    organization = response.json()
+    assert organization['name'] == 'test_edit'
+
 
 def test_add_hightlight():
     response = client.post(
