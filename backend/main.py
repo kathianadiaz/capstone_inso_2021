@@ -97,11 +97,24 @@ def edit_organization(organization: Organization, user: User = Depends(get_curre
 
     return organization
 
-@app.post("/organization/{id}/highlight", response_model=Organization)
-def add_organization_highlight(id: str, highlight: OrganizationHighlight, db: Session = Depends(get_db)):
-    return OrganizationRepository.add_highlight(highlight,id,db)
+@app.post("/organization/{o_id}/highlight", response_model=Organization)
+def add_organization_highlight(o_id: str, highlight: OrganizationHighlight, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.add_highlight(highlight, o_id, user, db)
 
-# @app.delete("/organization/{id}/highlight", response_model=Organization)
+    if not organization:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    return organization
+
+@app.delete("/organization/{o_id}/highlight/{oh_id}", response_model=Organization)
+def delete_organization_highlight(o_id:str , oh_id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.delete_highlight(o_id, oh_id, user, db)
+
+    if not organization:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    return organization
+
 
 
 @app.get("/my-organizations", response_model=List[Organization])

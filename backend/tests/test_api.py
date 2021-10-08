@@ -5,6 +5,8 @@ from organization.repository import OrganizationRepository, OrganizationHighligh
 
 TOKEN = ''
 
+# TODO: refactor code. Lots of repeated lines that can be put into a function
+
 def test_root():
     response = client.get('/')
     assert response.status_code == 200
@@ -219,7 +221,7 @@ def test_add_hightlight():
 
     response = client.post(
         f'/organization/{o_id}/highlight',
-        # headers= {"Authorization" : f"Bearer {TOKEN}"},
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
         json= {'title':'test','description':'test'}
     )
 
@@ -234,4 +236,35 @@ def test_add_hightlight():
         'attachment': None
       } 
     ]
+
+def test_delete_highlight():
+    response = client.post(
+        '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        json={'name':'testers5', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()['highlights']) == 0
+
+    o_id = response.json()['o_id']
+
+    response = client.post(
+        f'/organization/{o_id}/highlight',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        json= {'title':'test','description':'test'}
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()['highlights']) == 1
+
+    oh_id = response.json()['highlights'][0]['oh_id']
+
+    response = client.delete(
+        f'/organization/{o_id}/highlight/{oh_id}',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()['highlights']) == 0
 

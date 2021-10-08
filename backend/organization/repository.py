@@ -49,8 +49,6 @@ class OrganizationRepository:
     @staticmethod
     def get_organizations_by_user(u_id: str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all the organizations that belong to a specific user'''
-        # administrator = db.query(models.Administrator).filter(models.Administrator.u_id == u_id).all()
-        # return [admin.organization for admin in administrator]
         return db.query(models.Organization).filter(models.Administrator.u_id == u_id).all()
 
     @staticmethod
@@ -103,18 +101,43 @@ class OrganizationRepository:
         return new_organization
 
     # NOTE: Is there a way to implement this interface in a more idiomatic way such as my_orga.add_highlight(my_highlight) ?
-    # TODO: add user authentication to verifiy that user is administrator for this specific organization
     @staticmethod
-    def add_highlight(highlight: OrganizationHighlight, o_id: str, db: Session) -> Organization: 
+    def add_highlight(highlight: OrganizationHighlight, o_id: str, user: User, db: Session) -> Optional[Organization]: 
         '''Add a `OrganizationHighlight` to a specific `Organization`'''
+        #NOTE: dont know if this is the best way to do it
+        administrator = db.query(models.Administrator).\
+            filter(models.Administrator.u_id == user.u_id).\
+            filter(models.Administrator.o_id == o_id).\
+            first()
+
+        if not administrator:
+            return None
+
         db_highlight = models.OrganizationHighlight(title=highlight.title, description=highlight.description, o_id=o_id)
         db.add(db_highlight)
         db.commit()
 
         return OrganizationRepository.get_organization_by_id(o_id, db)
 
-    # TODO: add user authentication to verifiy that user is administrator for this specific organization
     @staticmethod
-    def delete_highlight(oh_id: str, db: Session) -> Organization:
+    def delete_highlight(o_id:str, oh_id: str, user: User, db: Session) -> Organization:
         '''Delete a specific `OrganizationHighlight` from an `Organization`'''
-        pass
+        #TODO: there must be a better way to do this
+        administrator = db.query(models.Administrator).\
+            filter(models.Administrator.u_id == user.u_id).\
+            filter(models.Administrator.o_id == o_id).\
+            first()
+
+        high_light = db.query(models.OrganizationHighlight).\
+            filter(models.OrganizationHighlight.o_id == o_id).\
+            filter(models.OrganizationHighlight.oh_id == oh_id).\
+            first()
+
+        if not high_light or not administrator:
+            return None
+
+        db.delete(high_light)
+        db.commit()
+
+        return OrganizationRepository.get_organization_by_id(o_id, db)
+
