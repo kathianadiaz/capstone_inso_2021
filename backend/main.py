@@ -6,7 +6,7 @@ from typing import List
 from database import engine, get_db
 from user import UserCreate, User
 from user.repository import UserRepository
-from organization import Organization
+from organization import Organization, OrganizationHighlight
 from organization.repository import OrganizationRepository
 from authentication.authentication import Token, OAuth2PasswordRequestForm, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from datetime import timedelta
@@ -79,9 +79,8 @@ def get_organization_by_id(id: str, db: Session = Depends(get_db)):
     return organization
 
 @app.delete("/organization/{id}", response_model=Organization)
-def delete_organization(id: str, db: Session = Depends(get_db)):
-    # TODO: add authentication
-    organization = OrganizationRepository.delete_organization(id, db)
+def delete_organization(id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.delete_organization(id, user, db)
 
     if not organization:
         raise HTTPException(status_code=404, detail="Organization not found")
@@ -89,14 +88,33 @@ def delete_organization(id: str, db: Session = Depends(get_db)):
     return organization
 
 @app.put("/organization", response_model=Organization)
-def edit_organization(organization: Organization, db: Session = Depends(get_db)):
-    # TODO: authentication
-    organization = OrganizationRepository.edit_organization(organization, db)
+def edit_organization(organization: Organization, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.edit_organization(organization, user, db)
 
     if not organization:
         raise HTTPException(status_code=404, detail="Organization not found")
 
     return organization
+
+@app.post("/organization/{o_id}/highlight", response_model=Organization)
+def add_organization_highlight(o_id: str, highlight: OrganizationHighlight, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.add_highlight(highlight, o_id, user, db)
+
+    if not organization:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    return organization
+
+@app.delete("/organization/{o_id}/highlight/{oh_id}", response_model=Organization)
+def delete_organization_highlight(o_id:str , oh_id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.delete_highlight(o_id, oh_id, user, db)
+
+    if not organization:
+        raise HTTPException(status_code=404, detail="Organization not found")
+
+    return organization
+
+
 
 @app.get("/my-organizations", response_model=List[Organization])
 def get_administrators_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
