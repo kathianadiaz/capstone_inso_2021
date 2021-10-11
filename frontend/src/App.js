@@ -12,7 +12,7 @@ import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
 import UserProfile from "./Components/UserProfile";
 import { useState } from "react";
 import { Nav } from "react-bootstrap";
-import {AuthProvider} from "./Components/AuthContext";
+import { AuthProvider } from "./Components/AuthContext";
 
 function App() {
   const [userdata, setuserdata] = useState("");
@@ -26,7 +26,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <AuthProvider>
+        <AuthProvider>
           <Switch>
             {/* <Route path="/SignUp">
       
@@ -44,14 +44,14 @@ function App() {
             </Route>
             <>
               <Navbar
-                navbartoggle={navbarhidden}
-                navbarchange={setnavbarhidden}
+              // navbartoggle={navbarhidden}
+              // navbarchange={setnavbarhidden}
               />
               <Route exact path="/">
                 {console.log(navbarhidden)}
                 <Homepage />
               </Route>
-              <Route path="/SignUp">
+              <Route path="/MyOrganization">
                 {/* <UserPage
                   name="test"
                   email="joshwalker44@gmail.com"
@@ -61,6 +61,17 @@ function App() {
                   status="Recruiting"
                   description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
                 />
+              </Route>
+              <Route path="/UserProfile">
+                <UserPage
+                  name="test"
+                  email="joshwalker44@gmail.com"
+                  phone="787-450-4934"
+                />
+                {/* <OrganizationProfile
+                  status="Recruiting"
+                  description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
+                /> */}
               </Route>
             </>
           </Switch>
