@@ -12,6 +12,7 @@ import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
 import UserProfile from "./Components/UserProfile";
 import { useState } from "react";
 import { Nav } from "react-bootstrap";
+import { AuthProvider } from "./Components/AuthContext";
 
 function App() {
   const [userdata, setuserdata] = useState("");
@@ -25,43 +26,56 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Switch>
-          {/* <Route path="/SignUp">
-     
+        <AuthProvider>
+          <Switch>
+            {/* <Route path="/SignUp">
+      
 
-            <SignUp />
-          </Route> */}
-          <Route path="/SignIn">
-            {/* <UserPage
-              name="Josh Walker Hernandez"
-              email="joshwalker44@gmail.com"
-              phone="787-450-4934"
-            /> */}
-
-            <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
-          </Route>
-          <>
-            <Navbar
-              navbartoggle={navbarhidden}
-              navbarchange={setnavbarhidden}
-            />
-            <Route exact path="/">
-              {console.log(navbarhidden)}
-              <Homepage />
-            </Route>
-            <Route path="/SignUp">
-              <UserPage
-                name="Josh Walker"
+              <SignUp />
+            </Route> */}
+            <Route path="/SignIn">
+              {/* <UserPage
+                name="Josh Walker Hernandez"
                 email="joshwalker44@gmail.com"
-                phone="7874504934"
-              />
-              {/* <OrganizationProfile
-                status="Recruiting"
-                description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
+                phone="787-450-4934"
               /> */}
+
+              <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
             </Route>
-          </>
-        </Switch>
+            <>
+              <Navbar
+              // navbartoggle={navbarhidden}
+              // navbarchange={setnavbarhidden}
+              />
+              <Route exact path="/">
+                {console.log(navbarhidden)}
+                <Homepage />
+              </Route>
+              <Route path="/MyOrganization">
+                {/* <UserPage
+                  name="test"
+                  email="joshwalker44@gmail.com"
+                  phone="787-450-4934"
+                /> */}
+                <OrganizationProfile
+                  status="Recruiting"
+                  description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
+                />
+              </Route>
+              <Route path="/UserProfile">
+                <UserPage
+                  name="test"
+                  email="joshwalker44@gmail.com"
+                  phone="787-450-4934"
+                />
+                {/* <OrganizationProfile
+                  status="Recruiting"
+                  description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
+                /> */}
+              </Route>
+            </>
+          </Switch>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );
