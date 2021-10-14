@@ -5,6 +5,7 @@ from organization import Organization, OrganizationHighlight
 from user import User
 import models
 
+
 class OrganizationRepository:
     '''Repository for `Organization` agregate'''
 
@@ -66,10 +67,8 @@ class OrganizationRepository:
     @staticmethod
     def delete_organization(o_id: str, user: User, db: Session) -> Optional[Organization]:
         '''Delete a specific `Organization` with the give id'''
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == o_id).\
-            first()
+        administrator = admin_authentication(db, o_id, user)
+
 
         if not administrator:
             return None
@@ -84,20 +83,17 @@ class OrganizationRepository:
     @staticmethod
     def edit_organization(new_organization: Organization, user: User, db: Session) -> Optional[Organization]:
         '''Edit the information for a specific `Organization`'''
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == new_organization.o_id).\
-            first()
+        administrator = admin_authentication(db, new_organization.o_id, user)
 
         if not administrator:
             return None
 
         # NOTE: error prone. There might be a better way to implement it
-        administrator.organization.name = new_organization.name
-        administrator.organization.description = new_organization.description
-        administrator.organization.tags = new_organization.tags
-        administrator.organization.status = new_organization.status
-        administrator.organization.highlight = new_organization.highlights
+        setattr(administrator.organization, "name", new_organization.name)
+        setattr(administrator.organization, "description", new_organization.description)
+        setattr(administrator.organization, "tags", new_organization.tags)
+        setattr(administrator.organization, "status", new_organization.status)
+        setattr(administrator.organization, "highlights", new_organization.highlights)
         db.commit()
 
         return new_organization
@@ -108,10 +104,7 @@ class OrganizationRepository:
     def add_highlight(highlight: OrganizationHighlight, o_id: str, user: User, db: Session) -> Optional[Organization]: 
         '''Add a `OrganizationHighlight` to a specific `Organization`'''
         #NOTE: dont know if this is the best way to do it
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == o_id).\
-            first()
+        administrator = admin_authentication(db, o_id, user)
 
         if not administrator:
             return None
@@ -126,10 +119,7 @@ class OrganizationRepository:
     def delete_highlight(o_id:str, oh_id: str, user: User, db: Session) -> Organization:
         '''Delete a specific `OrganizationHighlight` from an `Organization`'''
         #TODO: there must be a better way to do this
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == o_id).\
-            first()
+        administrator = admin_authentication(db, o_id, user)
 
         high_light = db.query(models.OrganizationHighlight).\
             filter(models.OrganizationHighlight.o_id == o_id).\
@@ -144,3 +134,11 @@ class OrganizationRepository:
 
         return OrganizationRepository.get_organization_by_id(o_id, db)
 
+    #end of class
+
+def admin_authentication(db: Session, o_id: str, user: User):
+    authentication = db.query(models.Administrator).\
+        filter(models.Administrator.u_id == user.u_id).\
+        filter(models.Administrator.o_id == o_id).\
+        first()
+    return authentication
