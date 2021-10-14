@@ -52,11 +52,13 @@ class OrganizationRepository:
         return db.query(models.Organization).filter(models.Administrator.u_id == u_id).all()
 
     @staticmethod
+    #TODO: search by keyword
     def get_organization_by_keyword(keywords:List[str], db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all organizations that conatain a specific keyword in their description or name'''
         pass
 
     @staticmethod
+    #TODO: search by tags
     def get_organization_by_tags(tags: List[str], db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all organizations that contain the given tags'''
         pass
@@ -100,6 +102,7 @@ class OrganizationRepository:
 
         return new_organization
 
+    #TODO: find more optimal way
     # NOTE: Is there a way to implement this interface in a more idiomatic way such as my_orga.add_highlight(my_highlight) ?
     @staticmethod
     def add_highlight(highlight: OrganizationHighlight, o_id: str, user: User, db: Session) -> Optional[Organization]: 
