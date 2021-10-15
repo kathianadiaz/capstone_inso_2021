@@ -61,6 +61,7 @@ def test_login():
     )
 
     assert response.status_code == 200, response.text
+    assert "user" in response.json()
 
     TOKEN = response.json()['access_token']
 
