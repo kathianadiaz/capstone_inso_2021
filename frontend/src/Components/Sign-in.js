@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormInput from "./Form";
 import { useForm, Controller } from "react-hook-form";
@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import "./Form.scss";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { AuthContext } from "./AuthContext";
 
 const schema = Yup.object()
 
@@ -22,6 +23,7 @@ const schema = Yup.object()
 
 function SignForm(props) {
   const [toggleRedirect, setToggleRedirect] = React.useState(false);
+  const [state, setState] = useContext(AuthContext);
 
   const {
     register,
@@ -53,6 +55,8 @@ function SignForm(props) {
       .post("http://localhost:8000/token", parameters)
       .then((response) => {
         console.log(response);
+        setState({ token: response.data.access_token, user: "WWEASD" });
+
         // let usertoken = response.data.access_token;
         setToggleRedirect(true); // Cookies.set(
         userData(response.data);

@@ -1,17 +1,19 @@
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import "./Navbar.scss";
 import { Router, Link, Redirect } from "react-router-dom";
 import SignIn from "./Sign-in";
+import { AuthContext } from "./AuthContext";
 
 function NavigationBar(props) {
   const [loggedIn, setloggedIn] = useState(true);
-
+  const [state, setState] = useContext(AuthContext);
   const changeNavbartoggle = () => {
-    props.navbarchange(false);
+    // props.navbarchange(false);
+    setState(null);
   };
-
-  if (props.navbartoggle === false) {
+  // if (props.navbartoggle === false) {
+  if (state === null) {
     return (
       <Navbar collapseOnSelect expand="lg" bg="light">
         <Nav.Link as={Link} to="/">
@@ -57,12 +59,18 @@ function NavigationBar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Navbar.Brand>Welcome {props.username}</Navbar.Brand>
+            <Navbar.Brand>Welcome {state.user} !</Navbar.Brand>
           </Nav>
           <Nav>
             {/* <Nav.Link as={Link} to="/SignIn">
               Log-out
             </Nav.Link> */}
+            <Nav.Link as={Link} to="/MyOrganization">
+              My organization
+            </Nav.Link>
+            <Nav.Link as={Link} to="/UserProfile">
+              User Profile
+            </Nav.Link>
             <Button className="btn logout-button" onClick={changeNavbartoggle}>
               Log-out
             </Button>
