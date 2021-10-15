@@ -43,7 +43,7 @@ def signup(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     # response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True)
-    return {"access_token": access_token, "token_type": "Bearer"}
+    return {"access_token": access_token, "token_type": "Bearer", "user": user}
 
 @app.post("/register", response_model=User)
 def register(user: UserCreate, db: Session = Depends(get_db)):
