@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormInput from "./Form";
 import { useForm, Controller } from "react-hook-form";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
@@ -126,8 +126,8 @@ function SignForm(props) {
         </Form>
 
         <div className="Formcontainer-options">
-          <a href="">Forgot your password?</a>
-          <a href="">New? Sign up</a>
+          {/* <a href="">Forgot your password?</a> */}
+          <Link to="/SignUp">New? Sign-up</Link>
         </div>
         <p>Copyright © 2021</p>
       </div>

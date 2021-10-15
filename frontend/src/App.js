@@ -13,7 +13,7 @@ import UserProfile from "./Components/UserProfile";
 import { useState } from "react";
 import { Nav } from "react-bootstrap";
 import { AuthProvider } from "./Components/AuthContext";
-
+import OrganizationLists from "./Components/OrganizationsList";
 function App() {
   const [userdata, setuserdata] = useState("");
   const [navbarhidden, setnavbarhidden] = useState(false);
@@ -28,11 +28,9 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <Switch>
-            {/* <Route path="/SignUp">
-      
-
+            <Route path="/SignUp">
               <SignUp />
-            </Route> */}
+            </Route>
             <Route path="/SignIn">
               {/* <UserPage
                 name="Josh Walker Hernandez"
@@ -68,10 +66,9 @@ function App() {
                   email="joshwalker44@gmail.com"
                   phone="787-450-4934"
                 />
-                {/* <OrganizationProfile
-                  status="Recruiting"
-                  description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
-                /> */}
+              </Route>
+              <Route path="/OrganizationsList">
+                <OrganizationLists />
               </Route>
             </>
           </Switch>
