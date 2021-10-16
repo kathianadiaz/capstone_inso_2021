@@ -45,9 +45,11 @@ function NavigationBar(props) {
       </Navbar>
     );
   } else {
+    console.log(state.user.name);
     return (
       <Navbar collapseOnSelect expand="lg" bg="light">
-        <Navbar.Brand href="#home">
+        <Nav.Link as={Link} to="/">
+          {" "}
           <img
             src="/TempLogo.png"
             width="30"
@@ -55,24 +57,33 @@ function NavigationBar(props) {
             className="navigation-logo"
             alt="React Bootstrap logo"
           />
-        </Navbar.Brand>{" "}
+        </Nav.Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <Navbar.Brand>Welcome {state.user} !</Navbar.Brand>
+          <Nav className="me-auto welcome-position">
+            <Navbar.Brand>Welcome {state.user.name}!</Navbar.Brand>
           </Nav>
           <Nav>
             {/* <Nav.Link as={Link} to="/SignIn">
               Log-out
             </Nav.Link> */}
+            <Nav.Link as={Link} to="/OrganizationsList">
+              Find Organizations
+            </Nav.Link>
+            <Nav.Link as={Link} to="/OrganizationCreation">
+              Create Organization
+            </Nav.Link>
             <Nav.Link as={Link} to="/MyOrganization">
               My organization
             </Nav.Link>
             <Nav.Link as={Link} to="/UserProfile">
               User Profile
             </Nav.Link>
-            <Button className="btn logout-button" onClick={changeNavbartoggle}>
-              Log-out
+            <Button className="logout-button btn" onClick={changeNavbartoggle}>
+              <Link to="/" className="white-text">
+                {" "}
+                Log-out{" "}
+              </Link>
             </Button>
           </Nav>
         </Navbar.Collapse>

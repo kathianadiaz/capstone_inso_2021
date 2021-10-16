@@ -55,11 +55,13 @@ function SignForm(props) {
       .post("http://localhost:8000/token", parameters)
       .then((response) => {
         console.log(response);
-        setState({ token: response.data.access_token, user: "WWEASD" });
+        setState({
+          token: response.data.access_token,
+          user: response.data.user,
+        });
 
         // let usertoken = response.data.access_token;
         setToggleRedirect(true); // Cookies.set(
-        userData(response.data);
         togglenavbar();
         //   "usertoken",
         //   usertoken,

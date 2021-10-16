@@ -1,20 +1,19 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import Navbar from "./Navbar.js";
 import { Button, Image, Card } from "react-bootstrap";
 import "./UserProfile.scss";
 import OrgIcon from "./organizationIcon.js";
 import EditM from "./EditModal.js";
+import { AuthContext } from "./AuthContext";
 
 function UserProfile(props) {
-  const userInfo = {
-    email: props.email,
-    phone: props.phone,
-  };
-  const [userData, setUserData] = useState(userInfo);
   const [resume, setresume] = useState("");
   const [fileuploaded, setfileuploaded] = useState(false);
   const inputRef = useRef();
+  const [state, setState] = useContext(AuthContext);
+  const [userData, setUserData] = useState({});
 
+  // console.log(state);
   const openFiles = () => {
     inputRef.current.click();
   };
@@ -37,9 +36,9 @@ function UserProfile(props) {
     resumeDoc = URL.createObjectURL(resume);
   }
 
-  console.log(userData);
-  console.log(resume);
-  console.log(resumeDoc);
+  // console.log(userData);
+  // console.log(resume);
+  // console.log(resumeDoc);
 
   return (
     <div className="user-page-wrapper">
@@ -51,17 +50,19 @@ function UserProfile(props) {
               src="/testPerson.jpg"
               roundedCircle
             />
-            <h1 className="user-info-name text-color">{props.name}</h1>
+            <h1 className="user-info-name text-color">{state?.user.name}</h1>
           </div>
-
+          {console.log(state)}
           <div className="user-contact">
             <h2 className="user-contact-header">
               Contact Information:{" "}
               <EditM mdata={userData} setdata={setUserData} type="User" />
             </h2>
             <div className="user-contact-information">
-              <p className="white-text">{"Email: " + userData.email}</p>
-              <p className="white-text">{"Phone number: " + userData.phone}</p>
+              <p className="white-text">{"Email: " + state?.user.email}</p>
+              <p className="white-text">
+                {"Phone number: " + state?.user.phone}
+              </p>
             </div>
           </div>
         </div>

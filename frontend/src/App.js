@@ -40,6 +40,9 @@ function App() {
 
               <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
             </Route>
+            <Route path="/OrganizationCreation">
+              <OrgCreation />
+            </Route>
             <>
               <Navbar
               // navbartoggle={navbarhidden}
