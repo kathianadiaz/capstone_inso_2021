@@ -61,7 +61,7 @@ function NavigationBar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto welcome-position">
-            <Navbar.Brand>Welcome {state.user.name}!</Navbar.Brand>
+            <Navbar.Brand>Welcome {state?.user.name}!</Navbar.Brand>
           </Nav>
           <Nav>
             {/* <Nav.Link as={Link} to="/SignIn">
@@ -73,7 +73,7 @@ function NavigationBar(props) {
             <Nav.Link as={Link} to="/OrganizationCreation">
               Create Organization
             </Nav.Link>
-            <Nav.Link as={Link} to="/MyOrganization">
+            <Nav.Link as={Link} to="/organization-profile">
               My organization
             </Nav.Link>
             <Nav.Link as={Link} to="/UserProfile">

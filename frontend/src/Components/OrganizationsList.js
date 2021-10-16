@@ -9,7 +9,7 @@ function OrganizationsList() {
   const [inputvalue, setInputValue] = useState("");
   useEffect(() => {
     axios
-      .get("http://localhost:8000/users")
+      .get("http://localhost:8000/organization")
       .then((response) => {
         setorganizationsFilter(response.data);
         setOrganizations(response.data);
@@ -20,18 +20,18 @@ function OrganizationsList() {
       });
   }, []);
 
-  const filterOrgs = (e) => {
-    const input = e.target.value;
-    // console.log(e.target.value);
-    if (e.key === "Enter") {
-      const results = organizationsFilter.filter((organization) => {
-        return organization.name.toLowerCase().startsWith(input.toLowerCase());
-      });
-      setorganizationsFilter(results);
-    } else {
-      setorganizationsFilter(organizations);
-    }
-  };
+  // const filterOrgs = (e) => {
+  //   const input = e.target.value;
+  //   // console.log(e.target.value);
+  //   if (e.key === "Enter") {
+  //     const results = organizationsFilter.filter((organization) => {
+  //       return organization.name.toLowerCase().startsWith(input.toLowerCase());
+  //     });
+  //     setorganizationsFilter(results);
+  //   } else {
+  //     setorganizationsFilter(organizations);
+  //   }
+  // };
 
   const onChangeInput = (e) => {
     setInputValue(e.target.value);
@@ -56,7 +56,7 @@ function OrganizationsList() {
             className="org-search-input"
             value={inputvalue || ""}
             onChange={onChangeInput}
-            onKeyDown={filterOrgs}
+            // onKeyDown={filterOrgs}
           />
           <Button className="btn org-search-button" onClick={onClickFilter}>
             Search
@@ -65,17 +65,42 @@ function OrganizationsList() {
       </div>
       <div className="organizations-list">
         <div className="organizations-list-wrapper">
-          {organizationsFilter && organizationsFilter.length > 0 ? (
+          {organizations &&
+            organizations
+              .filter((organization) => organization.name === inputvalue)
+              .map((organization, index) => {
+                return (
+                  <OrganizationCard
+                    key={index}
+                    organizationName={organization.name}
+                    organizationInfo={organization.description}
+                  />
+                );
+              })}
+
+          {organizations &&
+            inputvalue === "" &&
+            organizations.map((organization, index) => {
+              return (
+                <OrganizationCard
+                  key={index}
+                  organizationName={organization.name}
+                  organizationInfo={organization.description}
+                />
+              );
+            })}
+
+          {/* {organizationsFilter && organizationsFilter.length > 0 ? (
             organizationsFilter.map((organization, i) => (
               <OrganizationCard
                 key={i}
                 organizationName={organization.name}
-                organizationInfo={organization.username}
+                organizationInfo={organization.description}
               />
             ))
           ) : (
             <h1>No results found!</h1>
-          )}
+          )} */}
           {/* <OrganizationCard
             organizationName="IEEE"
             organizationInfo="lorem5 adwe weasd wewa dsa "
