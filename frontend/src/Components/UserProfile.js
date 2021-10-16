@@ -1,10 +1,45 @@
-import React from "react";
+import React, { useState, useRef, useContext } from "react";
 import Navbar from "./Navbar.js";
 import { Button, Image, Card } from "react-bootstrap";
 import "./UserProfile.scss";
 import OrgIcon from "./organizationIcon.js";
+import EditM from "./EditModal.js";
+import { AuthContext } from "./AuthContext";
 
 function UserProfile(props) {
+  const [resume, setresume] = useState("");
+  const [fileuploaded, setfileuploaded] = useState(false);
+  const inputRef = useRef();
+  const [state, setState] = useContext(AuthContext);
+  const [userData, setUserData] = useState({});
+
+  // console.log(state);
+  const openFiles = () => {
+    inputRef.current.click();
+  };
+
+  const handleResume = (e) => {
+    const resumefile = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(resumefile);
+    reader.onload = () => {
+      setresume(e.target.files[0]);
+      setfileuploaded(true);
+    };
+    reader.onerror = () => {
+      console.log("file errors", reader.error);
+    };
+  };
+
+  let resumeDoc = "";
+  if (fileuploaded) {
+    resumeDoc = URL.createObjectURL(resume);
+  }
+
+  // console.log(userData);
+  // console.log(resume);
+  // console.log(resumeDoc);
+
   return (
     <div className="user-page-wrapper">
       <div className="user-page">
@@ -15,14 +50,19 @@ function UserProfile(props) {
               src="/testPerson.jpg"
               roundedCircle
             />
-            <h1 className="user-info-name text-color">{props.name}</h1>
+            <h1 className="user-info-name text-color">{state?.user.name}</h1>
           </div>
-
+          {console.log(state)}
           <div className="user-contact">
-            <h2 className="user-contact-header">Contact Information</h2>
+            <h2 className="user-contact-header">
+              Contact Information:{" "}
+              <EditM mdata={userData} setdata={setUserData} type="User" />
+            </h2>
             <div className="user-contact-information">
-              <p className="white-text">{"Email: " + props.email}</p>
-              <p className="white-text">{"Phone number: " + props.phone}</p>
+              <p className="white-text">{"Email: " + state?.user.email}</p>
+              <p className="white-text">
+                {"Phone number: " + state?.user.phone}
+              </p>
             </div>
           </div>
         </div>
@@ -30,9 +70,19 @@ function UserProfile(props) {
         <div className="user-options-wrapper">
           <div className="user-resume">
             <h2 className="user-resume-heading text-color">Resume:</h2>
-            <Button variant="btn user-resume-button" size="lg">
-              Add / Update your resume
-            </Button>
+            <div className="user-resume-upload">
+              <Button
+                onClick={openFiles}
+                variant="btn user-resume-button"
+                size="lg"
+              >
+                Add / Update your resume
+              </Button>
+              <input type="file" ref={inputRef} onChange={handleResume} />
+              <a className="download-link" href={resumeDoc} download="resume">
+                Click here to download resume
+              </a>
+            </div>
           </div>
           <div className="user-organizations">
             <h2 className="user-organizations-heading text-color">

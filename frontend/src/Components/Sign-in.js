@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import FormInput from "./Form";
 import { useForm, Controller } from "react-hook-form";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { AuthContext } from "./AuthContext";
 
 const schema = Yup.object()
 
@@ -22,6 +23,7 @@ const schema = Yup.object()
 
 function SignForm(props) {
   const [toggleRedirect, setToggleRedirect] = React.useState(false);
+  const [state, setState] = useContext(AuthContext);
 
   const {
     register,
@@ -53,9 +55,13 @@ function SignForm(props) {
       .post("http://localhost:8000/token", parameters)
       .then((response) => {
         console.log(response);
+        setState({
+          token: response.data.access_token,
+          user: response.data.user,
+        });
+
         // let usertoken = response.data.access_token;
         setToggleRedirect(true); // Cookies.set(
-        userData(response.data);
         togglenavbar();
         //   "usertoken",
         //   usertoken,
@@ -122,8 +128,8 @@ function SignForm(props) {
         </Form>
 
         <div className="Formcontainer-options">
-          <a href="">Forgot your password?</a>
-          <a href="">New? Sign up</a>
+          {/* <a href="">Forgot your password?</a> */}
+          <Link to="/SignUp">New? Sign-up</Link>
         </div>
         <p>Copyright © 2021</p>
       </div>

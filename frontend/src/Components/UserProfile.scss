@@ -73,6 +73,26 @@
     text-align: left;
   }
 
+  &-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .download-link {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      background-color: var(--t-bright-green);
+      border-radius: 15px;
+      padding: 0.5rem;
+    }
+  }
   &-button {
     margin: 0 auto;
     padding: 2rem;
@@ -107,6 +127,8 @@
     gap: 1rem;
   }
   &-header {
+    display: flex;
+    align-items: center;
     font-size: 25px;
     font-weight: bold;
     color: white;

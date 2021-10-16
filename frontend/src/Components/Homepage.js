@@ -1,5 +1,6 @@
 import React from "react";
 import "./Homepage.scss";
+import { Link } from "react-router-dom";
 import NavigationBar from "./Navbar";
 import { Button } from "react-bootstrap";
 function Homepage() {
@@ -23,11 +24,13 @@ function Homepage() {
             {/* <a href="" className="link-btn learn-button">
               Learn more
             </a> */}
-            <Button variant="btn learn-button" size="lg">
+            {/* <Button variant="btn learn-button" size="lg">
               Learn more
-            </Button>
+            </Button> */}
             <Button variant="link-btn search-button" size="lg">
-              Start searching now
+              <Link to="/OrganizationsList" className="custom-link">
+                Start searching now
+              </Link>
             </Button>
           </div>
         </div>
@@ -85,11 +88,13 @@ function Homepage() {
         </h2>
         <div className="welcome-buttons">
           <Button variant="link-btn search-button" size="lg">
-            Start searching now
+            <Link to="/OrganizationsList" className="custom-link">
+              Start searching now
+            </Link>
           </Button>
-          <Button variant="link-btn learn-button" size="lg">
+          {/* <Button variant="link-btn learn-button" size="lg">
             Learn more
-          </Button>
+          </Button> */}
 
           {/* <a href="" className="link-btn search-button">
             Start searching now

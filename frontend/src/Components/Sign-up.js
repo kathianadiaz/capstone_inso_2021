@@ -1,6 +1,6 @@
 import React from "react";
+import { Redirect, Link } from "react-router-dom";
 import { Form, Button, Toast } from "react-bootstrap";
-import { Redirect } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
@@ -119,7 +119,7 @@ function Signup(props) {
         </Form>
 
         <div className="Formcontainer-options">
-          <a href="">Already joined? Login</a>
+          <Link to="/SignIn">Already joined? Login</Link>
         </div>
       </div>
       <p>Copyright © 2021</p>

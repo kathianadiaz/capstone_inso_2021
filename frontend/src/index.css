@@ -8,12 +8,15 @@ body {
 .btn:focus {
   box-shadow: none !important;
 }
+
 .white-text {
   color: white;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 13px;
+  text-decoration: none;
 }
+
 *,
 *::before,
 *::after {
@@ -21,6 +24,7 @@ body {
   scroll-behavior: smooth;
   margin: 0;
 }
+
 a,
 a:hover,
 a:focus,
@@ -28,6 +32,12 @@ a:active {
   text-decoration: none;
   color: inherit;
 }
+
+.custom-link {
+  text-decoration: none;
+  color: white;
+}
+
 :root {
   /*Primary color */
   --p-light-blue: #e0f1ff;
@@ -44,6 +54,7 @@ a:active {
 
   /* Shape colors */
   --s-dark-gray: #afafaf;
+  --s-gray: #717171;
 }
 
 /*= body {

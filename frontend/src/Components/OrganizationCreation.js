@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
 import axios from "axios";
+import { AuthContext } from "./AuthContext";
 
 const schema = Yup.object()
   .shape({
@@ -19,7 +20,7 @@ const schema = Yup.object()
   .required();
 
 function OrganizationCreation(props) {
-  const [state, setState] = useState([]);
+  const [state, setState] = useState(AuthContext);
   const [tagData, setTagData] = useState([]);
   const [linkData, setLinkData] = useState([]);
   const [toggleRedirect, setToggleRedirect] = useState(false);
@@ -48,10 +49,12 @@ function OrganizationCreation(props) {
       name: data.name,
       description: data.description,
       department: data.department,
-      password: data.password,
+      tags: data.tags,
     };
+    axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+    console.log(state.token);
     await axios
-      .post("http://localhost:8000/register", json)
+      .post("http://localhost:8000/organization", json)
       .then((response) => {
         console.log(response);
         setToggleRedirect(true);
@@ -66,8 +69,9 @@ function OrganizationCreation(props) {
     // append tagData data
     data.tags = tagData;
     data.links = linkData;
-    console.log(JSON.stringify(data, null, 2));
-    console.log(JSON.stringify(tagData));
+    createOrganization(data);
+    // console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(tagData));
   };
   // console.log(linkData);
   return (
@@ -118,7 +122,7 @@ function OrganizationCreation(props) {
         />
         <p className="error-message">{errors.email?.message}</p>
         <InputTag tagData={setTagData} tagsType="Tags" />
-        <InputTag linkData={setLinkData} tagsType="Links" />
+        {/* <InputTag linkData={setLinkData} tagsType="Links" /> */}
 
         {/* {console.log(tagData)} */}
         {/* <InputTag linkData={setLinkData} tagsType="Links" /> */}

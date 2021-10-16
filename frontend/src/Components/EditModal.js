@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { ReactComponent as Add } from "./plus-box.svg";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 const eventSchema = Yup.object()
   .shape({
     event: Yup.string().required("Event name required"),
@@ -22,6 +21,17 @@ const highlightSchema = Yup.object()
   })
   .required();
 
+const userProfileSchema = Yup.object()
+  .shape({
+    email: Yup.string().email().required("Email required"),
+    phone: Yup.string()
+      .required()
+      .matches(/^[0-9]+$/, "Must be only digits")
+      .min(10, "Phone number mininum is 10 digits")
+      .max(10, "Phone number maximum is 10 digits"),
+  })
+  .required();
+
 function EditModal(props) {
   const [show, setShow] = useState(false);
 
@@ -35,7 +45,11 @@ function EditModal(props) {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(
-      props.type === "Event" ? eventSchema : highlightSchema
+      props.type === "Event"
+        ? eventSchema
+        : props.type === "User"
+        ? userProfileSchema
+        : highlightSchema
     ),
   });
 
@@ -43,7 +57,9 @@ function EditModal(props) {
     // setEventData([...eventdata, data]);
     // console.log(JSON.stringify(data, null, 2));
     // console.log(eventdata);
-    sendModalData([...props.mdata, data]);
+    props.type !== "User"
+      ? sendModalData([...props.mdata, data])
+      : sendModalData(data);
     setShow(false);
   };
 
@@ -79,6 +95,26 @@ function EditModal(props) {
             placeholder={"Description"}
           />
           <p className="error-message">{errors.description?.message}</p>
+        </Modal.Body>
+      );
+    } else if (props.type === "User") {
+      return (
+        <Modal.Body>
+          <Form.Label>{props.type} email: </Form.Label>
+          <Form.Control
+            type="email"
+            {...register("email")}
+            placeholder={"Email"}
+          />
+          <p className="error-message">{errors.email?.message}</p>
+          <Form.Label>{props.type} phone: </Form.Label>
+
+          <Form.Control
+            type="phone"
+            {...register("phone")}
+            placeholder={"Phone"}
+          />
+          <p className="error-message">{errors.phone?.message}</p>
         </Modal.Body>
       );
     } else {
@@ -117,7 +153,13 @@ function EditModal(props) {
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit(getEventdata)}>
           <Modal.Header closeButton>
-            <Modal.Title>Add a new {props.type}</Modal.Title>
+            {props.type !== "User" ? (
+              <Modal.Title>Add a new {props.type}</Modal.Title>
+            ) : (
+              <Modal.Title>
+                Change your {props.type.toLowerCase()} data
+              </Modal.Title>
+            )}
           </Modal.Header>
           {displayInputs()}
 
