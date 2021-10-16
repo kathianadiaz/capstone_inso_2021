@@ -1,17 +1,16 @@
 import React, { useContext } from "react";
 import { Form, Button } from "react-bootstrap";
-import FormInput from "./Form";
+// import FormInput from "./Form";
 import { useForm, Controller } from "react-hook-form";
 import { Redirect, Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
 import axios from "axios";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { AuthContext } from "./AuthContext";
 
 const schema = Yup.object()
-
   .shape({
     username: Yup.string().required("Username required"),
     password: Yup.string()
@@ -72,7 +71,6 @@ function SignForm(props) {
         // TODO: save JWT token and other data
       })
       .catch((error) => {
-        console.log(error);
         // If error notify user
       });
   };

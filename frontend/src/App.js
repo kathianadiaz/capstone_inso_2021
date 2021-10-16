@@ -11,14 +11,16 @@ import Navbar from "./Components/Navbar";
 import { BrowserRouter, Route, Switch, useLocation, Redirect } from "react-router-dom";
 import UserProfile from "./Components/UserProfile";
 import { useState } from "react";
-import { Nav } from "react-bootstrap";
 import { AuthProvider } from "./Components/AuthContext";
 import OrganizationLists from "./Components/OrganizationsList";
 import NotFound from "./Components/NotFound";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
   const [userdata, setuserdata] = useState("");
   const [navbarhidden, setnavbarhidden] = useState(false);
+
+  const queryClient = new QueryClient();
 
   // console.log(navbarhidden);
   const dasd = () => {
@@ -28,6 +30,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
         <AuthProvider>
             <Navbar/>
             <Switch>
@@ -50,7 +53,7 @@ function App() {
               <Route path="/OrganizationCreation">
                 <OrgCreation />
               </Route>              
-    //        <Route path="/MyOrganization"/>
+    {/*         <Route path="/MyOrganization"/> */}
               <Route path="/organization-profile">
                 <OrganizationProfile
                   status="Recruiting"
@@ -65,6 +68,7 @@ function App() {
               </Route>
             </Switch>
           </AuthProvider>
+          </QueryClientProvider>
       </BrowserRouter>
     </div>
   );

@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import * as Yup from "yup";
 import "./Form.scss";
+import { useMutation } from "react-query";
 
 const schema = Yup.object()
   .shape({
@@ -36,33 +37,36 @@ function Signup(props) {
   // });
   // };
 
-  const add_new_user = async (data) => {
-    // const parameters = new URLSearchParams();
-    // parameters.append("name", data.name);
-    // parameters.append("username", data.username);
-    // parameters.append("email", data.email);
-    // parameters.append("password", data.password);
+  const post_new_user = async (data) => {
     let json = {
       name: data.name,
       username: data.username,
       email: data.email,
       password: data.password,
     };
+
     await axios
       .post("http://localhost:8000/register", json)
-      .then((response) => {
-        console.log(response);
-        setToggleRedirect(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        // If error notify user
-      });
   };
+
+  const handleSignUpData= useMutation(data => post_new_user(data), {
+    onSuccess: async () => {
+      setToggleRedirect(true);
+    },
+    onError: async (error) => {
+      //TODO
+      if (error.response.status === 400) {
+        //TODO
+      }
+      console.log("respoonse",error.response);
+    }
+  })
+
+ 
 
   const onSubmission = (data) => {
     console.log(data);
-    add_new_user(data);
+    handleSignUpData.mutate(data);
   };
 
   return (
