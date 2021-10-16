@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import InputTag from "./InputTag";
 import { useForm } from "react-hook-form";
+import { Redirect } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
@@ -20,14 +21,11 @@ const schema = Yup.object()
   .required();
 
 function OrganizationCreation(props) {
-  const [state, setState] = useState(AuthContext);
+  const [state, setState] = useContext(AuthContext);
   const [tagData, setTagData] = useState([]);
   const [linkData, setLinkData] = useState([]);
   const [toggleRedirect, setToggleRedirect] = useState(false);
 
-  const handleSubmit1 = (e) => {
-    e.preventDefault();
-  };
   const {
     register,
     handleSubmit,
@@ -39,43 +37,50 @@ function OrganizationCreation(props) {
   // console.log(watch());
   console.log(tagData);
 
-  const createOrganization = async (data) => {
-    // const parameters = new URLSearchParams();
-    // parameters.append("name", data.name);
-    // parameters.append("username", data.username);
-    // parameters.append("email", data.email);
-    // parameters.append("password", data.password);
-    let json = {
-      name: data.name,
-      description: data.description,
-      department: data.department,
-      tags: data.tags,
-    };
-    axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
-    console.log(state.token);
-    await axios
-      .post("http://localhost:8000/organization", json)
-      .then((response) => {
-        console.log(response);
-        setToggleRedirect(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        // If error notify user
-      });
-  };
+  // const createOrganization = async (data) => {
+  //   // const parameters = new URLSearchParams();
+  //   // parameters.append("name", data.name);
+  //   // parameters.append("username", data.username);
+  //   // parameters.append("email", data.email);
+  //   // parameters.append("password", data.password);
+  //   let json = {
+  //     name: data.name,
+  //     description: data.description,
+  //     department: data.department,
+  //     tags: data.tags,
+  //   };
+  //   axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+  //   await axios
+  //     .post("http://localhost:8000/organization", json)
+  //     .then((response) => {
+  //       console.log(response);
+  //       setToggleRedirect(true);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       // If error notify user
+  //     });
+  // };
 
   const onSubmission = (data) => {
     // append tagData data
     data.tags = tagData;
     data.links = linkData;
-    createOrganization(data);
-    // console.log(JSON.stringify(data, null, 2));
+    console.log("WORKS");
+    // createOrganization(data);
+    console.log(JSON.stringify(data, null, 2));
+    setToggleRedirect(true);
     // console.log(JSON.stringify(tagData));
   };
+  const checkKeyDown = (e) => {
+    if (e.key === "Enter") e.preventDefault();
+  };
+
   // console.log(linkData);
   return (
     <div className="Formcontainer">
+      {toggleRedirect && <Redirect to="/organization-profile" />}
+
       <div className="Formcontainer-logo">
         <img
           src="/TempLogo.png"
@@ -83,8 +88,7 @@ function OrganizationCreation(props) {
           alt="React Bootstrap logo"
         />{" "}
       </div>
-      {/* <button onClick={setState("BAH")}>HERE</button> */}
-      <Form onSubmit={handleSubmit(onSubmission)}>
+      <Form onSubmit={handleSubmit(onSubmission)} onKeyDown={checkKeyDown}>
         <Form.Label className="form-name" column="lg" lg={2}>
           Create an organization
         </Form.Label>
