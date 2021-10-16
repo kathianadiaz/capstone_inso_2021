@@ -8,11 +8,12 @@ import OrgCreation from "./Components/OrganizationCreation";
 import UserPage from "./Components/UserProfile";
 import OrganizationProfile from "./Components/OrganizationProfile";
 import Navbar from "./Components/Navbar";
-import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useLocation, Redirect } from "react-router-dom";
 import UserProfile from "./Components/UserProfile";
 import { useState } from "react";
 import { Nav } from "react-bootstrap";
 import {AuthProvider} from "./Components/AuthContext";
+import NotFound from "./Components/NotFound";
 
 function App() {
   const [userdata, setuserdata] = useState("");
@@ -27,42 +28,30 @@ function App() {
     <div className="App">
       <BrowserRouter>
       <AuthProvider>
+          <Navbar navbartoggle={navbarhidden} navbarchange={setnavbarhidden}/>
           <Switch>
             {/* <Route path="/SignUp">
       
 
               <SignUp />
             </Route> */}
-            <Route path="/SignIn">
-              {/* <UserPage
-                name="Josh Walker Hernandez"
-                email="joshwalker44@gmail.com"
-                phone="787-450-4934"
-              /> */}
-
-              <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
-            </Route>
-            <>
-              <Navbar
-                navbartoggle={navbarhidden}
-                navbarchange={setnavbarhidden}
-              />
+            
               <Route exact path="/">
                 {console.log(navbarhidden)}
                 <Homepage />
               </Route>
+              <Route path="/SignIn">
+                <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
+              </Route>
               <Route path="/SignUp">
-                {/* <UserPage
-                  name="test"
-                  email="joshwalker44@gmail.com"
-                  phone="787-450-4934"
-                /> */}
                 <OrganizationProfile
                   status="Recruiting"
                   description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
                 />
               </Route>
-            </>
+            <Route path="*">
+                <NotFound message="404 Not Found"/>
+            </Route>
           </Switch>
         </AuthProvider>
       </BrowserRouter>
