@@ -4,6 +4,13 @@ python:
   - "3.9"
 # command to install dependencies
 
+env: 
+  - URL=capstone-dev.ct1iwiyel0uh.us-east-2.rds.amazonaws.com
+  - PORT=5432
+  - NAME=postgres
+  - USERNAME=user
+  - PASSWORD=letMeInCapstone
+  
 install:
   - cd backend
   - pip install -r requirements.txt
