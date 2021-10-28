@@ -1,8 +1,54 @@
-import React from "react";
-import { Button, Image } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Image, NavItem, Spinner } from "react-bootstrap";
 import "./OrganizationsList.scss";
 import OrganizationCard from "./OrganizationCard";
+import axios from "axios";
 function OrganizationsList() {
+  const [organizations, setOrganizations] = useState([]);
+  const [organizationsFilter, setorganizationsFilter] = useState([]);
+  const [inputvalue, setInputValue] = useState("");
+  const [spinner, setSpinner] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/organization")
+      .then((response) => {
+        setorganizationsFilter(response.data);
+        setOrganizations(response.data);
+        console.log(response);
+        setSpinner(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const filterOrgs = (e) => {
+    const input = e.target.value;
+    // console.log(e.target.value);
+    if (e.key === "Enter") {
+      const results = organizationsFilter.filter((organization) => {
+        return organization.name.toLowerCase().startsWith(input.toLowerCase());
+      });
+      setorganizationsFilter(results);
+    } else {
+      setorganizationsFilter(organizations);
+    }
+  };
+
+  const onChangeInput = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const onClickFilter = () => {
+    console.log(inputvalue);
+    const results = organizationsFilter.filter((organization) => {
+      return organization.name
+        .toLowerCase()
+        .startsWith(inputvalue.toLowerCase());
+    });
+    setorganizationsFilter(results);
+  };
   return (
     <div className="org-list-wrapper">
       <div className="org-search-wrapper">
@@ -11,27 +57,31 @@ function OrganizationsList() {
             type="text"
             placeholder="Search organizations"
             className="org-search-input"
+            value={inputvalue || ""}
+            onChange={onChangeInput}
+            onKeyDown={filterOrgs}
           />
-          <Button className="btn org-search-button">Search</Button>
+          <Button className="btn org-search-button" onClick={onClickFilter}>
+            Search
+          </Button>
         </div>
       </div>
       <div className="organizations-list">
         <div className="organizations-list-wrapper">
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-          <OrganizationCard />
-
-          <OrganizationCard />
+          {spinner && (
+            <Spinner animation="border" role="status" size="bg">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          )}
+          {organizationsFilter && organizationsFilter.length > 0
+            ? organizationsFilter.map((organization, i) => (
+                <OrganizationCard
+                  key={i}
+                  organizationName={organization.name}
+                  organizationInfo={organization.description}
+                />
+              ))
+            : !spinner && <h1>No results found!</h1>}
         </div>
       </div>
     </div>
