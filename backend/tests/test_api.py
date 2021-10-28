@@ -7,6 +7,17 @@ TOKEN = ''
 
 # TODO: refactor code. Lots of repeated lines that can be put into a function
 
+def create_organization(name: str):
+    response = client.post(
+        '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        json={'name':name, 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
+    )
+
+    assert response.status_code == 200
+
+    return response.json()
+
 def test_root():
     response = client.get('/')
     assert response.status_code == 200
@@ -105,6 +116,7 @@ def test_create_organizations():
     assert organization['department'] == 'INSO'
     assert organization['status'] == False
     assert organization['highlights'] == []
+    assert organization['members'] == []
 
 def test_get_all_organizations():
     response = client.get('/organization')
@@ -269,3 +281,25 @@ def test_delete_highlight():
     assert response.status_code == 200
     assert len(response.json()['highlights']) == 0
 
+def test_add_member_information():
+    organization = create_organization('org')
+
+    response = client.post(
+        f'/organization/{organization["o_id"]}/member-information',
+        json={
+            "name": "string",
+            "email": "string",
+            "links": [
+                "string"
+            ],
+            "resume": "string",
+            "picture": "string"
+        }
+    )
+
+    assert response.status_code == 200
+
+    response = client.get(f'/organization/{organization["o_id"]}') 
+
+    assert response.status_code == 200
+    assert len(response.json()['members']) == 1

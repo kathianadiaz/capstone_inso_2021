@@ -1,9 +1,10 @@
 from typing import Optional,List
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import Select,select
-from organization import Organization, OrganizationHighlight
+from organization import Organization, OrganizationHighlight, MemberInformation
 from user import User
 import models
+import uuid
 
 class OrganizationRepository:
     '''Repository for `Organization` agregate'''
@@ -141,3 +142,13 @@ class OrganizationRepository:
 
         return OrganizationRepository.get_organization_by_id(o_id, db)
 
+    @staticmethod
+    def add_member_information(o_id: str, member_info: MemberInformation, db: Session) -> MemberInformation:
+        db_member_information = models.MemberInformation(m_id=uuid.uuid4(), name=member_info.name, email=member_info.email, links=member_info.links, resume=None, picture=None)
+        # db.add(db_member_information)
+
+        db_organization = db.query(models.Organization).filter(models.Organization.o_id == o_id).first()
+        db_organization.members.append(db_member_information)
+        db.commit()
+
+        return db_member_information
