@@ -116,7 +116,7 @@ def delete_organization_highlight(o_id:str , oh_id: str, user: User = Depends(ge
 
 @app.get("/my-organizations", response_model=List[Organization])
 def get_administrators_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    return OrganizationRepository.get_organizations_by_user(user.u_id,db)
+    return OrganizationRepository.get_organizations_by_administrator(user.u_id,db)
 
 @app.post("/organization/{o_id}/member-information", response_model=MemberInformation)
 def add_member_information(o_id:str, member_info: MemberInformation, db: Session = Depends(get_db)):
