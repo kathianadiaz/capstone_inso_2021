@@ -1,17 +1,17 @@
 import React, { useContext } from "react";
-import { Form, Button } from "react-bootstrap";
-import FormInput from "./Form";
+import { Form, Button,Alert } from "react-bootstrap";
+// import FormInput from "./Form";
 import { useForm, Controller } from "react-hook-form";
 import { Redirect, Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import "./Form.scss";
 import axios from "axios";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { AuthContext } from "./AuthContext";
+import { useMutation } from "react-query";
 
 const schema = Yup.object()
-
   .shape({
     username: Yup.string().required("Username required"),
     password: Yup.string()
@@ -25,67 +25,32 @@ function SignForm(props) {
   const [toggleRedirect, setToggleRedirect] = React.useState(false);
   const [state, setState] = useContext(AuthContext);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  const { register, handleSubmit, formState: { errors } } = useForm({resolver: yupResolver(schema)});
 
-  const verifyUser = async (data) => {
+  const postLoginData = async (data) => {
     const parameters = new URLSearchParams();
     parameters.append("username", data.username);
     parameters.append("password", data.password);
 
-    // Check if user is logged in.
-    // (function () {
-    //   let usertoken = Cookies.get("usertoken");
-
-    //   if (Cookies.get("usertoken") === null) {
-    //     // This means that there's no JWT and no user is logged in.
-    //     axios.defaults.headers.common.Authorization = null;
-    //   } else {
-    //     // This means that there's a JWT so someone must be logged in.
-    //     axios.defaults.headers.common.Authorization = `Bearer ${usertoken}`;
-    //   }
-    // })();
-
-    await axios
+    return await axios
       .post("http://localhost:8000/token", parameters)
-      .then((response) => {
-        console.log(response);
-        setState({ token: response.data.access_token, user: "WWEASD" });
-
-        // let usertoken = response.data.access_token;
-        setToggleRedirect(true); // Cookies.set(
-        userData(response.data);
-        togglenavbar();
-        //   "usertoken",
-        //   usertoken,
-        //   { secure: true },
-        //   { sameSite: "Lax" }
-        // );
-        // axios.defaults.headers.common.Authorization = "`Bearer ${user}`";
-        // TODO: save JWT token and other data
-      })
-      .catch((error) => {
-        console.log(error);
-        // If error notify user
-      });
   };
 
-  const userData = (data) => {
-    props.userData(data);
-  };
+  const handleLogin = useMutation(data => postLoginData(data), {
+    onSuccess: async (data) => {
+      setState({
+          token: data.data.access_token,
+          user: data.data.user,
+        });
+        
+      props.navbartoggle(true);
+      setToggleRedirect(true); 
+    },
+  });
 
   const onSubmission = (data) => {
     console.log(JSON.stringify(data, null, 2));
-    verifyUser(data);
-  };
-
-  const togglenavbar = () => {
-    props.navbartoggle(true);
+    handleLogin.mutate(data)
   };
 
   return (
@@ -120,6 +85,9 @@ function SignForm(props) {
           />
           <p className="error-message">{errors.password?.message}</p>
 
+          {handleLogin.isError && 
+            <strong className="text-danger">Incorrect username or password</strong>
+          }
           <Button variant="continue-btn" type="submit">
             Continue
           </Button>

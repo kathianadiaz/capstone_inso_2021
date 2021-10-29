@@ -28,6 +28,19 @@
   &-button {
     width: 100%;
     max-width: 100px;
+    background-color: var(--t-royal-blue);
+    border: none;
+
+    &:hover {
+      background-color: var(--t-royal-blue);
+      color: white;
+    }
+    &:active {
+      background-color: var(--t-royal-blue);
+    }
+    &:focus {
+      background-color: var(--t-royal-blue);
+    }
   }
 
   @media (min-width: 700px) {

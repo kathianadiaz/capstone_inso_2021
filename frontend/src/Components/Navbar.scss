@@ -10,4 +10,31 @@
 
 .navbar {
   padding: 0 1rem;
+
+  &-nav {
+    padding: 0.3rem 0;
+  }
+}
+
+.navbar-brand {
+  margin: auto 0;
+}
+
+.logout-button {
+  width: 100px;
+  background-color: var(--t-bright-green);
+  border-color: white;
+  color: black;
+  margin: 0 auto;
+  margin-bottom: 0.5rem;
+
+  &:hover {
+    background-color: var(--t-bright-green);
+    border-color: white;
+    color: black;
+  }
+
+  @media (min-width: 700px) {
+    margin-bottom: 0;
+  }
 }

@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from "react";
 const AuthContext = createContext([{}, () => {}]);
 
 function AuthProvider(props) {
-  const [state, setState] = useState({});
+  const [state, setState] = useState(null);
 
   useEffect(() => {
     if (sessionStorage.getItem("state")) {
