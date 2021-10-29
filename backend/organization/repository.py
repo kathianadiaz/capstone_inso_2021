@@ -118,7 +118,7 @@ class OrganizationRepository:
         db.commit()
 
         return OrganizationRepository.get_organization_by_id(o_id, db)
-
+    
     @staticmethod
     def delete_highlight(o_id:str, oh_id: str, user: User, db: Session) -> Organization:
         '''Delete a specific `OrganizationHighlight` from an `Organization`'''
