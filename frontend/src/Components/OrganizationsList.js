@@ -66,6 +66,8 @@ function OrganizationsList() {
           </Button>
         </div>
       </div>
+      {console.log(organizations)}
+
       <div className="organizations-list">
         <div className="organizations-list-wrapper">
           {spinner && (
@@ -77,6 +79,7 @@ function OrganizationsList() {
             ? organizationsFilter.map((organization, i) => (
                 <OrganizationCard
                   key={i}
+                  organizationId={organization.o_id}
                   organizationName={organization.name}
                   organizationInfo={organization.description}
                 />

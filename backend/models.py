@@ -12,6 +12,7 @@ class User(Base):
     name = Column(String)
     username = Column(String, unique=True)
     email = Column(String, unique=True)
+    # phonenumber = Column(String,unique=True)
     password = Column(String)
     #TODO: add phone number
     administrators = relationship('Administrator', back_populates='user', cascade="all, delete")

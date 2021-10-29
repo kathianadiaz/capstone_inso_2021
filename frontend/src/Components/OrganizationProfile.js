@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import Navbar from "./Navbar.js";
+import React, { useState, useEffect } from "react";
 import { Image, Button, Modal, Form } from "react-bootstrap";
 import OrgHighlight from "./OrganizationHighlight.js";
 import OrgEvent from "./OrganizationEvent.js";
 import "./OrganizationProfile.scss";
-import { get } from "js-cookie";
-import { useForm } from "react-hook-form";
+import { useParams } from "react-router";
 import EditM from "./EditModal.js";
+import axios from "axios";
 function OrganizationProfile(props) {
   // const [show, setShow] = useState(false);
   // const [modalData, setModalData] = useState("");
@@ -23,11 +22,25 @@ function OrganizationProfile(props) {
   //   console.log(eventdata);
   //   setShow(false);
   // };
+  const { OrganizationId } = useParams();
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/organization/${OrganizationId}`)
+      .then((response) => {
+        SetOrganizationData(response.data);
+        console.log(organizationData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // console.log("THIS" + OrganizationId);
   const [eventData, setEventData] = useState([]);
   const [highlightData, setHighlightData] = useState([]);
-
-  console.log(highlightData);
+  const [organizationData, SetOrganizationData] = useState([]);
+  // console.log(highlightData);
   return (
     <div className="organizationpage-wrapper">
       <div className="organizationpage-container">
@@ -37,23 +50,26 @@ function OrganizationProfile(props) {
               <Image src="/Logo-IEEE.jpg" fluid />
             </div>
             <div className="organization-heading-info">
-              <h2>Lorem ipsum dolor sit amet.</h2>
+              {/* {console.log(organizationData.name)} */}
+              <h2>{organizationData.name}</h2>
               <div className="organization-heading-buttons-container">
                 <Button
                   variant="btn organization-heading-button remove-functions"
                   size="lg"
                 >
-                  Status: {props.status}
+                  Status: {organizationData.status}
                 </Button>
-                <Button variant="btn organization-heading-button" size="lg">
-                  Request to join
-                </Button>
+                {organizationData.status !== "true" ? (
+                  <Button variant="btn organization-heading-button" size="lg">
+                    Request to join
+                  </Button>
+                ) : null}
               </div>
             </div>
           </div>
           <div className="organization-description organization-layout">
             <h3 className="section-heading">Organization Description: </h3>
-            <p>{props.description}</p>
+            <p>{organizationData.description}</p>
           </div>
           <div className="organization-highlights organization-layout">
             <h3 className="section-heading">

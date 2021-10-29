@@ -24,8 +24,8 @@ function OrganizationCreation(props) {
   const [state, setState] = useContext(AuthContext);
   const [tagData, setTagData] = useState([]);
   const [linkData, setLinkData] = useState([]);
-  const [toggleRedirect, setToggleRedirect] = useState(false);
-
+  // const [toggleRedirect, setToggleRedirect] = useState(false);
+  const [organizationData, SetOrganizationData] = useState([]);
   const {
     register,
     handleSubmit,
@@ -37,39 +37,42 @@ function OrganizationCreation(props) {
   // console.log(watch());
   console.log(tagData);
 
-  // const createOrganization = async (data) => {
-  //   // const parameters = new URLSearchParams();
-  //   // parameters.append("name", data.name);
-  //   // parameters.append("username", data.username);
-  //   // parameters.append("email", data.email);
-  //   // parameters.append("password", data.password);
-  //   let json = {
-  //     name: data.name,
-  //     description: data.description,
-  //     department: data.department,
-  //     tags: data.tags,
-  //   };
-  //   axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
-  //   await axios
-  //     .post("http://localhost:8000/organization", json)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setToggleRedirect(true);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       // If error notify user
-  //     });
-  // };
+  const createOrganization = async (data) => {
+    // const parameters = new URLSearchParams();
+    // parameters.append("name", data.name);
+    // parameters.append("username", data.username);
+    // parameters.append("email", data.email);
+    // parameters.append("password", data.password);
+    let json = {
+      name: data.name,
+      description: data.description,
+      department: data.department,
+      tags: data.tags,
+    };
+    axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+    await axios
+      .post("http://localhost:8000/organization", json)
+      .then((response) => {
+        // console.log(response);
+        // setToggleRedirect(true);
+        SetOrganizationData(response);
+        console.log(organizationData.data);
+        // console.log(toggleRedirect);
+      })
+      .catch((error) => {
+        console.log(error);
+        // If error notify user
+      });
+  };
 
   const onSubmission = (data) => {
     // append tagData data
     data.tags = tagData;
     data.links = linkData;
     console.log("WORKS");
-    // createOrganization(data);
+    createOrganization(data);
     console.log(JSON.stringify(data, null, 2));
-    setToggleRedirect(true);
+    // setToggleRedirect(true);
     // console.log(JSON.stringify(tagData));
   };
   const checkKeyDown = (e) => {
@@ -79,7 +82,9 @@ function OrganizationCreation(props) {
   // console.log(linkData);
   return (
     <div className="Formcontainer">
-      {toggleRedirect && <Redirect to="/organization-profile" />}
+      {organizationData.length === 0 ? null : (
+        <Redirect to={`/organization-profile/${organizationData.data.o_id}`} />
+      )}
 
       <div className="Formcontainer-logo">
         <img
@@ -107,6 +112,8 @@ function OrganizationCreation(props) {
         <Form.Label>Description:</Form.Label>
         <Form.Control
           type="text"
+          as="textarea"
+          rows={3}
           {...register("description")}
           placeholder={"Description"}
         />

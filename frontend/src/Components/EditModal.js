@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { ReactComponent as Add } from "./plus-box.svg";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import { AuthContext } from "./AuthContext";
+
 const eventSchema = Yup.object()
   .shape({
     event: Yup.string().required("Event name required"),
@@ -34,7 +37,8 @@ const userProfileSchema = Yup.object()
 
 function EditModal(props) {
   const [show, setShow] = useState(false);
-
+  const [state, setState] = useContext(AuthContext);
+  // console.log(state?.user);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -61,6 +65,17 @@ function EditModal(props) {
       ? sendModalData([...props.mdata, data])
       : sendModalData(data);
     setShow(false);
+
+    if (props.type === "User") {
+      axios
+        .post(`http://localhost:8000/organization/${state.user.u_id}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const sendModalData = (data) => {

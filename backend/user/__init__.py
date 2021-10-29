@@ -1,11 +1,14 @@
 from pydantic import BaseModel
 import uuid
 
+from sqlalchemy.sql.sqltypes import Integer
+
 class UserBase(BaseModel):
     '''Base user class'''
     name: str
     username: str
     email: str
+    # phonenumber: str
 
 class UserCreate(UserBase):
     ''' Newly created user to be added to database. Password is not hashed'''

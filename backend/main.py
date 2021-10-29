@@ -69,6 +69,14 @@ def get_users(db: Session = Depends(get_db)):
 
     return users   
 
+@app.post("/user/{id}", response_model=User)
+def edit_user(user: User, id: str, db: Session = Depends(get_db)):
+    user = UserRepository.edit_user(User, id, db)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user 
+
 @app.post("/organization", response_model=Organization)
 def create_organization(organization: Organization, user: User = Depends(get_current_user) ,db: Session = Depends(get_db)):
     return OrganizationRepository.add_organization(organization, user, db)
