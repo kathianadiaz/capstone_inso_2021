@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Image, NavItem } from "react-bootstrap";
+import { Button, Image, NavItem, Spinner } from "react-bootstrap";
 import "./OrganizationsList.scss";
 import OrganizationCard from "./OrganizationCard";
 import axios from "axios";
@@ -7,6 +7,8 @@ function OrganizationsList() {
   const [organizations, setOrganizations] = useState([]);
   const [organizationsFilter, setorganizationsFilter] = useState([]);
   const [inputvalue, setInputValue] = useState("");
+  const [spinner, setSpinner] = useState(true);
+
   useEffect(() => {
     axios
       .get("http://localhost:8000/organization")
@@ -14,24 +16,25 @@ function OrganizationsList() {
         setorganizationsFilter(response.data);
         setOrganizations(response.data);
         console.log(response);
+        setSpinner(false);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
 
-  // const filterOrgs = (e) => {
-  //   const input = e.target.value;
-  //   // console.log(e.target.value);
-  //   if (e.key === "Enter") {
-  //     const results = organizationsFilter.filter((organization) => {
-  //       return organization.name.toLowerCase().startsWith(input.toLowerCase());
-  //     });
-  //     setorganizationsFilter(results);
-  //   } else {
-  //     setorganizationsFilter(organizations);
-  //   }
-  // };
+  const filterOrgs = (e) => {
+    const input = e.target.value;
+    // console.log(e.target.value);
+    if (e.key === "Enter") {
+      const results = organizationsFilter.filter((organization) => {
+        return organization.name.toLowerCase().startsWith(input.toLowerCase());
+      });
+      setorganizationsFilter(results);
+    } else {
+      setorganizationsFilter(organizations);
+    }
+  };
 
   const onChangeInput = (e) => {
     setInputValue(e.target.value);
@@ -56,7 +59,7 @@ function OrganizationsList() {
             className="org-search-input"
             value={inputvalue || ""}
             onChange={onChangeInput}
-            // onKeyDown={filterOrgs}
+            onKeyDown={filterOrgs}
           />
           <Button className="btn org-search-button" onClick={onClickFilter}>
             Search
@@ -65,58 +68,20 @@ function OrganizationsList() {
       </div>
       <div className="organizations-list">
         <div className="organizations-list-wrapper">
-          {organizations &&
-            organizations
-              .filter((organization) => organization.name === inputvalue)
-              .map((organization, index) => {
-                return (
-                  <OrganizationCard
-                    key={index}
-                    organizationName={organization.name}
-                    organizationInfo={organization.description}
-                  />
-                );
-              })}
-
-          {organizations &&
-            inputvalue === "" &&
-            organizations.map((organization, index) => {
-              return (
+          {spinner && (
+            <Spinner animation="border" role="status" size="bg">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          )}
+          {organizationsFilter && organizationsFilter.length > 0
+            ? organizationsFilter.map((organization, i) => (
                 <OrganizationCard
-                  key={index}
+                  key={i}
                   organizationName={organization.name}
                   organizationInfo={organization.description}
                 />
-              );
-            })}
-
-          {/* {organizationsFilter && organizationsFilter.length > 0 ? (
-            organizationsFilter.map((organization, i) => (
-              <OrganizationCard
-                key={i}
-                organizationName={organization.name}
-                organizationInfo={organization.description}
-              />
-            ))
-          ) : (
-            <h1>No results found!</h1>
-          )} */}
-          {/* <OrganizationCard
-            organizationName="IEEE"
-            organizationInfo="lorem5 adwe weasd wewa dsa "
-          />
-          <OrganizationCard
-            organizationName="IEEE"
-            organizationInfo="lorem5 adwe weasd wewa dsa "
-          />
-          <OrganizationCard
-            organizationName="IEEE"
-            organizationInfo="lorem5 adwe weasd wewa dsa "
-          />
-          <OrganizationCard
-            organizationName="IEEE"
-            organizationInfo="lorem5 adwe weasd wewa dsa "
-          /> */}
+              ))
+            : !spinner && <h1>No results found!</h1>}
         </div>
       </div>
     </div>
