@@ -1,15 +1,10 @@
 import models
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from typing import List
-from database import engine, get_db
-from user import UserCreate, User
-from user.repository import UserRepository
-from organization import Organization, OrganizationHighlight, MemberInformation
-from organization.repository import OrganizationRepository
-from authentication.authentication import Token, OAuth2PasswordRequestForm, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
-from datetime import timedelta
+from database import engine 
+from organization.routes import router as OrganizationRouter
+from user.routes import router as UserRouter
+from authentication.routes import router as AuthRouter
 
 app = FastAPI()
 
@@ -21,103 +16,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(OrganizationRouter)
+app.include_router(UserRouter)
+app.include_router(AuthRouter)
+
 models.Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-
-@app.post("/token", response_model=Token)
-def signup(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
-    
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
-    )
-    # response.set_cookie(key="access_token",value=f"Bearer {access_token}", httponly=True)
-    return {"access_token": access_token, "token_type": "Bearer", "user": user}
-
-@app.post("/register", response_model=User)
-def register(user: UserCreate, db: Session = Depends(get_db)):
-    if UserRepository.user_already_exists(db, user.username, user.email):
-        raise HTTPException(status_code=400, detail="Email or username already registered")
-    else:
-        return UserRepository.add_user(db, user)
-
-@app.get("/user/{id}", response_model=User)
-def get_user(id: str, db: Session = Depends(get_db)):
-    user = UserRepository.get_user(db, id)
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return user
-
-@app.post("/organization", response_model=Organization)
-def create_organization(organization: Organization, user: User = Depends(get_current_user) ,db: Session = Depends(get_db)):
-    return OrganizationRepository.add_organization(organization, user, db)
-
-@app.get("/organization", response_model=List[Organization])
-def get_organizations(db: Session = Depends(get_db)):
-    return OrganizationRepository.get_organizations(db)
-
-@app.get("/organization/{id}", response_model=Organization)
-def get_organization_by_id(id: str, db: Session = Depends(get_db)):
-    organization = OrganizationRepository.get_organization_by_id(id,db)
-
-    if not organization:
-        raise HTTPException(status_code=404, detail="Organization not found")
-
-    return organization
-
-@app.delete("/organization/{id}", response_model=Organization)
-def delete_organization(id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    organization = OrganizationRepository.delete_organization(id, user, db)
-
-    if not organization:
-        raise HTTPException(status_code=404, detail="Organization not found")
-
-    return organization
-
-@app.put("/organization", response_model=Organization)
-def edit_organization(organization: Organization, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    organization = OrganizationRepository.edit_organization(organization, user, db)
-
-    if not organization:
-        raise HTTPException(status_code=404, detail="Organization not found")
-
-    return organization
-
-@app.post("/organization/{o_id}/highlight", response_model=Organization)
-def add_organization_highlight(o_id: str, highlight: OrganizationHighlight, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    organization = OrganizationRepository.add_highlight(highlight, o_id, user, db)
-
-    if not organization:
-        raise HTTPException(status_code=404, detail="Organization not found")
-
-    return organization
-
-@app.delete("/organization/{o_id}/highlight/{oh_id}", response_model=Organization)
-def delete_organization_highlight(o_id:str , oh_id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    organization = OrganizationRepository.delete_highlight(o_id, oh_id, user, db)
-
-    if not organization:
-        raise HTTPException(status_code=404, detail="Organization not found")
-
-    return organization
-
-@app.get("/my-organizations", response_model=List[Organization])
-def get_administrators_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    return OrganizationRepository.get_organizations_by_administrator(user.u_id,db)
-
-@app.post("/organization/{o_id}/member-information", response_model=MemberInformation)
-def add_member_information(o_id:str, member_info: MemberInformation, db: Session = Depends(get_db)):
-    return OrganizationRepository.add_member_information(o_id, member_info, db)
