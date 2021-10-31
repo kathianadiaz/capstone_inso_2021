@@ -1,11 +1,14 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
 import { Redirect, Link } from "react-router-dom";
+import { Form, Button, Toast, ToastContainer, Alert } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import * as Yup from "yup";
 import "./Form.scss";
+import { useMutation } from "react-query";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 const schema = Yup.object()
   .shape({
@@ -22,6 +25,9 @@ const schema = Yup.object()
 function Signup(props) {
   const [toggleRedirect, setToggleRedirect] = React.useState(false);
 
+  const [showA, setShowA] = React.useState(false);
+  const toggleShowA = () => setShowA(!showA);
+
   const {
     register,
     handleSubmit,
@@ -30,44 +36,45 @@ function Signup(props) {
     resolver: yupResolver(schema),
   });
 
-  // const getUser = () => {
-  // axios.get("http://localhost:8000/user/94f60f5f-0b62-49d1-b647-7e03105cae33").then((response) => {
-  // console.log(response.data);
-  // });
-  // };
-
-  const add_new_user = async (data) => {
-    // const parameters = new URLSearchParams();
-    // parameters.append("name", data.name);
-    // parameters.append("username", data.username);
-    // parameters.append("email", data.email);
-    // parameters.append("password", data.password);
+  const postNewUser = async (data) => {
     let json = {
       name: data.name,
       username: data.username,
       email: data.email,
       password: data.password,
     };
-    await axios
+
+    return await axios
       .post("http://localhost:8000/register", json)
-      .then((response) => {
-        console.log(response);
-        setToggleRedirect(true);
-      })
-      .catch((error) => {
-        console.log(error);
-        // If error notify user
-      });
   };
+
+  const handleSignUpData= useMutation(data => postNewUser(data), {
+    onSuccess: async () => {
+      setToggleRedirect(true);
+    },
+    onError: async (error) => {
+      if (error.response.status === 400) {
+        toggleShowA()
+      }
+    }
+  })
+ 
 
   const onSubmission = (data) => {
     console.log(data);
-    add_new_user(data);
+    handleSignUpData.mutate(data);
   };
 
   return (
     <>
       {toggleRedirect && <Redirect to="/" />}
+        <ToastContainer position="top-end" className="m-3">
+          <Toast show={showA} onClose={toggleShowA} bg="danger">
+            <Toast.Header className="py-4">
+                <strong className="me-auto"><FontAwesomeIcon icon={faExclamationTriangle}/> Username or Email already in use</strong>
+            </Toast.Header>
+          </Toast> 
+        </ToastContainer>
       <div className="Formcontainer">
         <div className="Formcontainer-logo">
           <img

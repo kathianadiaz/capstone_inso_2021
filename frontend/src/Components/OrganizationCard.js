@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "react-bootstrap";
-function OrganizationCard() {
+function OrganizationCard(props) {
   return (
     <div className="organization-cards">
       <div className="organization-cards-logo">
@@ -11,11 +11,8 @@ function OrganizationCard() {
         />
       </div>
       <div className="organization-cards-info">
-        <h3 className="organization-cards-title">Test</h3>
-        <p className="organization-cards-info">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam,
-          nobis.
-        </p>
+        <h3 className="organization-cards-title">{props.organizationName}</h3>
+        <p className="organization-cards-info">{props.organizationInfo}</p>
       </div>
     </div>
   );
