@@ -33,7 +33,6 @@ __pycache__/
 
 *.exe
 *.cmd
-*.ini
 *.env
 *.secrets
 
