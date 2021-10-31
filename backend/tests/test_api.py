@@ -1,5 +1,6 @@
 from tests import client
 from uuid import uuid4
+from typing import List
 
 from organization.repository import OrganizationRepository, OrganizationHighlight
 
@@ -7,10 +8,16 @@ TOKEN = ''
 
 # TODO: refactor code. Lots of repeated lines that can be put into a function
 
-def test_root():
-    response = client.get('/')
+def create_testing_organization(name: str, description: str = 'testing org', tags: List[str] = [], department:str = 'INSO'):
+    response = client.post(
+        '/organization',
+        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        json={'name':name, 'description': description, 'tags': tags, 'department': department}
+    )
+
     assert response.status_code == 200
-    assert response.json() == {'message': 'Hello World'}
+
+    return response.json()
 
 def test_register():
     response = client.post(
@@ -61,6 +68,7 @@ def test_login():
     )
 
     assert response.status_code == 200, response.text
+    assert "user" in response.json()
 
     TOKEN = response.json()['access_token']
 
@@ -73,14 +81,8 @@ def test_login():
     assert response.json() == {"detail": "Incorrect username or password"}
 
 def test_create_organizations():
-    response = client.post(
-        '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':'testers', 'description':'testing org', 'tags':['software','testing'], 'department':'INSO', 'status': False, 'highlights':[]}
-    )
+    organization = create_testing_organization(name='testers', tags=['software', 'testing'])
 
-    organization = response.json()
-    assert response.status_code == 200
     assert 'o_id' in organization
     assert organization['name'] == 'testers'
     assert organization['description'] == 'testing org'
@@ -89,14 +91,8 @@ def test_create_organizations():
     assert organization['status'] == False
     assert organization['highlights'] == []
 
-    response = client.post(
-        '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':'testers2', 'description':'testing org2', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
-    )
+    organization = create_testing_organization(name='testers2',description='testing org2', tags=['software', 'testing'])
 
-    organization = response.json()
-    assert response.status_code == 200
     assert 'o_id' in organization
     assert organization['name'] == 'testers2'
     assert organization['description'] == 'testing org2'
@@ -104,6 +100,7 @@ def test_create_organizations():
     assert organization['department'] == 'INSO'
     assert organization['status'] == False
     assert organization['highlights'] == []
+    assert organization['members'] == []
 
 def test_get_all_organizations():
     response = client.get('/organization')
@@ -268,3 +265,25 @@ def test_delete_highlight():
     assert response.status_code == 200
     assert len(response.json()['highlights']) == 0
 
+def test_add_member_information():
+    organization = create_testing_organization('org')
+
+    response = client.post(
+        f'/organization/{organization["o_id"]}/member-information',
+        json={
+            "name": "string",
+            "email": "string",
+            "links": [
+                "string"
+            ],
+            "resume": "string",
+            "picture": "string"
+        }
+    )
+
+    assert response.status_code == 200
+
+    response = client.get(f'/organization/{organization["o_id"]}') 
+
+    assert response.status_code == 200
+    assert len(response.json()['members']) == 1
