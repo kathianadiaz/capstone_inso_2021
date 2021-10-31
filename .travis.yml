@@ -2,11 +2,18 @@ language: python
 
 python:
   - "3.9"
-# command to install dependencies
 
 install:
   - cd backend
-  - pip install -r requirements.txt
+  - python -m pip install --upgrade pip
+  - pip install flake8 pytest
+  - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database test_postgres_db;' -U postgres
 
 script:
   - python -m pytest tests/
