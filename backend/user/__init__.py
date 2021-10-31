@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 import uuid
+from typing import Optional
 
 class UserBase(BaseModel):
     '''Base user class'''
@@ -14,6 +15,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     '''User entity plus its respective id. SQL user table entry can be parsed as this class'''
     u_id: uuid.UUID
+    m_id: Optional[uuid.UUID] 
 
     class Config:
         orm_mode = True

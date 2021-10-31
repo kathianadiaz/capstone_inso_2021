@@ -287,3 +287,6 @@ def test_add_member_information():
 
     assert response.status_code == 200
     assert len(response.json()['members']) == 1
+
+def test_get_all_member_organizations():
+    pass

@@ -14,7 +14,12 @@ class User(Base):
     email = Column(String, unique=True)
     password = Column(String)
     #TODO: add phone number
+    phone_number = Column(String,unique=True)
     # administrators = relationship('Administrator', back_populates='user', cascade="all, delete")
+    m_id= Column(UUID(as_uuid=True), ForeignKey('member_information.m_id')) 
+
+    member_information= relationship("MemberInformation", back_populates="user")
+
 
 organization_members_assoc_table = Table('org_member_association', Base.metadata,
     Column('member_info_id', ForeignKey('member_information.m_id'), primary_key=True),
@@ -35,6 +40,8 @@ class MemberInformation(Base):
     links = Column(ARRAY(String))
     resume = Column(BYTEA)
     picture = Column(BYTEA)
+    user= relationship("User", back_populates="member_information", uselist=False)
+
 
 class OrganizationHighlight(Base):
     __tablename__ = "organization_highlight"

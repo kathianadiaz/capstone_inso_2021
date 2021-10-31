@@ -154,3 +154,18 @@ class OrganizationRepository:
         db.commit()
 
         return db_member_information
+
+    @staticmethod
+    def get_organization_by_member(m_id: Optional[str], db: Session) -> List[Organization]:
+        if not m_id:
+            return []
+        
+        organizations = db.query(models.Organization).\
+            join(models.organization_members_assoc_table).\
+            filter(models.organization_members_assoc_table.columns.member_info_id == m_id).\
+            all()
+
+        return organizations
+
+    # @staticmethod
+    # def connect_user_to_organization
