@@ -1,9 +1,10 @@
 from typing import Optional,List
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import Select,select
-from organization import Organization, OrganizationHighlight
+from organization import Organization, OrganizationHighlight, MemberInformation
 from user import User
 import models
+import uuid
 
 class OrganizationRepository:
     '''Repository for `Organization` agregate'''
@@ -11,17 +12,15 @@ class OrganizationRepository:
     @staticmethod
     def add_organization(organization: Organization, user: User, db: Session) -> Organization:
         '''Add a `Organization` to the repository'''
-        db_organization = models.Organization(name=organization.name, description=organization.description, tags=organization.tags, department=organization.department, status=organization.status)
-        db.add(db_organization)
-        db.commit()
-        db.refresh(db_organization)
+        db_organization = models.Organization(o_id=uuid.uuid4() ,name=organization.name, description=organization.description, tags=organization.tags, department=organization.department, status=organization.status)
+        db_user = db.query(models.User).filter(models.User.u_id == user.u_id).first()
 
-        # TODO: is there a way to let sqlalchemy handle the nested objects by itself, like it does with get?
+        db_organization.administrators.append(db_user)
+
+        db.add(db_organization)
         for highlight in organization.highlights:
             db.add(models.OrganizationHighlight(title=highlight.title, description=highlight.description, o_id=db_organization.o_id))
 
-        administrator = models.Administrator(o_id=db_organization.o_id, u_id=user.u_id)
-        db.add(administrator)
         db.commit()
 
         return db_organization
@@ -47,9 +46,11 @@ class OrganizationRepository:
         return db.query(models.Organization).filter(models.Organization.status == True).offset(skip).limit(limit).all()
 
     @staticmethod
-    def get_organizations_by_user(u_id: str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+    def get_organizations_by_administrator(u_id: str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all the organizations that belong to a specific user'''
-        return db.query(models.Organization).filter(models.Administrator.u_id == u_id).all()
+        return db.query(models.Organization).\
+            join(models.organization_administrator_assoc_table).\
+            filter(models.organization_administrator_assoc_table.columns.user_id == u_id).all()
 
     @staticmethod
     def get_organization_by_keyword(keywords:List[str], db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
@@ -64,17 +65,18 @@ class OrganizationRepository:
     @staticmethod
     def delete_organization(o_id: str, user: User, db: Session) -> Optional[Organization]:
         '''Delete a specific `Organization` with the give id'''
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == o_id).\
+        db_organization = db.query(models.Organization).\
+            join(models.organization_administrator_assoc_table).\
+            filter(models.organization_administrator_assoc_table.columns.user_id == user.u_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == o_id).\
             first()
 
-        if not administrator:
+        if not db_organization:
             return None
 
-        organization = Organization.from_orm(administrator.organization)
-        
-        db.delete(administrator.organization)
+        organization = Organization.from_orm(db_organization)
+
+        db.delete(db_organization)
         db.commit()
 
         return organization
@@ -82,20 +84,21 @@ class OrganizationRepository:
     @staticmethod
     def edit_organization(new_organization: Organization, user: User, db: Session) -> Optional[Organization]:
         '''Edit the information for a specific `Organization`'''
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == new_organization.o_id).\
+        organization = db.query(models.Organization).\
+            join(models.organization_administrator_assoc_table).\
+            filter(models.organization_administrator_assoc_table.columns.user_id == user.u_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == new_organization.o_id).\
             first()
 
-        if not administrator:
+        if not organization:
             return None
 
         # NOTE: error prone. There might be a better way to implement it
-        administrator.organization.name = new_organization.name
-        administrator.organization.description = new_organization.description
-        administrator.organization.tags = new_organization.tags
-        administrator.organization.status = new_organization.status
-        administrator.organization.highlight = new_organization.highlights
+        organization.name = new_organization.name
+        organization.description = new_organization.description
+        organization.tags = new_organization.tags
+        organization.status = new_organization.status
+        organization.highlight = new_organization.highlights
         db.commit()
 
         return new_organization
@@ -104,28 +107,28 @@ class OrganizationRepository:
     @staticmethod
     def add_highlight(highlight: OrganizationHighlight, o_id: str, user: User, db: Session) -> Optional[Organization]: 
         '''Add a `OrganizationHighlight` to a specific `Organization`'''
-        #NOTE: dont know if this is the best way to do it
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == o_id).\
+        organization = db.query(models.Organization).\
+            join(models.organization_administrator_assoc_table).\
+            filter(models.organization_administrator_assoc_table.columns.user_id == user.u_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == o_id).\
             first()
 
-        if not administrator:
+        if not organization:
             return None
 
-        db_highlight = models.OrganizationHighlight(title=highlight.title, description=highlight.description, o_id=o_id)
-        db.add(db_highlight)
+        db_highlight = models.OrganizationHighlight(title=highlight.title, description=highlight.description)
+        organization.highlights.append(db_highlight)
         db.commit()
 
-        return OrganizationRepository.get_organization_by_id(o_id, db)
-    
+        return organization
+
     @staticmethod
     def delete_highlight(o_id:str, oh_id: str, user: User, db: Session) -> Organization:
         '''Delete a specific `OrganizationHighlight` from an `Organization`'''
-        #TODO: there must be a better way to do this
-        administrator = db.query(models.Administrator).\
-            filter(models.Administrator.u_id == user.u_id).\
-            filter(models.Administrator.o_id == o_id).\
+        organization = db.query(models.Organization).\
+            join(models.organization_administrator_assoc_table).\
+            filter(models.organization_administrator_assoc_table.columns.user_id == user.u_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == o_id).\
             first()
 
         high_light = db.query(models.OrganizationHighlight).\
@@ -133,11 +136,21 @@ class OrganizationRepository:
             filter(models.OrganizationHighlight.oh_id == oh_id).\
             first()
 
-        if not high_light or not administrator:
+        if not high_light or not organization:
             return None
 
         db.delete(high_light)
         db.commit()
 
-        return OrganizationRepository.get_organization_by_id(o_id, db)
+        return organization
 
+    @staticmethod
+    def add_member_information(o_id: str, member_info: MemberInformation, db: Session) -> MemberInformation:
+        db_member_information = models.MemberInformation(m_id=uuid.uuid4(), name=member_info.name, email=member_info.email, links=member_info.links, resume=None, picture=None)
+        # db.add(db_member_information)
+
+        db_organization = db.query(models.Organization).filter(models.Organization.o_id == o_id).first()
+        db_organization.members.append(db_member_information)
+        db.commit()
+
+        return db_member_information

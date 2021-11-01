@@ -1,12 +1,14 @@
 import React from "react";
 import { Redirect, Link } from "react-router-dom";
-import { Form, Button, Toast } from "react-bootstrap";
+import { Form, Button, Toast, ToastContainer, Alert } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import * as Yup from "yup";
 import "./Form.scss";
 import { useMutation } from "react-query";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
 const schema = Yup.object()
   .shape({
@@ -23,6 +25,9 @@ const schema = Yup.object()
 function Signup(props) {
   const [toggleRedirect, setToggleRedirect] = React.useState(false);
 
+  const [showA, setShowA] = React.useState(false);
+  const toggleShowA = () => setShowA(!showA);
+
   const {
     register,
     handleSubmit,
@@ -31,13 +36,7 @@ function Signup(props) {
     resolver: yupResolver(schema),
   });
 
-  // const getUser = () => {
-  // axios.get("http://localhost:8000/user/94f60f5f-0b62-49d1-b647-7e03105cae33").then((response) => {
-  // console.log(response.data);
-  // });
-  // };
-
-  const post_new_user = async (data) => {
+  const postNewUser = async (data) => {
     let json = {
       name: data.name,
       username: data.username,
@@ -45,23 +44,20 @@ function Signup(props) {
       password: data.password,
     };
 
-    await axios
+    return await axios
       .post("http://localhost:8000/register", json)
   };
 
-  const handleSignUpData= useMutation(data => post_new_user(data), {
+  const handleSignUpData= useMutation(data => postNewUser(data), {
     onSuccess: async () => {
       setToggleRedirect(true);
     },
     onError: async (error) => {
-      //TODO
       if (error.response.status === 400) {
-        //TODO
+        toggleShowA()
       }
-      console.log("respoonse",error.response);
     }
   })
-
  
 
   const onSubmission = (data) => {
@@ -72,6 +68,13 @@ function Signup(props) {
   return (
     <>
       {toggleRedirect && <Redirect to="/" />}
+        <ToastContainer position="top-end" className="m-3">
+          <Toast show={showA} onClose={toggleShowA} bg="danger">
+            <Toast.Header className="py-4">
+                <strong className="me-auto"><FontAwesomeIcon icon={faExclamationTriangle}/> Username or Email already in use</strong>
+            </Toast.Header>
+          </Toast> 
+        </ToastContainer>
       <div className="Formcontainer">
         <div className="Formcontainer-logo">
           <img

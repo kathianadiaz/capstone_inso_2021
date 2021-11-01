@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Boolean, Date
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Boolean, Date, Table
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, BYTEA
 from sqlalchemy.orm import backref, relationship
 from database import Base
@@ -15,7 +15,27 @@ class User(Base):
     # phonenumber = Column(String,unique=True)
     password = Column(String)
     #TODO: add phone number
-    administrators = relationship('Administrator', back_populates='user', cascade="all, delete")
+    # administrators = relationship('Administrator', back_populates='user', cascade="all, delete")
+
+organization_members_assoc_table = Table('org_member_association', Base.metadata,
+    Column('member_info_id', ForeignKey('member_information.m_id'), primary_key=True),
+    Column('organization_id', ForeignKey('organization.o_id'), primary_key=True)
+)
+
+organization_administrator_assoc_table = Table('org_administrator_association', Base.metadata,
+    Column('user_id', ForeignKey('user.u_id'), primary_key=True),
+    Column('organization_id', ForeignKey('organization.o_id'), primary_key=True)
+)
+
+class MemberInformation(Base):
+    __tablename__ = "member_information"
+
+    m_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    links = Column(ARRAY(String))
+    resume = Column(BYTEA)
+    picture = Column(BYTEA)
 
 class OrganizationHighlight(Base):
     __tablename__ = "organization_highlight"
@@ -37,18 +57,16 @@ class Organization(Base):
     department = Column(String)
     status = Column(Boolean, default=False, nullable=False)
     highlights = relationship('OrganizationHighlight', cascade="all, delete")
-    administrators = relationship('Administrator', back_populates='organization', cascade="all, delete")
+    # administrators = relationship('Administrator', back_populates='organization', cascade="all, delete")
+    administrators = relationship('User',  secondary=organization_administrator_assoc_table)
+    members = relationship('MemberInformation', secondary=organization_members_assoc_table)
 
-class Administrator(Base):
-    __tablename__ = "administrator"
+# class Administrator(Base):
+    # __tablename__ = "administrator"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
-    o_id = Column(UUID(as_uuid=True), ForeignKey('organization.o_id'))
-    u_id = Column(UUID(as_uuid=True), ForeignKey('user.u_id'))
+    # id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
+    # o_id = Column(UUID(as_uuid=True), ForeignKey('organization.o_id'))
+    # u_id = Column(UUID(as_uuid=True), ForeignKey('user.u_id'))
 
-    organization = relationship('Organization', uselist=False, back_populates="administrators")
-    user= relationship('User', uselist=False, back_populates="administrators")
-
-
-
-
+    # organization = relationship('Organization', uselist=False, back_populates="administrators")
+    # user= relationship('User', uselist=False, back_populates="administrators")
