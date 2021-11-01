@@ -5,6 +5,7 @@ import { ReactComponent as Add } from "./plus-box.svg";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { useParams } from "react-router";
 import { AuthContext } from "./AuthContext";
 
 const eventSchema = Yup.object()
@@ -21,6 +22,7 @@ const highlightSchema = Yup.object()
     highlight_description: Yup.string().required(
       "Highlight description required"
     ),
+    // date: Yup.date().required("Date required"),
   })
   .required();
 
@@ -41,7 +43,9 @@ function EditModal(props) {
   // console.log(state?.user);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const { OrganizationId } = useParams();
 
+  console.log(OrganizationId);
   //   const [eventdata, setEventData] = useState([]);
   const {
     register,
@@ -69,6 +73,17 @@ function EditModal(props) {
     if (props.type === "User") {
       axios
         .post(`http://localhost:8000/organization/${state.user.u_id}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (props.type != "User" && props.type != "Event") {
+      axios
+        .post(`http://localhost:8000/organization/${OrganizationId}/highlight`)
         .then((response) => {
           console.log(response);
         })
@@ -153,6 +168,13 @@ function EditModal(props) {
           <p className="error-message">
             {errors.highlight_description?.message}
           </p>
+          {/* <Form.Label>{props.type} date: </Form.Label>
+          <Form.Control
+            type="date"
+            {...register("date")}
+            placeholder={"Date"}
+          />
+          <p className="error-message">{errors.date?.message}</p> */}
         </Modal.Body>
       );
     }

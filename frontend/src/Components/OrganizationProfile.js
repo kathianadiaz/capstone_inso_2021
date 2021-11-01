@@ -29,6 +29,7 @@ function OrganizationProfile(props) {
       .get(`http://localhost:8000/organization/${OrganizationId}`)
       .then((response) => {
         SetOrganizationData(response.data);
+        console.log(response);
         console.log(organizationData);
       })
       .catch((error) => {
@@ -84,6 +85,7 @@ function OrganizationProfile(props) {
               <OrgHighlight
                 key={i}
                 award={data.award}
+                // date={data.date.toLocaleDateString()}
                 description={data.highlight_description}
               />
             ))}
