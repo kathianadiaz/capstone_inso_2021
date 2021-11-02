@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from organization import MemberInformation
 import uuid
 from typing import Optional
 

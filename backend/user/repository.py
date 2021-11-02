@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import insert
 from user import UserCreate, User
+from organization import MemberInformation
 import models
 from authentication import get_password_hash
+import uuid
 
 class UserRepository:
     '''Repository to perform CRUD operations on the `User` class in the database'''
@@ -53,3 +55,14 @@ class UserRepository:
         db.delete(user)
         db.commit()
         return "USER DELETED"
+
+    @staticmethod
+    def create_member_information(member_info: MemberInformation, user: User, db: Session) -> User:
+        db_member_information = models.MemberInformation(m_id=uuid.uuid4(), name=member_info.name, email=member_info.email, links=member_info.links, resume=None, picture=None)
+        # db.add(db_member_information)
+
+        db_user = db.query(models.User).filter(models.User.u_id== user.u_id).first()
+        db_user.member_information = db_member_information
+        db.commit()
+
+        return db_user
