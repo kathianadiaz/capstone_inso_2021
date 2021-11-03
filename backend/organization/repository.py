@@ -154,3 +154,34 @@ class OrganizationRepository:
         db.commit()
 
         return db_member_information
+
+    @staticmethod
+    def get_organization_by_member(m_id: Optional[str], db: Session) -> List[Organization]:
+        if not m_id:
+            return []
+        
+        organizations = db.query(models.Organization).\
+            join(models.organization_members_assoc_table).\
+            filter(models.organization_members_assoc_table.columns.member_info_id == m_id).\
+            all()
+
+        return organizations
+
+    @staticmethod
+    def connect_user_to_organization(o_id: str, m_id: str, user: User, db: Session) -> Organization:
+        '''Connect the member information attached to a user to an organization'''
+        #Verify that organization belongs to administrator
+        db_organization = db.query(models.Organization).\
+            join(models.organization_administrator_assoc_table).\
+            filter(models.organization_administrator_assoc_table.columns.user_id == user.u_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == o_id).\
+            first()
+        db_member_info = db.query(models.MemberInformation).filter(models.MemberInformation.m_id == m_id).first()
+
+        if not db_member_info or not db_organization:
+            return None
+
+        db_organization.members.append(db_member_info)
+        db.commit()
+
+        return db_organization
