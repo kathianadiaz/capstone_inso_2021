@@ -22,7 +22,7 @@ def create_testing_organization(name: str, description: str = 'testing org', tag
 def test_register():
     response = client.post(
         '/register',
-        json={'name':'tester', 'email':'testing@test.com', 'username':'tester', 'password':'testing' },
+        json={'name':'tester', 'email':'testing@test.com', 'username':'tester', 'password':'testing', 'phone_number':'787-123-4567' },
     )
 
     client.post(
@@ -37,6 +37,7 @@ def test_register():
     assert data['name'] == 'tester'
     assert data['email'] == 'testing@test.com'
     assert data['username'] == 'tester'
+    assert data['phone_number'] == '787-123-4567'
 
 def test_duplicate_register():
     response = client.post(
@@ -106,6 +107,8 @@ def test_create_organizations():
     assert organization['department'] == 'INSO'
     assert organization['status'] == False
     assert organization['highlights'] == []
+    assert organization['members'] == []
+    assert len(organization['administrators']) > 0
 
     organization = create_testing_organization(name='testers2',description='testing org2', tags=['software', 'testing'])
 
