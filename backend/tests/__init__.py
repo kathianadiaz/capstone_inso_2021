@@ -5,8 +5,12 @@ from database import Base, get_db
 from main import app 
 from user import User
 import json
+import os
 
-SQLALCHEMY_DATABASE_URL = 'postgresql://capstone_test:capstonetesting@localhost:5432/capstone_test'
+if os.getenv('TRAVIS') == "True":
+    SQLALCHEMY_DATABASE_URL = 'postgresql://foo:bar@localhost/capstone_test'
+else:
+    SQLALCHEMY_DATABASE_URL = 'postgresql://capstone_test:capstonetesting@localhost:5432/capstone_test'
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}
