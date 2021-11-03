@@ -66,6 +66,7 @@ def test_get_user_by_id():
     assert data['email'] == 'testing1@test.com'
     assert data['username'] == 'tester1'
 
+
 def test_login():
     # global TOKEN
     global TOKENS
@@ -96,6 +97,27 @@ def test_login():
 
     assert response.status_code == 401, response.text
     assert response.json() == {"detail": "Incorrect username or password"}
+
+def test_edit_user():
+    response = client.put(
+        '/user',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json = {
+            "name": "jose",
+            "username":"jose",
+            "email": "jose@jose.com",
+            "phone_number": "787-777-8888"
+        }
+    )
+
+    assert response.status_code == 200
+    new_user = response.json()
+    assert new_user['name'] == 'jose'
+    assert new_user['username'] != 'jose'
+    assert new_user['email'] == 'jose@jose.com'
+    assert new_user['phone_number'] == '787-777-8888'
+
+
 
 def test_create_organizations():
     organization = create_testing_organization(name='testers', tags=['software', 'testing'])
