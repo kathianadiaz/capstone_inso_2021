@@ -18,10 +18,8 @@ const eventSchema = Yup.object()
 
 const highlightSchema = Yup.object()
   .shape({
-    award: Yup.string().required("Award name required"),
-    highlight_description: Yup.string().required(
-      "Highlight description required"
-    ),
+    title: Yup.string().required("Award name required"),
+    description: Yup.string().required("Highlight description required"),
     // date: Yup.date().required("Date required"),
   })
   .required();
@@ -69,6 +67,7 @@ function EditModal(props) {
       ? sendModalData([...props.mdata, data])
       : sendModalData(data);
     setShow(false);
+    console.log(data);
 
     if (props.type === "User") {
       axios
@@ -82,8 +81,16 @@ function EditModal(props) {
     }
 
     if (props.type != "User" && props.type != "Event") {
+      let hjson = {
+        title: data.title,
+        description: data.description,
+      };
+      axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
       axios
-        .post(`http://localhost:8000/organization/${OrganizationId}/highlight`)
+        .post(
+          `http://localhost:8000/organization/${OrganizationId}/highlight`,
+          hjson
+        )
         .then((response) => {
           console.log(response);
         })
@@ -154,20 +161,18 @@ function EditModal(props) {
 
           <Form.Control
             type="text"
-            {...register("award")}
+            {...register("title")}
             placeholder={props.type}
           />
-          <p className="error-message">{errors.award?.message}</p>
+          <p className="error-message">{errors.title?.message}</p>
 
           <Form.Label>{props.type} Description: </Form.Label>
           <Form.Control
             type="text"
-            {...register("highlight_description")}
-            placeholder={"Description"}
+            {...register("description")}
+            placeholder={"description"}
           />
-          <p className="error-message">
-            {errors.highlight_description?.message}
-          </p>
+          <p className="error-message">{errors.description?.message}</p>
           {/* <Form.Label>{props.type} date: </Form.Label>
           <Form.Control
             type="date"

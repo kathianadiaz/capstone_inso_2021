@@ -42,6 +42,10 @@ function OrganizationProfile(props) {
   const [highlightData, setHighlightData] = useState([]);
   const [organizationData, SetOrganizationData] = useState([]);
   // console.log(highlightData);
+  const [spinner, setSpinner] = useState(true);
+
+  // console.log(organizationData.data);
+
   return (
     <div className="organizationpage-wrapper">
       <div className="organizationpage-container">
@@ -81,14 +85,28 @@ function OrganizationProfile(props) {
                 type="Highlight"
               />
             </h3>
+            {organizationData.highlights &&
+            organizationData.highlights.length > 0
+              ? organizationData.highlights.map((data, i) => (
+                  <OrgHighlight
+                    key={i}
+                    award={data.title}
+                    // date={data.date.toLocaleDateString()}
+                    description={data.description}
+                    hData={data.oh_id}
+                  />
+                ))
+              : null}
             {highlightData.map((data, i) => (
               <OrgHighlight
                 key={i}
-                award={data.award}
+                award={data.title}
                 // date={data.date.toLocaleDateString()}
-                description={data.highlight_description}
+                description={data.description}
+                hData={data.oh_id}
               />
             ))}
+
             {/* <OrgHighlight
               award="Competition 2015"
               description={highlightInfo}
