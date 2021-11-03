@@ -12,10 +12,13 @@ const OrganizationHighlight = (props) => {
     axios.defaults.headers.delete["Authorization"] = `Bearer ${state.token}`;
     axios
       .delete(
-        `http://localhost:8000/organization/${OrganizationId}/highlight/${props.hData}`
+        `http://localhost:8000/organization/${OrganizationId}/highlight/${props.highlightId}`
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
+        console.log(response.data.highlights);
+        props.sethighlight(response.data.highlights);
+        // console.log(props.highlightdata);
       })
       .catch((error) => {
         console.log(error);
@@ -31,7 +34,6 @@ const OrganizationHighlight = (props) => {
       </a>
       {/* <h4 className="event-time"> {"Date: " + props.date} </h4> */}
       <p>{props.description}</p>
-      <p>{props.hData}</p>
     </div>
   );
 };

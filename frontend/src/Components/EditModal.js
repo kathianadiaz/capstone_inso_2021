@@ -62,7 +62,7 @@ function EditModal(props) {
   const getEventdata = (data) => {
     // setEventData([...eventdata, data]);
     // console.log(JSON.stringify(data, null, 2));
-    // console.log(eventdata);
+    // console.log(eventdata);\
     props.type !== "User"
       ? sendModalData([...props.mdata, data])
       : sendModalData(data);
@@ -92,7 +92,8 @@ function EditModal(props) {
           hjson
         )
         .then((response) => {
-          console.log(response);
+          console.log(response.data.highlights);
+          props.setdata([...response.data.highlights]);
         })
         .catch((error) => {
           console.log(error);

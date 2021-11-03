@@ -29,23 +29,30 @@ function OrganizationProfile(props) {
       .get(`http://localhost:8000/organization/${OrganizationId}`)
       .then((response) => {
         SetOrganizationData(response.data);
-        console.log(response);
-        console.log(organizationData);
+        setHighlightData(response.data.highlights);
+        // console.log(response);
+        // console.log(organizationData);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
 
+  // const highlightDeleted = (highlightId) => {
+  //   highlightData.filter((oh_id) => oh_id != highlightId);
+  //   console.log("ASDSA");
+  //   setDeletedHighlight(false);
+  // };
+
   // console.log("THIS" + OrganizationId);
   const [eventData, setEventData] = useState([]);
   const [highlightData, setHighlightData] = useState([]);
   const [organizationData, SetOrganizationData] = useState([]);
-  // console.log(highlightData);
   const [spinner, setSpinner] = useState(true);
-
-  // console.log(organizationData.data);
-
+  const [deletedHighlight, setDeletedHighlight] = useState(false);
+  const [ohId, setOhId] = useState("");
+  console.log(organizationData.highlights);
+  // console.log(deletedHighlight);
   return (
     <div className="organizationpage-wrapper">
       <div className="organizationpage-container">
@@ -85,7 +92,7 @@ function OrganizationProfile(props) {
                 type="Highlight"
               />
             </h3>
-            {organizationData.highlights &&
+            {/* {organizationData.highlights &&
             organizationData.highlights.length > 0
               ? organizationData.highlights.map((data, i) => (
                   <OrgHighlight
@@ -96,17 +103,21 @@ function OrganizationProfile(props) {
                     hData={data.oh_id}
                   />
                 ))
-              : null}
+              : null} */}
             {highlightData.map((data, i) => (
               <OrgHighlight
                 key={i}
                 award={data.title}
                 // date={data.date.toLocaleDateString()}
                 description={data.description}
-                hData={data.oh_id}
+                highlightId={data.oh_id}
+                deleted={setDeletedHighlight}
+                highlightdata={highlightData}
+                sethighlight={setHighlightData}
               />
             ))}
-
+            {/* {console.log(organizationData)} */}
+            {/* {highlightDeleted === true ? deletedHighlight : null} */}
             {/* <OrgHighlight
               award="Competition 2015"
               description={highlightInfo}
