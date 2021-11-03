@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from user import UserCreate, User
 from user.repository import UserRepository
+from organization import MemberInformation
 from authentication.authentication import get_current_user
 from database import get_db
 from sqlalchemy.orm import Session
@@ -28,6 +29,10 @@ def get_user(id: str, db: Session = Depends(get_db)):
 
     return user
 
-@router.get("/profile", response_model=User)
-def get_user_profile(user: User = Depends(get_current_user)):
-    return user
+# @router.get("/profile", response_model=User)
+# def get_user_profile(user: User = Depends(get_current_user)):
+    # return user
+
+@router.post("/member-information", response_model=User)
+def create_member_information(member_information: MemberInformation, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return UserRepository.create_member_information(member_information,user,db)
