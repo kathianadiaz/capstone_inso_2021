@@ -29,9 +29,9 @@ def get_user(id: str, db: Session = Depends(get_db)):
 
     return user
 
-@router.get("/profile", response_model=User)
-def get_user_profile(user: User = Depends(get_current_user)):
-    return user
+# @router.get("/profile", response_model=User)
+# def get_user_profile(user: User = Depends(get_current_user)):
+    # return user
 
 @router.post("/member-information", response_model=User)
 def create_member_information(member_information: MemberInformation, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
