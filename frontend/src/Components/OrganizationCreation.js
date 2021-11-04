@@ -34,9 +34,7 @@ function OrganizationCreation(props) {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  // console.log(watch());
   console.log(tagData);
-
   const createOrganization = async (data) => {
     // const parameters = new URLSearchParams();
     // parameters.append("name", data.name);
