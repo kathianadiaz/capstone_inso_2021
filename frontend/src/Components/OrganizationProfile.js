@@ -3,8 +3,9 @@ import { Image, Button, Modal, Form } from "react-bootstrap";
 import OrgHighlight from "./OrganizationHighlight.js";
 import OrgEvent from "./OrganizationEvent.js";
 import "./OrganizationProfile.scss";
-import { useParams } from "react-router";
+import { Redirect, useParams } from "react-router";
 import EditM from "./EditModal.js";
+import DeleteM from "./DeleteModal";
 import axios from "axios";
 function OrganizationProfile(props) {
   // const [show, setShow] = useState(false);
@@ -48,9 +49,14 @@ function OrganizationProfile(props) {
   const [eventData, setEventData] = useState([]);
   const [highlightData, setHighlightData] = useState([]);
   const [organizationData, SetOrganizationData] = useState([]);
-  const [spinner, setSpinner] = useState(true);
   const [deletedHighlight, setDeletedHighlight] = useState(false);
-  const [ohId, setOhId] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [redirectD, setredirectD] = useState(false);
+
+  console.log(showModal);
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+
   console.log(organizationData.highlights);
   // console.log(deletedHighlight);
   return (
@@ -75,6 +81,30 @@ function OrganizationProfile(props) {
                   <Button variant="btn organization-heading-button" size="lg">
                     Request to join
                   </Button>
+                ) : null}
+                {/* Redirect user if org is deleted */}
+                {redirectD && <Redirect to="/UserProfile" />}
+
+                {/* If member is admin */}
+                {organizationData.status !== "true" ? (
+                  <Button
+                    variant="btn organization-heading-button delete-button"
+                    size="lg"
+                    onClick={handleShow}
+                  >
+                    Delete organization
+                  </Button>
+                ) : null}
+
+                {showModal ? (
+                  <DeleteM
+                    show={showModal}
+                    setshow={setShowModal}
+                    closeshow={handleClose}
+                    showM={handleShow}
+                    orgID={OrganizationId}
+                    redirect={setredirectD}
+                  />
                 ) : null}
               </div>
             </div>

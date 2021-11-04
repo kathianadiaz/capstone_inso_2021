@@ -139,10 +139,7 @@ function OrganizationCreation(props) {
           Continue
         </Button>
       </Form>
-      <div className="Formcontainer-options">
-        <a href="">Forgot your password?</a>
-        <a href="">New? Sign up</a>
-      </div>
+
       <p>Copyright © 2021</p>
     </div>
   );

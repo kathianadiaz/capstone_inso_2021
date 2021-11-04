@@ -72,9 +72,9 @@ function NavigationBar(props) {
             <Nav.Link as={Link} to="/OrganizationCreation">
               Create Organization
             </Nav.Link>
-            <Nav.Link as={Link} to="/organization-profile">
+            {/* <Nav.Link as={Link} to="/organization-profile">
               My organization
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link as={Link} to="/UserProfile">
               User Profile
             </Nav.Link>
