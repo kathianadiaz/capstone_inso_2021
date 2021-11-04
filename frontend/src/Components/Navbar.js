@@ -45,7 +45,6 @@ function NavigationBar(props) {
       </Navbar>
     );
   } else {
-    console.log(state.user.name);
     return (
       <Navbar collapseOnSelect expand="lg" bg="light">
         <Nav.Link as={Link} to="/">
