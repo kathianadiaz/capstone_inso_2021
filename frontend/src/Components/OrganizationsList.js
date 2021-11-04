@@ -70,7 +70,7 @@ function OrganizationsList() {
 
       <div className="organizations-list">
         {!spinner && (
-          <h3>
+          <h3 className="organizations-list-header">
             <span className="blue-text">
               Currently {organizations.length} available{" "}
             </span>
