@@ -7,7 +7,9 @@
   width: 50px;
   margin: 0 1rem;
 }
-
+.logout-text {
+  margin: 0;
+}
 .navbar {
   padding: 0 1rem;
 
@@ -21,10 +23,10 @@
 }
 
 .logout-button {
-  width: 100px;
+  width: 90px;
   background-color: var(--t-bright-green);
   border-color: white;
-  color: black;
+  color: white;
   margin: 0 auto;
   margin-bottom: 0.5rem;
 

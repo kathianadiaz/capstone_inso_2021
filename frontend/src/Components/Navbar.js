@@ -79,12 +79,14 @@ function NavigationBar(props) {
             <Nav.Link as={Link} to="/UserProfile">
               User Profile
             </Nav.Link>
-            <Button className="logout-button btn" onClick={changeNavbartoggle}>
-              <Link to="/" className="white-text">
-                {" "}
-                Log-out{" "}
-              </Link>
-            </Button>
+            <Link to="/">
+              <Button
+                className="logout-button btn"
+                onClick={changeNavbartoggle}
+              >
+                <p className="logout-text">Log-out</p>
+              </Button>
+            </Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
