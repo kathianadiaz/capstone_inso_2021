@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from user import UserCreate, User
+from user import UserCreate, User, UserBase
 from user.repository import UserRepository
 from organization import MemberInformation
 from authentication.authentication import get_current_user
@@ -28,6 +28,10 @@ def get_user(id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
 
     return user
+
+@router.put("", response_model=User)
+def edit_user(new_user: UserBase, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return UserRepository.edit_user(user.u_id,new_user,db)
 
 # @router.get("/profile", response_model=User)
 # def get_user_profile(user: User = Depends(get_current_user)):

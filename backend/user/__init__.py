@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from organization import MemberInformation
 import uuid
 from typing import Optional
 
@@ -8,6 +7,7 @@ class UserBase(BaseModel):
     name: str
     username: str
     email: str
+    phone_number: Optional[str]
 
 class UserCreate(UserBase):
     ''' Newly created user to be added to database. Password is not hashed'''
