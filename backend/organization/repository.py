@@ -12,7 +12,7 @@ class OrganizationRepository:
     @staticmethod
     def add_organization(organization: Organization, user: User, db: Session) -> Organization:
         '''Add a `Organization` to the repository'''
-        db_organization = models.Organization(o_id=uuid.uuid4() ,name=organization.name, description=organization.description, tags=organization.tags, department=organization.department, status=organization.status)
+        db_organization = models.Organization(o_id=uuid.uuid4() ,name=organization.name, description=organization.description, tags=organization.tags, department=organization.department, status=organization.status, email = organization.email)
         db_user = db.query(models.User).filter(models.User.u_id == user.u_id).first()
 
         db_organization.administrators.append(db_user)

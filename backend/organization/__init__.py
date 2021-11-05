@@ -32,6 +32,7 @@ class Organization(BaseModel):
     '''Organization class'''
     o_id: Optional[uuid.UUID]
     name: str
+    email: str
     description: Optional[str]
     tags: List[str] = []
     department: Optional[str]

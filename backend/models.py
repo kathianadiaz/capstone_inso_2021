@@ -58,6 +58,7 @@ class Organization(Base):
 
     o_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
     name = Column(String, nullable=False)
+    email = Column(String, unique=True)
     description = Column(String)
     tags = Column(ARRAY(String))
     department = Column(String)

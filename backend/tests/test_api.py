@@ -101,6 +101,7 @@ def test_create_organizations():
 
     assert 'o_id' in organization
     assert organization['name'] == 'testers'
+    assert organization['email'] == 'test@gmail.com'
     assert organization['description'] == 'testing org'
     assert organization['tags'] == ['software', 'testing']
     assert organization['department'] == 'INSO'
@@ -111,6 +112,7 @@ def test_create_organizations():
 
     assert 'o_id' in organization
     assert organization['name'] == 'testers2'
+    assert organization['email'] == 'test2@gmail.com'
     assert organization['description'] == 'testing org2'
     assert organization['tags'] == ['software', 'testing']
     assert organization['department'] == 'INSO'
@@ -132,7 +134,7 @@ def test_get_organization_by_id():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers3', 'description':'testing org3', 'tags':['software','testing'], 'department': 'INSO', 'highlights':[{'title':'test','description':'test'}]}
+        json={'name':'testers3', 'email':'test3@gmail.com', 'description':'testing org3', 'tags':['software','testing'], 'department': 'INSO', 'highlights':[{'title':'test','description':'test'}]}
     )
 
     o_id = response.json()['o_id']
@@ -142,6 +144,7 @@ def test_get_organization_by_id():
     organization = response.json()
     assert response.status_code == 200
     assert organization['name'] == 'testers3'
+    assert organization['email'] == 'test3@gmail.com'
     assert organization['description'] == 'testing org3'
     assert organization['tags'] == ['software', 'testing']
     assert organization['department'] == 'INSO'
@@ -172,7 +175,7 @@ def test_delete_organization():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers4', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        json={'name':'testers4', 'email':'test4@gmail.com','description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
     )
 
     assert response.status_code == 200
@@ -202,7 +205,7 @@ def test_edit_organization():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers4', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        json={'name':'testers4', 'email':'test4@gmail.com', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
     )
 
     assert response.status_code == 200
@@ -211,7 +214,7 @@ def test_edit_organization():
     response = client.put(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'o_id':o_id,'name':'test_edit', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        json={'o_id':o_id,'name':'test_edit', 'email':'test4edit@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
     ) 
 
 
@@ -224,7 +227,7 @@ def test_add_hightlight():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers4', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
+        json={'name':'testers4','email':'test4@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
     )
 
     assert response.status_code == 200
@@ -254,7 +257,7 @@ def test_delete_highlight():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers5', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
+        json={'name':'testers5', 'email':'test5@gmail.com','description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
     )
 
     assert response.status_code == 200

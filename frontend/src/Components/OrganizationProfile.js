@@ -66,6 +66,7 @@ function OrganizationProfile(props) {
           <div className="organization-heading">
             <div className="organization-heading-logo">
               <Image src="/Logo-IEEE.jpg" fluid />
+              <p>{console.log(organizationData)}</p>
             </div>
             <div className="organization-heading-info">
               {/* {console.log(organizationData.name)} */}
@@ -166,6 +167,21 @@ function OrganizationProfile(props) {
           <div className="organization-events organization-layout">
             <h3 className="section-heading">
               Organization's Events:{" "}
+              <EditM mdata={eventData} setdata={setEventData} type="Event" />
+            </h3>
+
+            {eventData.map((data, i) => (
+              <OrgEvent
+                key={i}
+                eventname={data.event}
+                date={data.date.toLocaleDateString()}
+                description={data.description}
+              />
+            ))}
+          </div>
+          <div className="organization-members organization-layout">
+            <h3 className="section-heading">
+              Organization's Members:{" "}
               <EditM mdata={eventData} setdata={setEventData} type="Event" />
             </h3>
 
