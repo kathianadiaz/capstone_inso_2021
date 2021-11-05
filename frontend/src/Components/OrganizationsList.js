@@ -30,9 +30,9 @@ function OrganizationsList() {
       const results = organizationsFilter.filter((organization) => {
         return organization.name.toLowerCase().startsWith(input.toLowerCase());
       });
-      setorganizationsFilter(results);
+      setOrganizations(results);
     } else {
-      setorganizationsFilter(organizations);
+      setOrganizations(organizationsFilter);
     }
   };
 
@@ -66,17 +66,29 @@ function OrganizationsList() {
           </Button>
         </div>
       </div>
+      {console.log(organizations)}
+
       <div className="organizations-list">
+        {!spinner && (
+          <h3 className="organizations-list-header">
+            <span className="blue-text">
+              Currently {organizations.length} available{" "}
+            </span>
+            <span className="green-text">organizations</span>:
+          </h3>
+        )}
+
         <div className="organizations-list-wrapper">
           {spinner && (
             <Spinner animation="border" role="status" size="bg">
               <span className="visually-hidden">Loading...</span>
             </Spinner>
           )}
-          {organizationsFilter && organizationsFilter.length > 0
-            ? organizationsFilter.map((organization, i) => (
+          {organizations && organizations.length > 0
+            ? organizations.map((organization, i) => (
                 <OrganizationCard
                   key={i}
+                  organizationId={organization.o_id}
                   organizationName={organization.name}
                   organizationInfo={organization.description}
                 />

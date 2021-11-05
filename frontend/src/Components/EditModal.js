@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Modal, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { ReactComponent as Add } from "./plus-box.svg";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import { useParams } from "react-router";
+import { AuthContext } from "./AuthContext";
+
 const eventSchema = Yup.object()
   .shape({
     event: Yup.string().required("Event name required"),
@@ -14,10 +18,9 @@ const eventSchema = Yup.object()
 
 const highlightSchema = Yup.object()
   .shape({
-    award: Yup.string().required("Award name required"),
-    highlight_description: Yup.string().required(
-      "Highlight description required"
-    ),
+    title: Yup.string().required("Award name required"),
+    description: Yup.string().required("Highlight description required"),
+    // date: Yup.date().required("Date required"),
   })
   .required();
 
@@ -34,10 +37,13 @@ const userProfileSchema = Yup.object()
 
 function EditModal(props) {
   const [show, setShow] = useState(false);
-
+  const [state, setState] = useContext(AuthContext);
+  // console.log(state?.user);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const { OrganizationId } = useParams();
 
+  console.log(OrganizationId);
   //   const [eventdata, setEventData] = useState([]);
   const {
     register,
@@ -56,11 +62,43 @@ function EditModal(props) {
   const getEventdata = (data) => {
     // setEventData([...eventdata, data]);
     // console.log(JSON.stringify(data, null, 2));
-    // console.log(eventdata);
+    // console.log(eventdata);\
     props.type !== "User"
       ? sendModalData([...props.mdata, data])
       : sendModalData(data);
     setShow(false);
+    console.log(data);
+
+    if (props.type === "User") {
+      axios
+        .post(`http://localhost:8000/organization/${state.user.u_id}`)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (props.type != "User" && props.type != "Event") {
+      let hjson = {
+        title: data.title,
+        description: data.description,
+      };
+      axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+      axios
+        .post(
+          `http://localhost:8000/organization/${OrganizationId}/highlight`,
+          hjson
+        )
+        .then((response) => {
+          console.log(response.data.highlights);
+          props.setdata([...response.data.highlights]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const sendModalData = (data) => {
@@ -124,20 +162,25 @@ function EditModal(props) {
 
           <Form.Control
             type="text"
-            {...register("award")}
+            {...register("title")}
             placeholder={props.type}
           />
-          <p className="error-message">{errors.award?.message}</p>
+          <p className="error-message">{errors.title?.message}</p>
 
           <Form.Label>{props.type} Description: </Form.Label>
           <Form.Control
             type="text"
-            {...register("highlight_description")}
-            placeholder={"Description"}
+            {...register("description")}
+            placeholder={"description"}
           />
-          <p className="error-message">
-            {errors.highlight_description?.message}
-          </p>
+          <p className="error-message">{errors.description?.message}</p>
+          {/* <Form.Label>{props.type} date: </Form.Label>
+          <Form.Control
+            type="date"
+            {...register("date")}
+            placeholder={"Date"}
+          />
+          <p className="error-message">{errors.date?.message}</p> */}
         </Modal.Body>
       );
     }

@@ -1,10 +1,10 @@
-import React, { useState, useRef, useContext } from "react";
-import Navbar from "./Navbar.js";
-import { Button, Image, Card } from "react-bootstrap";
+import React, { useState, useRef, useContext, useEffect } from "react";
+import { Button, Image, Spinner } from "react-bootstrap";
 import "./UserProfile.scss";
 import OrgIcon from "./organizationIcon.js";
 import EditM from "./EditModal.js";
 import { AuthContext } from "./AuthContext";
+import axios from "axios";
 
 function UserProfile(props) {
   const [resume, setresume] = useState("");
@@ -12,11 +12,29 @@ function UserProfile(props) {
   const inputRef = useRef();
   const [state, setState] = useContext(AuthContext);
   const [userData, setUserData] = useState({});
+  const [userOrganizations, setUserOrganizations] = useState([]);
+  const [spinner, setSpinner] = useState(true);
 
   // console.log(state);
   const openFiles = () => {
     inputRef.current.click();
   };
+  let s = sessionStorage.getItem("state");
+  let er = JSON.parse(s);
+  useEffect(() => {
+    axios.defaults.headers.get["Authorization"] = `Bearer ${er?.token}`;
+    axios
+      .get("http://localhost:8000/my-organizations")
+      .then((response) => {
+        setUserOrganizations(response.data);
+        console.log(userOrganizations);
+        console.log(response);
+        setSpinner(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleResume = (e) => {
     const resumefile = e.target.files[0];
@@ -35,8 +53,8 @@ function UserProfile(props) {
   if (fileuploaded) {
     resumeDoc = URL.createObjectURL(resume);
   }
-
-  // console.log(userData);
+  console.log(userOrganizations);
+  // console.log(state.token);
   // console.log(resume);
   // console.log(resumeDoc);
 
@@ -52,7 +70,7 @@ function UserProfile(props) {
             />
             <h1 className="user-info-name text-color">{state?.user.name}</h1>
           </div>
-          {console.log(state)}
+          {/* {console.log(state)} */}
           <div className="user-contact">
             <h2 className="user-contact-header">
               Contact Information:{" "}
@@ -89,32 +107,23 @@ function UserProfile(props) {
               My Organizations:
             </h2>
             <div className="user-organizations-cards">
-              <OrgIcon
-                organizationName="IEEE"
-                imageLocation="/testPerson.jpg"
-              />
-              <OrgIcon
-                organizationName="Lorem"
-                imageLocation="/testPerson.jpg"
-              />
-
-              <OrgIcon
-                organizationName="Lorem"
-                imageLocation="/testPerson.jpg"
-              />
-
-              <OrgIcon
-                organizationName="Lorem"
-                imageLocation="/testPerson.jpg"
-              />
-              <OrgIcon
-                organizationName="Lorem"
-                imageLocation="/testPerson.jpg"
-              />
-              <OrgIcon
-                organizationName="Lorem"
-                imageLocation="/testPerson.jpg"
-              />
+              {spinner && (
+                <div className="spinner-container">
+                  <Spinner animation="grow" variant="success">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+              )}
+              {userOrganizations
+                ? userOrganizations.map((org, i) => (
+                    <OrgIcon
+                      key={i}
+                      organizationName={org.name}
+                      imageLocation="/testPerson.jpg"
+                      organizationId={org.o_id}
+                    />
+                  ))
+                : spinner && <h1>No results found!</h1>}
             </div>
           </div>
         </div>

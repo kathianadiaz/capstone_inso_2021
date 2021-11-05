@@ -24,6 +24,18 @@ class UserRepository:
         '''Get a `User` with a specific id. If no user is found None is returned.'''
         return db.query(models.User).filter(models.User.u_id == user_id).first()
 
+    "Added newly"
+    @staticmethod
+    def edit_user(newUserInfo: User, db: Session, user_id: str) -> User:
+        '''Edit a `User` with a specific id. If no user is found None is returned.'''
+        user = UserRepository.get_user(db, user_id)
+        user.email = newUserInfo.email
+        # user.phone = newUserInfo.phonenumber
+        db.commit()
+
+        return user
+
+
     @staticmethod
     def get_users(db: Session, skip: int = 0, limit: int = 100):
         '''Return all 'Users' with a limit of 100'''

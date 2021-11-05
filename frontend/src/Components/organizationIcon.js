@@ -1,5 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function organizationIcon(props) {
   return (
@@ -7,7 +8,12 @@ function organizationIcon(props) {
       <Card className="organization-card" style={{ width: "11rem" }}>
         <Card.Img variant="top" src={props.imageLocation} roundedCircle />
         <Card.Body className="organization-card">
-          <a className="organization-card-name">{props.organizationName}</a>
+          <Link
+            className="organization-card-name card-name-color"
+            to={`/organization-profile/${props.organizationId}`}
+          >
+            <a className="organization-card-name">{props.organizationName}</a>
+          </Link>
         </Card.Body>
       </Card>
       {/* <div className="organization-box">

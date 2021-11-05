@@ -1,5 +1,6 @@
 import React from "react";
 import { Image } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
 function OrganizationCard(props) {
   return (
     <div className="organization-cards">
@@ -11,8 +12,17 @@ function OrganizationCard(props) {
         />
       </div>
       <div className="organization-cards-info">
-        <h3 className="organization-cards-title">{props.organizationName}</h3>
-        <p className="organization-cards-info">{props.organizationInfo}</p>
+        <h3 className="organization-cards-title">
+          <Link
+            className="organization-card-name card-name-color"
+            to={`/organization-profile/${props.organizationId}`}
+          >
+            {props.organizationName}
+          </Link>
+        </h3>
+        <p className="organization-cards-info-description">
+          {props.organizationInfo}
+        </p>
       </div>
     </div>
   );

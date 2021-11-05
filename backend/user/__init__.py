@@ -2,6 +2,8 @@ from pydantic import BaseModel
 import uuid
 from typing import Optional
 
+from sqlalchemy.sql.sqltypes import Integer
+
 class UserBase(BaseModel):
     '''Base user class'''
     name: str

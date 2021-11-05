@@ -12,6 +12,7 @@ class User(Base):
     name = Column(String)
     username = Column(String, unique=True)
     email = Column(String, unique=True)
+    # phonenumber = Column(String,unique=True)
     password = Column(String)
     phone_number = Column(String,unique=True)
     m_id= Column(UUID(as_uuid=True), ForeignKey('member_information.m_id'), nullable=True) 
@@ -56,6 +57,7 @@ class Organization(Base):
 
     o_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
     name = Column(String, nullable=False)
+    email = Column(String, unique=True)
     description = Column(String)
     tags = Column(ARRAY(String))
     department = Column(String)

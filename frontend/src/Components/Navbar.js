@@ -45,7 +45,6 @@ function NavigationBar(props) {
       </Navbar>
     );
   } else {
-    console.log(state.user.name);
     return (
       <Navbar collapseOnSelect expand="lg" bg="light">
         <Nav.Link as={Link} to="/">
@@ -73,18 +72,20 @@ function NavigationBar(props) {
             <Nav.Link as={Link} to="/OrganizationCreation">
               Create Organization
             </Nav.Link>
-            <Nav.Link as={Link} to="/organization-profile">
+            {/* <Nav.Link as={Link} to="/organization-profile">
               My organization
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link as={Link} to="/UserProfile">
               User Profile
             </Nav.Link>
-            <Button className="logout-button btn" onClick={changeNavbartoggle}>
-              <Link to="/" className="white-text">
-                {" "}
-                Log-out{" "}
-              </Link>
-            </Button>
+            <Link to="/">
+              <Button
+                className="logout-button btn"
+                onClick={changeNavbartoggle}
+              >
+                <p className="logout-text">Log-out</p>
+              </Button>
+            </Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
