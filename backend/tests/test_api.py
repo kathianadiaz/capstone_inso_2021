@@ -8,11 +8,11 @@ TOKENS = []
 
 # TODO: refactor code. Lots of repeated lines that can be put into a function
 
-def create_testing_organization(name: str, description: str = 'testing org', tags: List[str] = [], department:str = 'INSO'):
+def create_testing_organization(name: str, email: str, description: str = 'testing org', tags: List[str] = [], department:str = 'INSO'):
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':name, 'description': description, 'tags': tags, 'department': department}
+        json={'name':name, 'email':email, 'description': description, 'tags': tags, 'department': department}
     )
 
     assert response.status_code == 200
@@ -97,7 +97,7 @@ def test_login():
     assert response.json() == {"detail": "Incorrect username or password"}
 
 def test_create_organizations():
-    organization = create_testing_organization(name='testers', tags=['software', 'testing'])
+    organization = create_testing_organization(name='testers',email='test@gmail.com', tags=['software', 'testing'])
 
     assert 'o_id' in organization
     assert organization['name'] == 'testers'
@@ -108,7 +108,7 @@ def test_create_organizations():
     assert organization['status'] == False
     assert organization['highlights'] == []
 
-    organization = create_testing_organization(name='testers2',description='testing org2', tags=['software', 'testing'])
+    organization = create_testing_organization(name='testers2', email='test2@gmail.com', description='testing org2', tags=['software', 'testing'])
 
     assert 'o_id' in organization
     assert organization['name'] == 'testers2'
@@ -227,7 +227,7 @@ def test_add_hightlight():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers4','email':'test4@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
+        json={'name':'testers4','email':'testa5@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
     )
 
     assert response.status_code == 200
@@ -285,7 +285,7 @@ def test_delete_highlight():
     assert len(response.json()['highlights']) == 0
 
 def test_add_member_information():
-    organization = create_testing_organization('org')
+    organization = create_testing_organization('org','tester3')
 
     response = client.post(
         f'/organization/{organization["o_id"]}/member-information',
@@ -346,7 +346,7 @@ def test_connect_member_to_organization():
     assert response.json()['m_id'] != None 
     m_id = response.json()['m_id']
 
-    org = create_testing_organization("org2")
+    org = create_testing_organization("org2", 'tester4')
 
     response = client.post(
         f'/organization/{org["o_id"]}/member-information/{m_id}',
