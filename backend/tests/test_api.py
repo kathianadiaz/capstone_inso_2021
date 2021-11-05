@@ -22,7 +22,7 @@ def create_testing_organization(name: str, email: str, description: str = 'testi
 def test_register():
     response = client.post(
         '/register',
-        json={'name':'tester', 'email':'testing@test.com', 'username':'tester', 'password':'testing' },
+        json={'name':'tester', 'email':'testing@test.com', 'username':'tester', 'password':'testing', 'phone_number':'787-123-4567' },
     )
 
     client.post(
@@ -37,6 +37,7 @@ def test_register():
     assert data['name'] == 'tester'
     assert data['email'] == 'testing@test.com'
     assert data['username'] == 'tester'
+    assert data['phone_number'] == '787-123-4567'
 
 def test_duplicate_register():
     response = client.post(
@@ -64,6 +65,7 @@ def test_get_user_by_id():
     assert data['name'] == 'tester1'
     assert data['email'] == 'testing1@test.com'
     assert data['username'] == 'tester1'
+
 
 def test_login():
     # global TOKEN
@@ -96,6 +98,27 @@ def test_login():
     assert response.status_code == 401, response.text
     assert response.json() == {"detail": "Incorrect username or password"}
 
+def test_edit_user():
+    response = client.put(
+        '/user',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json = {
+            "name": "jose",
+            "username":"jose",
+            "email": "jose@jose.com",
+            "phone_number": "787-777-8888"
+        }
+    )
+
+    assert response.status_code == 200
+    new_user = response.json()
+    assert new_user['name'] == 'jose'
+    assert new_user['username'] != 'jose'
+    assert new_user['email'] == 'jose@jose.com'
+    assert new_user['phone_number'] == '787-777-8888'
+
+
+
 def test_create_organizations():
     organization = create_testing_organization(name='testers',email='test@gmail.com', tags=['software', 'testing'])
 
@@ -107,6 +130,8 @@ def test_create_organizations():
     assert organization['department'] == 'INSO'
     assert organization['status'] == False
     assert organization['highlights'] == []
+    assert organization['members'] == []
+    assert len(organization['administrators']) > 0
 
     organization = create_testing_organization(name='testers2', email='test2@gmail.com', description='testing org2', tags=['software', 'testing'])
 

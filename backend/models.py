@@ -15,7 +15,6 @@ class User(Base):
     # phonenumber = Column(String,unique=True)
     password = Column(String)
     phone_number = Column(String,unique=True)
-    # administrators = relationship('Administrator', back_populates='user', cascade="all, delete")
     m_id= Column(UUID(as_uuid=True), ForeignKey('member_information.m_id'), nullable=True) 
 
     member_information= relationship("MemberInformation", back_populates="user" )
@@ -64,6 +63,5 @@ class Organization(Base):
     department = Column(String)
     status = Column(Boolean, default=False, nullable=False)
     highlights = relationship('OrganizationHighlight', cascade="all, delete")
-    # administrators = relationship('Administrator', back_populates='organization', cascade="all, delete")
     administrators = relationship('User',  secondary=organization_administrator_assoc_table)
     members = relationship('MemberInformation', secondary=organization_members_assoc_table)

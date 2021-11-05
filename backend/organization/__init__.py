@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 import uuid
 from datetime import date
+from user import User
 
 class MemberInformation(BaseModel):
     m_id: Optional[uuid.UUID]
@@ -39,6 +40,7 @@ class Organization(BaseModel):
     status: Optional[bool] = False
     highlights: List[OrganizationHighlight] = []
     members: List[MemberInformation] = []
+    administrators: List[User] = []
 
     class Config:
         orm_mode = True
