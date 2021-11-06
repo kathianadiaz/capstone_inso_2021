@@ -1,6 +1,10 @@
+.organizationpage-wrapper {
+  height: 100%;
+  background-color: var(--p-background-color);
+}
+
 .organizationpage-container {
   width: 100%;
-  height: 100vh;
   padding: 1rem;
   background-color: var(--p-background-color);
   overflow: auto;
@@ -30,7 +34,7 @@
   padding-left: 25px;
 }
 
-.organization-events {
+.organization-members {
   border-bottom: none;
 }
 
@@ -49,12 +53,13 @@
 }
 .organization-heading {
   display: flex;
+  width: 100%;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid black;
-  width: 100%;
   color: var(--t-royal-blue);
 
   &-logo {
@@ -73,13 +78,16 @@
 
   &-buttons-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 1rem;
+    width: 100%;
   }
 
   &-button {
-    margin: 0 auto;
     padding: 0.5rem;
     font-weight: bold;
+    width: 200px;
     text-decoration: none;
     border-radius: 15px;
     font-weight: bold;
@@ -95,13 +103,47 @@
     pointer-events: none;
   }
 
-  @media (max-width: 450px) {
-    flex-direction: column;
+  @media (min-width: 780px) {
+    flex-direction: row;
 
     &-button {
-      padding-left: 0.3rem;
-      font-size: 15px;
+      font-size: 25px;
       line-height: 15px;
+      height: 70px;
+      width: 250px;
     }
+    &-buttons-container {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+//Organization-information-wrappper
+.organization-information-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &-text {
+    font-weight: bold;
+    color: var(--t-royal-blue);
+  }
+}
+
+//Highlight CSS
+.highlight-delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.highlight-anchor {
+  color: var(--t-royal-blue);
+  font-weight: bold;
+
+  &:hover {
+    color: black;
   }
 }

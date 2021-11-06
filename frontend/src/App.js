@@ -49,20 +49,16 @@ function App() {
               <Route path="/SignIn">
                 <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
               </Route>
-              <Route path="/UserProfile">
-                <UserPage
-                  name="test"
-                  email="joshwalker44@gmail.com"
-                  phone="787-450-4934"
-                />
+              <Route path="/UserProfile/:UserId">
+                <UserPage />
               </Route>
               <Route path="/OrganizationCreation">
                 <OrgCreation />
               </Route>
-              <Route path="/organization-profile">
+              <Route path="/organization-profile/:OrganizationId">
                 <OrganizationProfile
-                  status="Recruiting"
-                  description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
+                // status="Recruiting"
+                // description=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste laborum, delectus soluta, dolor adipisci modi eius maxime totam nisi facere sit, esse natus vel necessitatibus?"
                 />
               </Route>
               <Route path="/OrganizationsList">

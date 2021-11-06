@@ -4,15 +4,15 @@ from typing import List
 
 from organization.repository import OrganizationRepository, OrganizationHighlight
 
-TOKEN = ''
+TOKENS = []
 
 # TODO: refactor code. Lots of repeated lines that can be put into a function
 
-def create_testing_organization(name: str, description: str = 'testing org', tags: List[str] = [], department:str = 'INSO'):
+def create_testing_organization(name: str, email: str, description: str = 'testing org', tags: List[str] = [], department:str = 'INSO'):
     response = client.post(
         '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':name, 'description': description, 'tags': tags, 'department': department}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={'name':name, 'email':email, 'description': description, 'tags': tags, 'department': department}
     )
 
     assert response.status_code == 200
@@ -22,8 +22,14 @@ def create_testing_organization(name: str, description: str = 'testing org', tag
 def test_register():
     response = client.post(
         '/register',
-        json={'name':'tester', 'email':'testing@test.com', 'username':'tester', 'password':'testing' },
+        json={'name':'tester', 'email':'testing@test.com', 'username':'tester', 'password':'testing', 'phone_number':'787-123-4567' },
     )
+
+    client.post(
+        '/register',
+        json={'name':'tester2', 'email':'testing@test2.com', 'username':'tester2', 'password':'testing' },
+    )
+    assert response.status_code == 200
 
     data = response.json()
     assert response.status_code == 200, response.text
@@ -31,6 +37,7 @@ def test_register():
     assert data['name'] == 'tester'
     assert data['email'] == 'testing@test.com'
     assert data['username'] == 'tester'
+    assert data['phone_number'] == '787-123-4567'
 
 def test_duplicate_register():
     response = client.post(
@@ -59,8 +66,10 @@ def test_get_user_by_id():
     assert data['email'] == 'testing1@test.com'
     assert data['username'] == 'tester1'
 
+
 def test_login():
-    global TOKEN
+    # global TOKEN
+    global TOKENS
 
     response = client.post(
         '/token',
@@ -70,7 +79,16 @@ def test_login():
     assert response.status_code == 200, response.text
     assert "user" in response.json()
 
-    TOKEN = response.json()['access_token']
+    # TOKEN = response.json()['access_token']
+    TOKENS.append(response.json()['access_token'])
+
+    response = client.post(
+        '/token',
+        data={'username':'tester2', 'password':'testing'}
+    )   
+    assert response.status_code == 200, response.text
+
+    TOKENS.append(response.json()['access_token'])
 
     response = client.post(
         '/token',
@@ -80,21 +98,46 @@ def test_login():
     assert response.status_code == 401, response.text
     assert response.json() == {"detail": "Incorrect username or password"}
 
+def test_edit_user():
+    response = client.put(
+        '/user',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json = {
+            "name": "jose",
+            "username":"jose",
+            "email": "jose@jose.com",
+            "phone_number": "787-777-8888"
+        }
+    )
+
+    assert response.status_code == 200
+    new_user = response.json()
+    assert new_user['name'] == 'jose'
+    assert new_user['username'] != 'jose'
+    assert new_user['email'] == 'jose@jose.com'
+    assert new_user['phone_number'] == '787-777-8888'
+
+
+
 def test_create_organizations():
-    organization = create_testing_organization(name='testers', tags=['software', 'testing'])
+    organization = create_testing_organization(name='testers',email='test@gmail.com', tags=['software', 'testing'])
 
     assert 'o_id' in organization
     assert organization['name'] == 'testers'
+    assert organization['email'] == 'test@gmail.com'
     assert organization['description'] == 'testing org'
     assert organization['tags'] == ['software', 'testing']
     assert organization['department'] == 'INSO'
     assert organization['status'] == False
     assert organization['highlights'] == []
+    assert organization['members'] == []
+    assert len(organization['administrators']) > 0
 
-    organization = create_testing_organization(name='testers2',description='testing org2', tags=['software', 'testing'])
+    organization = create_testing_organization(name='testers2', email='test2@gmail.com', description='testing org2', tags=['software', 'testing'])
 
     assert 'o_id' in organization
     assert organization['name'] == 'testers2'
+    assert organization['email'] == 'test2@gmail.com'
     assert organization['description'] == 'testing org2'
     assert organization['tags'] == ['software', 'testing']
     assert organization['department'] == 'INSO'
@@ -115,8 +158,8 @@ def test_get_all_organizations():
 def test_get_organization_by_id():
     response = client.post(
         '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':'testers3', 'description':'testing org3', 'tags':['software','testing'], 'department': 'INSO', 'highlights':[{'title':'test','description':'test'}]}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={'name':'testers3', 'email':'test3@gmail.com', 'description':'testing org3', 'tags':['software','testing'], 'department': 'INSO', 'highlights':[{'title':'test','description':'test'}]}
     )
 
     o_id = response.json()['o_id']
@@ -126,6 +169,7 @@ def test_get_organization_by_id():
     organization = response.json()
     assert response.status_code == 200
     assert organization['name'] == 'testers3'
+    assert organization['email'] == 'test3@gmail.com'
     assert organization['description'] == 'testing org3'
     assert organization['tags'] == ['software', 'testing']
     assert organization['department'] == 'INSO'
@@ -142,7 +186,7 @@ def test_get_organization_by_id():
 def test_get_administrators_organizations():
     response = client.get(
         '/my-organizations',
-        headers= {"Authorization" : f"Bearer {TOKEN}"}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"}
     )
 
     organizations = response.json()
@@ -155,8 +199,8 @@ def test_get_administrators_organizations():
 def test_delete_organization():
     response = client.post(
         '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':'testers4', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={'name':'testers4', 'email':'test4@gmail.com','description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
     )
 
     assert response.status_code == 200
@@ -164,7 +208,7 @@ def test_delete_organization():
 
     response = client.get(
         '/my-organizations',
-        headers= {"Authorization" : f"Bearer {TOKEN}"}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"}
     )
 
     assert response.status_code == 200
@@ -172,12 +216,12 @@ def test_delete_organization():
 
     client.delete(
         f'/organization/{o_id}',
-        headers= {"Authorization" : f"Bearer {TOKEN}"}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"}
     )
 
     response = client.get(
         '/my-organizations',
-        headers= {"Authorization" : f"Bearer {TOKEN}"}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"}
     )
     response.status_code == 200
     assert len(response.json()) == 3
@@ -185,8 +229,8 @@ def test_delete_organization():
 def test_edit_organization():
     response = client.post(
         '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':'testers4', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={'name':'testers4', 'email':'test4@gmail.com', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
     )
 
     assert response.status_code == 200
@@ -194,8 +238,8 @@ def test_edit_organization():
 
     response = client.put(
         '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'o_id':o_id,'name':'test_edit', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={'o_id':o_id,'name':'test_edit', 'email':'test4edit@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
     ) 
 
 
@@ -207,8 +251,8 @@ def test_edit_organization():
 def test_add_hightlight():
     response = client.post(
         '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':'testers4', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={'name':'testers4','email':'testa5@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
     )
 
     assert response.status_code == 200
@@ -218,7 +262,7 @@ def test_add_hightlight():
 
     response = client.post(
         f'/organization/{o_id}/highlight',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
         json= {'title':'test','description':'test'}
     )
 
@@ -237,8 +281,8 @@ def test_add_hightlight():
 def test_delete_highlight():
     response = client.post(
         '/organization',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
-        json={'name':'testers5', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={'name':'testers5', 'email':'test5@gmail.com','description':'testing org4', 'tags':['software','testing'], 'department': 'INSO','highlights':[]}
     )
 
     assert response.status_code == 200
@@ -248,7 +292,7 @@ def test_delete_highlight():
 
     response = client.post(
         f'/organization/{o_id}/highlight',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
         json= {'title':'test','description':'test'}
     )
 
@@ -259,14 +303,14 @@ def test_delete_highlight():
 
     response = client.delete(
         f'/organization/{o_id}/highlight/{oh_id}',
-        headers= {"Authorization" : f"Bearer {TOKEN}"},
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
     )
 
     assert response.status_code == 200
     assert len(response.json()['highlights']) == 0
 
 def test_add_member_information():
-    organization = create_testing_organization('org')
+    organization = create_testing_organization('org','tester3')
 
     response = client.post(
         f'/organization/{organization["o_id"]}/member-information',
@@ -287,3 +331,63 @@ def test_add_member_information():
 
     assert response.status_code == 200
     assert len(response.json()['members']) == 1
+
+def test_add_member_info_as_user():
+    response = client.post(
+        f'/user/member-information',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+        json={
+            "name": "string",
+            "email": "string2",
+            "links": [
+                "string"
+            ],
+            "resume": "string",
+            "picture": "string"
+        }
+    )
+
+    assert response.status_code == 200
+    assert response.json()['m_id'] != None 
+
+    
+
+def test_connect_member_to_organization():
+    response = client.post(
+        f'/user/member-information',
+        headers= {"Authorization" : f"Bearer {TOKENS[1]}"},
+        json={
+            "name": "string",
+            "email": "string2",
+            "links": [
+                "string"
+            ],
+            "resume": "string",
+            "picture": "string"
+        }
+    )
+
+    assert response.status_code == 200
+    assert response.json()['m_id'] != None 
+    m_id = response.json()['m_id']
+
+    org = create_testing_organization("org2", 'tester4')
+
+    response = client.post(
+        f'/organization/{org["o_id"]}/member-information/{m_id}',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()['members']) > 0
+
+def test_get_organizations_by_member():
+    response = client.get(
+        '/my-organizations-member',
+        headers= {"Authorization" : f"Bearer {TOKENS[1]}"}
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+
+

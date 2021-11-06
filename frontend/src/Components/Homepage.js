@@ -7,26 +7,17 @@ function Homepage() {
   return (
     <div className="homepage-container">
       {/* <NavigationBar /> */}
-      <div className="welcome" id="about">
+      <div className="welcome">
         <div className="welcome-image">
           <img src="/WelcomeImage.png" alt="" className="girl-studying" />
         </div>
 
         <div className="welcome-container">
           <h1 className="welcome-title">
-            Welcome to the place to join{" "}
+            <span className="blue-text">Welcome to the place to join </span>
             <span className="green-text">student organizations</span>
           </h1>
           <div className="welcome-buttons">
-            {/* <a href="" className="link-btn search-button">
-              Start searching now
-            </a> */}
-            {/* <a href="" className="link-btn learn-button">
-              Learn more
-            </a> */}
-            {/* <Button variant="btn learn-button" size="lg">
-              Learn more
-            </Button> */}
             <Button variant="link-btn search-button" size="lg">
               <Link to="/OrganizationsList" className="custom-link">
                 Start searching now
@@ -35,7 +26,7 @@ function Homepage() {
           </div>
         </div>
       </div>
-      <div className="service">
+      <div className="service" id="about">
         <div className="service-image">
           <img src="/About-image.png" alt="" className="serviceImage" />
         </div>
@@ -54,7 +45,9 @@ function Homepage() {
         </div>
       </div>
       <div className="features" id="feature">
-        <h2>Features Provided</h2>
+        <h2 className="features-h2">
+          <span>Features</span> <span className="blue-text"> Provided </span>
+        </h2>
         <div className="features-wrapper">
           <div className="features-box">
             <img src="/settings.png" alt="" className="feature-image" />
@@ -92,29 +85,25 @@ function Homepage() {
               Start searching now
             </Link>
           </Button>
-          {/* <Button variant="link-btn learn-button" size="lg">
-            Learn more
-          </Button> */}
-
-          {/* <a href="" className="link-btn search-button">
-            Start searching now
-          </a>
-          <a href="" className="link-btn learn-button">
-            Learn more
-          </a> */}
         </div>
       </div>
       <footer className="creators">
         <div className="creators-information">
           <p>More about us:</p>
           <div className="creators-container">
-            <a href="" className="creators-name">
+            <a
+              href="https://github.com/edisonzapata20"
+              className="creators-name"
+            >
               Edison
             </a>
-            <a href="" className="creators-name">
+            <a
+              href="https://github.com/SamuelDiazBidot"
+              className="creators-name"
+            >
               Samuel
             </a>
-            <a href="" className="creators-name">
+            <a href="https://github.com/kathianadiaz" className="creators-name">
               Kathiana
             </a>
           </div>

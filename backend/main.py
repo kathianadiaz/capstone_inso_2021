@@ -20,8 +20,6 @@ app.include_router(OrganizationRouter)
 app.include_router(UserRouter)
 app.include_router(AuthRouter)
 
-models.Base.metadata.create_all(bind=engine)
-
 @app.get("/")
 async def root():
     return {"message": "Hello World"}

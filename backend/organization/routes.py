@@ -68,6 +68,19 @@ def delete_organization_highlight(o_id:str , oh_id: str, user: User = Depends(ge
 def get_administrators_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return OrganizationRepository.get_organizations_by_administrator(user.u_id,db)
 
+@router.get("/my-organizations-member")
+def get_member_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return OrganizationRepository.get_organization_by_member(user.m_id, db)
+
 @router.post("/organization/{o_id}/member-information", response_model=MemberInformation)
 def add_member_information(o_id:str, member_info: MemberInformation, db: Session = Depends(get_db)):
     return OrganizationRepository.add_member_information(o_id, member_info, db)
+
+@router.post("/organization/{o_id}/member-information/{m_id}", response_model=Organization)
+def connect_member_information(o_id: str, m_id: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.connect_user_to_organization(o_id,m_id, user, db)
+
+    if not organization:
+        raise HTTPException(status_code=404, detail="Organization or member information not found")
+
+    return organization
