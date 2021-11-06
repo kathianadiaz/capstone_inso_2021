@@ -9,8 +9,8 @@ class MemberInformation(BaseModel):
     name: str
     email: str
     links: Optional[List[str]]
-    resume: Optional[str] #TODO: find data type for BYTEA
-    picture: Optional[str] #TODO: find data type for BYTEA
+    resume: Optional[bytes] 
+    picture: Optional[bytes] 
 
     class Config:
         orm_mode = True
@@ -21,7 +21,7 @@ class OrganizationHighlight(BaseModel):
     date: Optional[date]
     title: str
     description: str
-    attachment: Optional[str] #TODO: find python type for blob
+    attachment: Optional[bytes] 
 
     class Config:
         orm_mode = True
@@ -33,7 +33,7 @@ class Organization(BaseModel):
     '''Organization class'''
     o_id: Optional[uuid.UUID]
     name: str
-    email: str
+    email: Optional[str]
     description: Optional[str]
     tags: List[str] = []
     department: Optional[str]
