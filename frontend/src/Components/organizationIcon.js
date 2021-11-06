@@ -12,7 +12,7 @@ function organizationIcon(props) {
             className="organization-card-name card-name-color"
             to={`/organization-profile/${props.organizationId}`}
           >
-            <a className="organization-card-name">{props.organizationName}</a>
+            <p className="organization-card-name">{props.organizationName}</p>
           </Link>
         </Card.Body>
       </Card>

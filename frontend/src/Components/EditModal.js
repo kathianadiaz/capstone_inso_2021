@@ -26,9 +26,10 @@ const highlightSchema = Yup.object()
 
 const userProfileSchema = Yup.object()
   .shape({
-    email: Yup.string().email().required("Email required"),
-    phone: Yup.string()
-      .required()
+    name: Yup.string().optional("Name required"),
+    email: Yup.string().email().optional("Email required"),
+    phone_number: Yup.string()
+      .optional()
       .matches(/^[0-9]+$/, "Must be only digits")
       .min(10, "Phone number mininum is 10 digits")
       .max(10, "Phone number maximum is 10 digits"),
@@ -43,7 +44,6 @@ function EditModal(props) {
   const handleShow = () => setShow(true);
   const { OrganizationId } = useParams();
 
-  console.log(OrganizationId);
   //   const [eventdata, setEventData] = useState([]);
   const {
     register,
@@ -67,12 +67,18 @@ function EditModal(props) {
       ? sendModalData([...props.mdata, data])
       : sendModalData(data);
     setShow(false);
-    console.log(data);
-
     if (props.type === "User") {
+      let ujson = {
+        username: state?.user.username,
+        email: data.email,
+        phone_number: data.phone_number,
+        name: data.name,
+      };
+      axios.defaults.headers.put["Authorization"] = `Bearer ${state?.token}`;
       axios
-        .post(`http://localhost:8000/organization/${state.user.u_id}`)
+        .put("http://localhost:8000/user", ujson)
         .then((response) => {
+          props.setdata(response.data);
           console.log(response);
         })
         .catch((error) => {
@@ -116,7 +122,7 @@ function EditModal(props) {
             {...register("event")}
             placeholder={props.type}
           />
-          <p className="error-message">{errors.event?.message}</p>
+          <p className="error-message">{errors.username?.message}</p>
           <Form.Label>{props.type} date: </Form.Label>
 
           <Form.Control
@@ -138,9 +144,18 @@ function EditModal(props) {
     } else if (props.type === "User") {
       return (
         <Modal.Body>
+          <Form.Label>{props.type} real name: </Form.Label>
+          <Form.Control
+            type="name"
+            defaultValue={props.mdata.name}
+            {...register("name")}
+            placeholder={"Real name"}
+          />
+          <p className="error-message">{errors.name?.message}</p>
           <Form.Label>{props.type} email: </Form.Label>
           <Form.Control
             type="email"
+            defaultValue={props.mdata.email}
             {...register("email")}
             placeholder={"Email"}
           />
@@ -149,10 +164,11 @@ function EditModal(props) {
 
           <Form.Control
             type="phone"
-            {...register("phone")}
-            placeholder={"Phone"}
+            defaultValue={props.mdata.phone_number}
+            {...register("phone_number")}
+            placeholder={"Phone number"}
           />
-          <p className="error-message">{errors.phone?.message}</p>
+          <p className="error-message">{errors.phone_number?.message}</p>
         </Modal.Body>
       );
     } else {
@@ -192,7 +208,6 @@ function EditModal(props) {
           <Add />
         </div>
       </Button>
-
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit(getEventdata)}>
           <Modal.Header closeButton>

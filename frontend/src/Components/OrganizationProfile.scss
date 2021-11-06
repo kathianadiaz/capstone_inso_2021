@@ -1,6 +1,10 @@
+.organizationpage-wrapper {
+  height: 100%;
+  background-color: var(--p-background-color);
+}
+
 .organizationpage-container {
   width: 100%;
-  height: 100vh;
   padding: 1rem;
   background-color: var(--p-background-color);
   overflow: auto;
@@ -115,7 +119,18 @@
     }
   }
 }
-//Organization delete button
+
+//Organization-information-wrappper
+.organization-information-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &-text {
+    font-weight: bold;
+    color: var(--t-royal-blue);
+  }
+}
 
 //Highlight CSS
 .highlight-delete {

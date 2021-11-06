@@ -49,7 +49,7 @@ function App() {
               <Route path="/SignIn">
                 <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
               </Route>
-              <Route path="/UserProfile">
+              <Route path="/UserProfile/:UserId">
                 <UserPage />
               </Route>
               <Route path="/OrganizationCreation">

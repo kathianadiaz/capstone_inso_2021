@@ -75,7 +75,7 @@ function NavigationBar(props) {
             {/* <Nav.Link as={Link} to="/organization-profile">
               My organization
             </Nav.Link> */}
-            <Nav.Link as={Link} to="/UserProfile">
+            <Nav.Link as={Link} to={`/UserProfile/${state?.user.u_id}`}>
               User Profile
             </Nav.Link>
             <Link to="/">

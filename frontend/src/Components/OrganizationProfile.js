@@ -24,7 +24,6 @@ function OrganizationProfile(props) {
   //   setShow(false);
   // };
   const { OrganizationId } = useParams();
-
   useEffect(() => {
     axios
       .get(`http://localhost:8000/organization/${OrganizationId}`)
@@ -108,6 +107,30 @@ function OrganizationProfile(props) {
                   />
                 ) : null}
               </div>
+            </div>
+          </div>
+          <div className="organization-information organization-layout">
+            <h3 className="section-heading">Organization Information: </h3>
+            <div className="organization-information-wrapper">
+              <p>
+                {" "}
+                <span className="organization-information-wrapper-text">
+                  Contact email:{" "}
+                </span>{" "}
+                {organizationData.email}
+              </p>
+              <p>
+                <span className="organization-information-wrapper-text">
+                  Department:{" "}
+                </span>
+                {organizationData.department}
+              </p>
+              <p>
+                <span className="organization-information-wrapper-text">
+                  Tags:{" "}
+                </span>
+                {organizationData.tags + ""}
+              </p>
             </div>
           </div>
           <div className="organization-description organization-layout">
