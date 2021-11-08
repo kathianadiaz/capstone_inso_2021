@@ -77,7 +77,7 @@ function UserProfile(props) {
             <div className="user-info">
               <Image
                 className="user-info-photo"
-                src="/testPerson.jpg"
+                src="/defaultProfile.png"
                 roundedCircle
               />
               <h1 className="user-info-name text-color">{userData.name}</h1>
@@ -126,8 +126,9 @@ function UserProfile(props) {
                       <OrgIcon
                         key={i}
                         organizationName={org.name}
-                        imageLocation="/testPerson.jpg"
+                        imageLocation="/defaultorganization.png"
                         organizationId={org.o_id}
+                        type={"organization"}
                       />
                     ))
                   : spinner && <h1>No results found!</h1>}
@@ -138,7 +139,7 @@ function UserProfile(props) {
       )}
       {spinner && (
         <div className="spinner-container">
-          <Spinner animation="grow" variant="success">
+          <Spinner animation="grow" variant="dark">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>

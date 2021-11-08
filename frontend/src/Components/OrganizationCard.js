@@ -7,7 +7,7 @@ function OrganizationCard(props) {
       <div className="organization-cards-logo">
         <Image
           className="organization-cards-image"
-          src="/testPerson.jpg"
+          src="/defaultorganization.png"
           fluid
         />
       </div>

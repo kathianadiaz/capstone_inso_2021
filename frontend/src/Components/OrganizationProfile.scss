@@ -21,6 +21,7 @@
   margin-top: 3em;
   border: 1.5px solid var(--t-blue-purple);
   background-color: white;
+  border-radius: 15px;
 }
 
 .organization-layout {
@@ -36,6 +37,19 @@
 
 .organization-members {
   border-bottom: none;
+  &-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 780px) {
+    &-layout {
+      display: flex;
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+  }
 }
 
 .event-time {
@@ -108,7 +122,7 @@
 
     &-button {
       font-size: 25px;
-      line-height: 15px;
+      line-height: 25px;
       height: 70px;
       width: 250px;
     }
@@ -116,6 +130,8 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      max-width: 600px;
     }
   }
 }
@@ -146,4 +162,50 @@
   &:hover {
     color: black;
   }
+}
+
+// Member Information CSS
+
+.member-card-information {
+  border-top: 1px solid black;
+  width: 100%;
+
+  &-name {
+    font-size: 25px;
+  }
+}
+
+.profile-image-container {
+  padding: 1rem;
+}
+
+.card-body {
+  padding: 0;
+}
+
+.member-card {
+  width: 100%;
+  max-width: 250px;
+  height: 100%;
+  border: 1px black solid;
+
+  @media (min-width: 780px) {
+    max-width: 250px;
+  }
+}
+/* Spinner CSS */
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+}
+
+.spinner-border {
+  width: 10rem;
+  height: 10rem;
+}
+.spinner-grow {
+  width: 6rem;
+  height: 6rem;
 }
