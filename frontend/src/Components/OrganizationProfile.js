@@ -34,10 +34,9 @@ function OrganizationProfile() {
   const [redirectD, setredirectD] = useState(false);
   const [spinner, setSpinner] = useState(true);
   const [memberData, setMemberData] = useState([]);
-  // console.log(showModal);
+  console.log(organizationData);
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
-  // console.log(deletedHighlight);
   return (
     <div className="organizationpage-wrapper">
       {!spinner && (
@@ -57,8 +56,8 @@ function OrganizationProfile() {
                   >
                     Status:{" "}
                     {organizationData.status === false
-                      ? "Not recruiting"
-                      : "Recruting  "}
+                      ? "Not Recruiting"
+                      : "Recruiting  "}
                   </Button>
                   {organizationData.status !== "true" ? (
                     <Button variant="btn organization-heading-button" size="lg">
@@ -94,7 +93,17 @@ function OrganizationProfile() {
               </div>
             </div>
             <div className="organization-information organization-layout">
-              <h3 className="section-heading">Organization Information: </h3>
+              <h3 className="section-heading">
+                Organization Information:
+                {ustate?.user.u_id ===
+                organizationData.administrators[0].u_id ? (
+                  <EditM
+                    mdata={organizationData}
+                    setdata={SetOrganizationData}
+                    type="Organization"
+                  />
+                ) : null}
+              </h3>
               <div className="organization-information-wrapper">
                 <p>
                   {" "}
@@ -113,7 +122,7 @@ function OrganizationProfile() {
                   <span className="organization-information-wrapper-text">
                     Tags:{" "}
                   </span>
-                  {organizationData.tags + ""}
+                  <p>{organizationData.tags + ""}</p>
                 </p>
               </div>
             </div>
@@ -160,7 +169,8 @@ function OrganizationProfile() {
                 />
               ))}
             </div>
-            <div className="organization-events organization-layout">
+            {/* EVENTS PENDING? */}
+            {/* <div className="organization-events organization-layout">
               <h3 className="section-heading">
                 Organization's Events:{" "}
                 {ustate?.user.u_id ===
@@ -181,7 +191,7 @@ function OrganizationProfile() {
                   description={data.description}
                 />
               ))}
-            </div>
+            </div> */}
             <div className="organization-members organization-layout">
               <h3 className="section-heading">
                 Organization's Members:{" "}

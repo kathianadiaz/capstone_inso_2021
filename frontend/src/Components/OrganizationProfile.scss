@@ -41,6 +41,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   @media (min-width: 780px) {
@@ -99,18 +101,25 @@
   }
 
   &-button {
-    padding: 0.5rem;
+    padding: 0.2rem;
     font-weight: bold;
-    width: 200px;
+    width: 150px;
     text-decoration: none;
     border-radius: 15px;
     font-weight: bold;
     border-radius: 15px;
-    background-color: var(--t-bright-green);
-    color: white;
+    border: 3px solid;
+    border-color: var(--t-bright-green);
+    color: var(--t-royal-blue);
     font-weight: 700;
-    font-size: 25px;
+    font-size: 20px;
     line-height: 30px;
+
+    &:hover {
+      background-color: var(--t-blue-purple);
+      color: white;
+      border-color: var(--t-blue-purple);
+    }
   }
 
   .remove-functions {
@@ -141,7 +150,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-
+  word-wrap: break-word;
   &-text {
     font-weight: bold;
     color: var(--t-royal-blue);
@@ -177,6 +186,7 @@
 
 .profile-image-container {
   padding: 1rem;
+  height: 250px;
 }
 
 .card-body {

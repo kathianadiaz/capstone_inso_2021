@@ -82,12 +82,12 @@ class OrganizationRepository:
         return organization
 
     @staticmethod
-    def edit_organization(new_organization: Organization, user: User, db: Session) -> Optional[Organization]:
+    def edit_organization(o_id: str, new_organization: Organization, user: User, db: Session) -> Optional[Organization]:
         '''Edit the information for a specific `Organization`'''
         organization = db.query(models.Organization).\
             join(models.organization_administrator_assoc_table).\
             filter(models.organization_administrator_assoc_table.columns.user_id == user.u_id).\
-            filter(models.organization_administrator_assoc_table.columns.organization_id == new_organization.o_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == o_id).\
             first()
 
         if not organization:
@@ -98,7 +98,9 @@ class OrganizationRepository:
         organization.description = new_organization.description
         organization.tags = new_organization.tags
         organization.status = new_organization.status
-        organization.highlight = new_organization.highlights
+        organization.email = new_organization.email
+        organization.department = new_organization.department
+        
         db.commit()
 
         return new_organization
