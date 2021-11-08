@@ -1,7 +1,6 @@
 import React from "react";
 import "./Homepage.scss";
 import { Link } from "react-router-dom";
-import NavigationBar from "./Navbar";
 import { Button } from "react-bootstrap";
 function Homepage() {
   return (
