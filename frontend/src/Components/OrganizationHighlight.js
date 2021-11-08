@@ -29,9 +29,11 @@ const OrganizationHighlight = (props) => {
       <div className="highlight-delete">
         <h3>{props.award}</h3>
       </div>
-      <a className="highlight-anchor" onClick={deleteHighlight}>
-        Delete Highlight
-      </a>
+      {state.user.u_id === props.admins[0].u_id ? (
+        <a className="highlight-anchor" onClick={deleteHighlight}>
+          Delete Highlight
+        </a>
+      ) : null}
       {/* <h4 className="event-time"> {"Date: " + props.date} </h4> */}
       <p>{props.description}</p>
     </div>

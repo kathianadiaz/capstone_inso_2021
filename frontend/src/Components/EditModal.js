@@ -36,6 +36,13 @@ const userProfileSchema = Yup.object()
   })
   .required();
 
+const memberSchema = Yup.object()
+  .shape({
+    name: Yup.string().optional("Name required"),
+    email: Yup.string().email().optional("Email required"),
+  })
+  .required();
+
 function EditModal(props) {
   const [show, setShow] = useState(false);
   const [state, setState] = useContext(AuthContext);
@@ -55,6 +62,8 @@ function EditModal(props) {
         ? eventSchema
         : props.type === "User"
         ? userProfileSchema
+        : props.type === "Member"
+        ? memberSchema
         : highlightSchema
     ),
   });
@@ -85,8 +94,29 @@ function EditModal(props) {
           console.log(error);
         });
     }
-
-    if (props.type != "User" && props.type != "Event") {
+    if (props.type === "Member") {
+      let hjson = {
+        name: data.name,
+        email: data.email,
+      };
+      axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+      axios
+        .post(
+          `http://localhost:8000/organization/${OrganizationId}/member-information`,
+          hjson
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (
+      props.type != "User" &&
+      props.type != "Event" &&
+      props.type != "Member"
+    ) {
       let hjson = {
         title: data.title,
         description: data.description,
@@ -139,6 +169,25 @@ function EditModal(props) {
             placeholder={"Description"}
           />
           <p className="error-message">{errors.description?.message}</p>
+        </Modal.Body>
+      );
+    } else if (props.type === "Member") {
+      return (
+        <Modal.Body>
+          <Form.Label>{props.type} real name: </Form.Label>
+          <Form.Control
+            type="name"
+            {...register("name")}
+            placeholder={"Real name"}
+          />
+          <p className="error-message">{errors.name?.message}</p>
+          <Form.Label>{props.type} email: </Form.Label>
+          <Form.Control
+            type="email"
+            {...register("email")}
+            placeholder={"Email"}
+          />
+          <p className="error-message">{errors.email?.message}</p>
         </Modal.Body>
       );
     } else if (props.type === "User") {

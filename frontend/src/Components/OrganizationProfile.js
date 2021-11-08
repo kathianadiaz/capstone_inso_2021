@@ -24,7 +24,8 @@ function OrganizationProfile() {
         console.log(error);
       });
   }, []);
-
+  let s = sessionStorage.getItem("state");
+  let ustate = JSON.parse(s);
   const [eventData, setEventData] = useState([]);
   const [highlightData, setHighlightData] = useState([]);
   const [organizationData, SetOrganizationData] = useState([]);
@@ -32,12 +33,10 @@ function OrganizationProfile() {
   const [showModal, setShowModal] = useState(false);
   const [redirectD, setredirectD] = useState(false);
   const [spinner, setSpinner] = useState(true);
-
+  const [memberData, setMemberData] = useState([]);
   // console.log(showModal);
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
-  console.log(organizationData);
-  // console.log(organizationData.highlights);
   // console.log(deletedHighlight);
   return (
     <div className="organizationpage-wrapper">
@@ -70,7 +69,8 @@ function OrganizationProfile() {
                   {redirectD && <Redirect to="/UserProfile" />}
 
                   {/* If member is admin */}
-                  {organizationData.status !== "true" ? (
+                  {ustate.user.u_id ===
+                  organizationData.administrators[0].u_id ? (
                     <Button
                       variant="btn organization-heading-button delete-button"
                       size="lg"
@@ -124,11 +124,14 @@ function OrganizationProfile() {
             <div className="organization-highlights organization-layout">
               <h3 className="section-heading">
                 Organization's highlights:{" "}
-                <EditM
-                  mdata={highlightData}
-                  setdata={setHighlightData}
-                  type="Highlight"
-                />
+                {ustate.user.u_id ===
+                organizationData.administrators[0].u_id ? (
+                  <EditM
+                    mdata={highlightData}
+                    setdata={setHighlightData}
+                    type="Highlight"
+                  />
+                ) : null}
               </h3>
               {/* {organizationData.highlights &&
             organizationData.highlights.length > 0
@@ -149,6 +152,7 @@ function OrganizationProfile() {
                   // date={data.date.toLocaleDateString()}
                   description={data.description}
                   highlightId={data.oh_id}
+                  admins={organizationData.administrators}
                   deleted={setDeletedHighlight}
                   highlightdata={highlightData}
                   sethighlight={setHighlightData}
@@ -158,7 +162,14 @@ function OrganizationProfile() {
             <div className="organization-events organization-layout">
               <h3 className="section-heading">
                 Organization's Events:{" "}
-                <EditM mdata={eventData} setdata={setEventData} type="Event" />
+                {ustate.user.u_id ===
+                organizationData.administrators[0].u_id ? (
+                  <EditM
+                    mdata={eventData}
+                    setdata={setEventData}
+                    type="Event"
+                  />
+                ) : null}
               </h3>
 
               {eventData.map((data, i) => (
@@ -173,10 +184,25 @@ function OrganizationProfile() {
             <div className="organization-members organization-layout">
               <h3 className="section-heading">
                 Organization's Members:{" "}
-                <EditM mdata={eventData} setdata={setEventData} type="Event" />
+                {ustate.user.u_id ===
+                organizationData.administrators[0].u_id ? (
+                  <EditM
+                    mdata={memberData}
+                    setdata={setMemberData}
+                    type="Member"
+                  />
+                ) : null}
               </h3>
-
               <div className="organization-members-layout">
+                {memberData.map((data, i) => (
+                  <MemberIcon
+                    key={i}
+                    type={"User"}
+                    memberName={data.name}
+                    imageLocation="/defaultProfile.png"
+                    email={data.email}
+                  />
+                ))}
                 {(organizationData.members || []).map((data, i) => (
                   <MemberIcon
                     key={i}
