@@ -116,7 +116,7 @@ class OrganizationRepository:
         if not organization:
             return None
 
-        db_highlight = models.OrganizationHighlight(title=highlight.title, description=highlight.description)
+        db_highlight = models.OrganizationHighlight(title=highlight.title, description=highlight.description, date = highlight.date)
         organization.highlights.append(db_highlight)
         db.commit()
 

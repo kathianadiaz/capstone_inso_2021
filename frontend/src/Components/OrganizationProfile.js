@@ -69,7 +69,7 @@ function OrganizationProfile() {
                   {redirectD && <Redirect to="/UserProfile" />}
 
                   {/* If member is admin */}
-                  {ustate.user.u_id ===
+                  {ustate?.user.u_id ===
                   organizationData.administrators[0].u_id ? (
                     <Button
                       variant="btn organization-heading-button delete-button"
@@ -124,7 +124,7 @@ function OrganizationProfile() {
             <div className="organization-highlights organization-layout">
               <h3 className="section-heading">
                 Organization's highlights:{" "}
-                {ustate.user.u_id ===
+                {ustate?.user.u_id ===
                 organizationData.administrators[0].u_id ? (
                   <EditM
                     mdata={highlightData}
@@ -133,6 +133,7 @@ function OrganizationProfile() {
                   />
                 ) : null}
               </h3>
+
               {/* {organizationData.highlights &&
             organizationData.highlights.length > 0
               ? organizationData.highlights.map((data, i) => (
@@ -149,7 +150,7 @@ function OrganizationProfile() {
                 <OrgHighlight
                   key={i}
                   award={data.title}
-                  // date={data.date.toLocaleDateString()}
+                  date={new Date(data.date).toLocaleDateString()}
                   description={data.description}
                   highlightId={data.oh_id}
                   admins={organizationData.administrators}
@@ -162,7 +163,7 @@ function OrganizationProfile() {
             <div className="organization-events organization-layout">
               <h3 className="section-heading">
                 Organization's Events:{" "}
-                {ustate.user.u_id ===
+                {ustate?.user.u_id ===
                 organizationData.administrators[0].u_id ? (
                   <EditM
                     mdata={eventData}
@@ -184,7 +185,7 @@ function OrganizationProfile() {
             <div className="organization-members organization-layout">
               <h3 className="section-heading">
                 Organization's Members:{" "}
-                {ustate.user.u_id ===
+                {ustate?.user.u_id ===
                 organizationData.administrators[0].u_id ? (
                   <EditM
                     mdata={memberData}

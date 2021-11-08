@@ -20,7 +20,7 @@ const highlightSchema = Yup.object()
   .shape({
     title: Yup.string().required("Award name required"),
     description: Yup.string().required("Highlight description required"),
-    // date: Yup.date().required("Date required"),
+    date: Yup.date().required("Date required"),
   })
   .required();
 
@@ -72,6 +72,9 @@ function EditModal(props) {
     // setEventData([...eventdata, data]);
     // console.log(JSON.stringify(data, null, 2));
     // console.log(eventdata);\
+    console.log(
+      data.date.toLocaleDateString("en-GB").split("/").reverse().join("-")
+    );
     props.type !== "User"
       ? sendModalData([...props.mdata, data])
       : sendModalData(data);
@@ -120,6 +123,11 @@ function EditModal(props) {
       let hjson = {
         title: data.title,
         description: data.description,
+        date: data.date
+          .toLocaleDateString("en-GB")
+          .split("/")
+          .reverse()
+          .join("-"),
       };
       axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
       axios
@@ -129,6 +137,7 @@ function EditModal(props) {
         )
         .then((response) => {
           console.log(response.data.highlights);
+          console.log(response);
           props.setdata([...response.data.highlights]);
         })
         .catch((error) => {
@@ -239,13 +248,13 @@ function EditModal(props) {
             placeholder={"description"}
           />
           <p className="error-message">{errors.description?.message}</p>
-          {/* <Form.Label>{props.type} date: </Form.Label>
+          <Form.Label>{props.type} date: </Form.Label>
           <Form.Control
             type="date"
             {...register("date")}
             placeholder={"Date"}
           />
-          <p className="error-message">{errors.date?.message}</p> */}
+          <p className="error-message">{errors.date?.message}</p>
         </Modal.Body>
       );
     }
