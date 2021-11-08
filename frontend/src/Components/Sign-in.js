@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Form, Button,Alert } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 // import FormInput from "./Form";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Redirect, Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -25,32 +25,35 @@ function SignForm(props) {
   const [toggleRedirect, setToggleRedirect] = React.useState(false);
   const [state, setState] = useContext(AuthContext);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({resolver: yupResolver(schema)});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
 
   const postLoginData = async (data) => {
     const parameters = new URLSearchParams();
     parameters.append("username", data.username);
     parameters.append("password", data.password);
 
-    return await axios
-      .post("http://localhost:8000/token", parameters)
+    return await axios.post("http://localhost:8000/token", parameters);
   };
 
-  const handleLogin = useMutation(data => postLoginData(data), {
+  const handleLogin = useMutation((data) => postLoginData(data), {
     onSuccess: async (data) => {
       setState({
-          token: data.data.access_token,
-          user: data.data.user,
-        });
-        
+        token: data.data.access_token,
+        user: data.data.user,
+      });
+
       props.navbartoggle(true);
-      setToggleRedirect(true); 
+      setToggleRedirect(true);
     },
   });
 
   const onSubmission = (data) => {
     console.log(JSON.stringify(data, null, 2));
-    handleLogin.mutate(data)
+    handleLogin.mutate(data);
   };
 
   return (
@@ -85,9 +88,11 @@ function SignForm(props) {
           />
           <p className="error-message">{errors.password?.message}</p>
 
-          {handleLogin.isError && 
-            <strong className="text-danger">Incorrect username or password</strong>
-          }
+          {handleLogin.isError && (
+            <strong className="text-danger">
+              Incorrect username or password
+            </strong>
+          )}
           <Button variant="continue-btn" type="submit">
             Continue
           </Button>

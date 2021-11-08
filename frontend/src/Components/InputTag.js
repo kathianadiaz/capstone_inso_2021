@@ -77,6 +77,3 @@ function InputTag(props) {
 }
 
 export default InputTag;
-{
-  /* <ReactTagInput tags={tags} onChange={(newTags) => setTags(newTags)} /> */
-}

@@ -60,7 +60,6 @@ function EditModal(props) {
   const handleShow = () => setShow(true);
   const { OrganizationId } = useParams();
 
-  //   const [eventdata, setEventData] = useState([]);
   const {
     register,
     handleSubmit,

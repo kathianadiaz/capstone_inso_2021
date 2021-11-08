@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal, Button } from "react-bootstrap";
-import { Redirect } from "react-router";
 import axios from "axios";
 
 function DeleteModal(props) {

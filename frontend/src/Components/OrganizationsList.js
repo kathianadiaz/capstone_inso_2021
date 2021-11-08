@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Image, NavItem, Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import "./OrganizationsList.scss";
 import OrganizationCard from "./OrganizationCard";
 import axios from "axios";

@@ -5,7 +5,6 @@ import OrgIcon from "./organizationIcon.js";
 import EditM from "./EditModal.js";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
-import { useParams } from "react-router";
 
 function UserProfile(props) {
   const [resume, setresume] = useState("");
@@ -17,8 +16,6 @@ function UserProfile(props) {
   const [spinner, setSpinner] = useState(true);
   const [username, setUsername] = useState("");
 
-  const { UserId } = useParams();
-  // console.log(state);
   const openFiles = () => {
     inputRef.current.click();
   };
@@ -37,7 +34,7 @@ function UserProfile(props) {
         console.log(error);
       });
     axios
-      .get(`http://localhost:8000/user/${UserId}`)
+      .get(`http://localhost:8000/user/${ustate.user.u_id}`)
       .then((response) => {
         setUserData(response.data);
         setUsername(response.data.username);

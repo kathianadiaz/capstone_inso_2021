@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Image, Button, Spinner } from "react-bootstrap";
 import OrgHighlight from "./OrganizationHighlight.js";
-import OrgEvent from "./OrganizationEvent.js";
 import MemberIcon from "./organizationIcon";
 import "./OrganizationProfile.scss";
 import { Redirect, useParams } from "react-router";
