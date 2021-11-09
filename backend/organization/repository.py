@@ -52,15 +52,20 @@ class OrganizationRepository:
             join(models.organization_administrator_assoc_table).\
             filter(models.organization_administrator_assoc_table.columns.user_id == u_id).all()
 
+    #TODO: get all organizations that contain the given keywords in their name or description
     @staticmethod
     def get_organization_by_keyword(keywords:List[str], db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all organizations that conatain a specific keyword in their description or name'''
         pass
 
+    #TODO: get all organizations that contain the given tags
     @staticmethod
     def get_organization_by_tags(tags: List[str], db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all organizations that contain the given tags'''
-        pass
+        organizations = {}
+        for tag in tags:
+            organizations.add(db.query(models.Organization).filter(models.Organization.tags.contains([tag])).offset(skip).limit(limit).all())
+        return organizations if len(organizations) > 0 else None
 
     @staticmethod
     def delete_organization(o_id: str, user: User, db: Session) -> Optional[Organization]:
