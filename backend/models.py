@@ -65,3 +65,13 @@ class Organization(Base):
     highlights = relationship('OrganizationHighlight', cascade="all, delete")
     administrators = relationship('User',  secondary=organization_administrator_assoc_table)
     members = relationship('MemberInformation', secondary=organization_members_assoc_table)
+
+class JoinRequest(Base):
+    __tablename__ = "join_request"
+
+    r_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
+    o_id = Column(UUID(as_uuid=True), ForeignKey('organization.o_id'))
+    u_id = Column(UUID(as_uuid=True), ForeignKey('user.u_id'))
+    m_id = Column(UUID(as_uuid=True), ForeignKey('member_information.m_id'))
+    date = Column(Date, default=datetime.date.today())
+    message = Column(String, nullable=False)
