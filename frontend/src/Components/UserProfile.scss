@@ -1,12 +1,5 @@
 // Color css helper class for heading text and some other text
 
-.text-color {
-  color: var(--t-royal-blue);
-  font-weight: 900;
-  font-size: 25px;
-  line-height: 50px;
-}
-
 .user-page-wrapper {
   background-color: var(--p-background-color);
   height: 100%;
@@ -213,5 +206,17 @@
 .spinner-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.text-color {
+  color: var(--t-royal-blue);
+  font-weight: 900;
+  font-size: 25px;
+  line-height: 50px;
+}
+
+.organization-join-message {
+  display: flex;
   align-items: center;
 }

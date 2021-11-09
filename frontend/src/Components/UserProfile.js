@@ -90,7 +90,9 @@ function UserProfile(props) {
                 <p className="white-text">{"Username: " + username}</p>
                 <p className="white-text">{"Email: " + userData.email}</p>
                 <p className="white-text">
-                  {"Phone number: " + userData.phone_number}
+                  {userData.phone_number === null
+                    ? "Phone number: " + "Add a phone number"
+                    : "Phone number: " + userData.phone_number}
                 </p>
               </div>
             </div>
@@ -128,7 +130,11 @@ function UserProfile(props) {
                         type={"organization"}
                       />
                     ))
-                  : spinner && <h1>No results found!</h1>}
+                  : Spinner && (
+                      <h2 className="green-text organization-join-message">
+                        Join organizations today!
+                      </h2>
+                    )}
               </div>
             </div>
           </div>
