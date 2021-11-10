@@ -84,3 +84,7 @@ def connect_member_information(o_id: str, m_id: str, user: User = Depends(get_cu
         raise HTTPException(status_code=404, detail="Organization or member information not found")
 
     return organization
+
+@router.post("organization/keyword/{keywords}", response_model=List[Organization])
+def search_organizations(keywords: str, db: Session = Depends(get_db)):
+    return OrganizationRepository.search_organizations(keywords, db)
