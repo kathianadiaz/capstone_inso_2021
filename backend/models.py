@@ -12,7 +12,6 @@ class User(Base):
     name = Column(String)
     username = Column(String, unique=True)
     email = Column(String, unique=True)
-    # phonenumber = Column(String,unique=True)
     password = Column(String)
     phone_number = Column(String,unique=True)
     m_id= Column(UUID(as_uuid=True), ForeignKey('member_information.m_id'), nullable=True) 
@@ -37,8 +36,8 @@ class MemberInformation(Base):
     name = Column(String, nullable=False)
     email = Column(String, nullable=False)
     links = Column(ARRAY(String))
-    resume = Column(BYTEA)
-    picture = Column(BYTEA)
+    a_id = Column(UUID(as_uuid=True), ForeignKey('attachment.a_id'))
+    i_id = Column(UUID(as_uuid=True), ForeignKey('image.i_id'))
     user= relationship("User", back_populates="member_information", uselist=False)
 
 class OrganizationHighlight(Base):
@@ -49,15 +48,23 @@ class OrganizationHighlight(Base):
     title = Column(String, nullable=False)
     description = Column(String)
     o_id = Column(UUID(as_uuid=True), ForeignKey('organization.o_id'))
+    a_id = Column(UUID(as_uuid=True), ForeignKey('attachment.a_id'))
 
 class Attachment(Base):
     __tablename__ = "attachment"
 
-    a_id = Column(Integer, primary_key=True)
+    a_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
     data= Column(BYTEA)
     filename = Column(String)
     content_type = Column(String)
-    oh_id = Column(UUID(as_uuid=True), ForeignKey('organization_highlight.oh_id'))
+
+class Image(Base):
+    __tablename__ = "image"
+
+    i_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, nullable=False)
+    data= Column(BYTEA)
+    filename = Column(String)
+    content_type = Column(String)
 
 class Organization(Base):
     __tablename__ = "organization"

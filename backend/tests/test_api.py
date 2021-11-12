@@ -318,8 +318,6 @@ def test_add_member_information():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
@@ -340,8 +338,6 @@ def test_add_member_info_as_user():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
@@ -358,8 +354,6 @@ def test_connect_member_to_organization():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
