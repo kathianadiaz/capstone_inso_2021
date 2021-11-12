@@ -179,7 +179,6 @@ def test_get_organization_by_id():
         'date': organization['highlights'][0]['date'],
         'title': 'test',
         'description':'test',
-        'attachment': None
       } 
     ]
 
@@ -274,7 +273,6 @@ def test_add_hightlight():
         'date': organization['highlights'][0]['date'],
         'title': 'test',
         'description':'test',
-        'attachment': None
       } 
     ]
 
@@ -320,8 +318,6 @@ def test_add_member_information():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
@@ -342,8 +338,6 @@ def test_add_member_info_as_user():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
@@ -360,8 +354,6 @@ def test_connect_member_to_organization():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 

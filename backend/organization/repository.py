@@ -148,7 +148,7 @@ class OrganizationRepository:
 
     @staticmethod
     def add_member_information(o_id: str, member_info: MemberInformation, db: Session) -> MemberInformation:
-        db_member_information = models.MemberInformation(m_id=uuid.uuid4(), name=member_info.name, email=member_info.email, links=member_info.links, resume=None, picture=None)
+        db_member_information = models.MemberInformation(m_id=uuid.uuid4(), name=member_info.name, email=member_info.email, links=member_info.links)
         # db.add(db_member_information)
 
         db_organization = db.query(models.Organization).filter(models.Organization.o_id == o_id).first()
