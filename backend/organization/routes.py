@@ -88,3 +88,4 @@ def connect_member_information(o_id: str, m_id: str, user: User = Depends(get_cu
 @router.post("organization/keyword/{keywords}", response_model=List[Organization])
 def search_organizations(keywords: str, db: Session = Depends(get_db)):
     return OrganizationRepository.search_organizations(keywords, db)
+

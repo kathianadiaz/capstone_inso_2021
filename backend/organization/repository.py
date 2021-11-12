@@ -53,8 +53,9 @@ class OrganizationRepository:
             filter(models.organization_administrator_assoc_table.columns.user_id == u_id).all()
 
     @staticmethod
-    def search_organizations(keywords:List[str], db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+    def search_organizations(keywords:str, db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all organizations that contain a specific keyword in their description or name or a specific tag'''
+        keywords = keywords.split(',')
         organizations=set()
         for keyword in keywords:
             organizations.update(db.query(models.Organization).filter(models.Organization.name.contains(f'%{keyword}%') 
@@ -194,3 +195,11 @@ class OrganizationRepository:
         db.commit()
 
         return db_organization
+
+    #end of class
+
+# def parse_keywords(keywords: str) -> List[str]: 
+
+
+
+
