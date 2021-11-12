@@ -179,7 +179,6 @@ def test_get_organization_by_id():
         'date': organization['highlights'][0]['date'],
         'title': 'test',
         'description':'test',
-        'attachment': None
       } 
     ]
 
@@ -274,7 +273,6 @@ def test_add_hightlight():
         'date': organization['highlights'][0]['date'],
         'title': 'test',
         'description':'test',
-        'attachment': None
       } 
     ]
 

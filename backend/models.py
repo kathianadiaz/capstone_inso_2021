@@ -1,6 +1,6 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Boolean, Date, Table
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Boolean, Date, Table, Identity
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, BYTEA
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy.orm import backref, relationship 
 from database import Base
 from uuid import uuid4
 import datetime
@@ -41,7 +41,6 @@ class MemberInformation(Base):
     picture = Column(BYTEA)
     user= relationship("User", back_populates="member_information", uselist=False)
 
-
 class OrganizationHighlight(Base):
     __tablename__ = "organization_highlight"
 
@@ -49,8 +48,16 @@ class OrganizationHighlight(Base):
     date = Column(Date, default=datetime.date.today())
     title = Column(String, nullable=False)
     description = Column(String)
-    attachment = Column(BYTEA)
     o_id = Column(UUID(as_uuid=True), ForeignKey('organization.o_id'))
+
+class Attachment(Base):
+    __tablename__ = "attachment"
+
+    a_id = Column(Integer, primary_key=True)
+    data= Column(BYTEA)
+    filename = Column(String)
+    content_type = Column(String)
+    oh_id = Column(UUID(as_uuid=True), ForeignKey('organization_highlight.oh_id'))
 
 class Organization(Base):
     __tablename__ = "organization"

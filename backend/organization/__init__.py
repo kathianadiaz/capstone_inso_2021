@@ -21,7 +21,6 @@ class OrganizationHighlight(BaseModel):
     date: Optional[date]
     title: str
     description: str
-    attachment: Optional[bytes] 
 
     class Config:
         orm_mode = True

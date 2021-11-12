@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi.responses import StreamingResponse
 from organization import Organization, OrganizationHighlight, MemberInformation
 from organization.repository import OrganizationRepository
+from organization.services.file_upload import *
 from user import User
 from sqlalchemy.orm import Session
 from typing import List
 from database import get_db
 from authentication.authentication import get_current_user
+from io import BytesIO
 
 router = APIRouter(
     tags=["organizations"]
@@ -63,6 +66,19 @@ def delete_organization_highlight(o_id:str , oh_id: str, user: User = Depends(ge
         raise HTTPException(status_code=404, detail="Organization not found")
 
     return organization
+
+@router.post('/organization/{o_id}/highlight/{oh_id}/attachment')
+def upload_attachment(o_id: str, oh_id: str, attachment: UploadFile = File(None), db: Session = Depends(get_db)):
+    upload_highlight_attachment(oh_id,attachment,db)
+
+@router.get('/organization/{o_id}/highlight/{oh_id}/attachment')
+def download_attachment(o_id: str, oh_id: str, db: Session = Depends(get_db)):
+    data = download_highlight_attachment(oh_id,db)
+    memfile = BytesIO(data['data'])
+    
+    response = StreamingResponse(memfile, media_type=f'{data["content_type"]}')
+    response.headers["Content-Disposition"] = f"inline; filename={data['filename']}"
+    return response
 
 @router.get("/my-organizations", response_model=List[Organization])
 def get_administrators_organizations(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
