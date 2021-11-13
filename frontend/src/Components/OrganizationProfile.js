@@ -6,6 +6,7 @@ import "./OrganizationProfile.scss";
 import { Redirect, useParams } from "react-router";
 import EditM from "./EditModal.js";
 import DeleteM from "./DeleteModal";
+import JoinM from "./JoinModal";
 import axios from "axios";
 function OrganizationProfile() {
   const { OrganizationId } = useParams();
@@ -23,19 +24,59 @@ function OrganizationProfile() {
         console.log(error);
       });
   }, []);
+
   let s = sessionStorage.getItem("state");
   let ustate = JSON.parse(s);
+
+  // const sendJoinRequest = () => {
+  //   axios.defaults.headers.post["Authorization"] = `Bearer ${ustate?.token}`;
+  //   let rjson = {
+  //     message: "I am interested in joining your organization",
+  //   };
+  //   axios
+  //     .post(`/${OrganizationId}/join`, rjson)
+  //     .then((response) => {
+  //       console.log(response);
+  //       setRequestStatus(true);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
   const [eventData, setEventData] = useState([]);
   const [highlightData, setHighlightData] = useState([]);
   const [organizationData, SetOrganizationData] = useState([]);
   const [deletedHighlight, setDeletedHighlight] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  // const [JoinMessage, SetJoinMessage] = useState("");
+  // const [joinRequests, setJoinRequests] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [showJoinRequestsModal, setShowJoinRequestsModal] = useState(false);
   const [redirectD, setredirectD] = useState(false);
   const [spinner, setSpinner] = useState(true);
   const [memberData, setMemberData] = useState([]);
-  console.log(organizationData);
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
+  const [requestStatus, setRequestStatus] = useState(false);
+
+  console.log(showJoinRequestsModal);
+
+  const handleShow = (e) => {
+    if (e === "JoinRequests") {
+      showJoinRequestsModal === false
+        ? setShowJoinRequestsModal(true)
+        : setShowJoinRequestsModal(false);
+    }
+    if (e === "Delete") {
+      showDeleteModal === false
+        ? setShowDeleteModal(true)
+        : setShowDeleteModal(false);
+    } else {
+      showJoinModal === false
+        ? setShowJoinModal(true)
+        : setShowJoinModal(false);
+    }
+  };
+
   return (
     <div className="organizationpage-wrapper">
       {!spinner && (
@@ -47,7 +88,10 @@ function OrganizationProfile() {
               </div>
               <div className="organization-heading-info">
                 {/* {console.log(organizationData.name)} */}
-                <h2>{organizationData.name}</h2>
+                <h1>
+                  {organizationData.name[0].toUpperCase() +
+                    organizationData.name.slice(1).toLowerCase()}
+                </h1>
                 <div className="organization-heading-buttons-container">
                   <Button
                     variant="btn organization-heading-button remove-functions"
@@ -58,36 +102,72 @@ function OrganizationProfile() {
                       ? "Not Recruiting"
                       : "Recruiting  "}
                   </Button>
-                  {organizationData.status !== "true" ? (
+                  {ustate?.user.u_id !==
+                    organizationData.administrators[0].u_id &&
+                  organizationData.status === true ? (
                     <Button variant="btn organization-heading-button" size="lg">
-                      Request to join
+                      <JoinM
+                        show={showJoinModal}
+                        setshow={setShowJoinModal}
+                        orgID={OrganizationId}
+                        setrequeststatus={setRequestStatus}
+                        type="Join"
+                      />
+                      {requestStatus === true ? (
+                        <span className="blue-text">Request sent</span>
+                      ) : (
+                        <span
+                          className="blue-text modal-text"
+                          onClick={(e) => handleShow("Join", e)}
+                        >
+                          Request to join
+                        </span>
+                      )}
                     </Button>
                   ) : null}
                   {/* Redirect user if org is deleted */}
                   {redirectD && <Redirect to="/UserProfile" />}
-
                   {/* If member is admin */}
                   {ustate?.user.u_id ===
                   organizationData.administrators[0].u_id ? (
                     <Button
                       variant="btn organization-heading-button delete-button"
                       size="lg"
-                      onClick={handleShow}
                     >
-                      Delete Organization
+                      <span
+                        className="blue-text modal-text"
+                        onClick={(e) => handleShow("Delete", e)}
+                      >
+                        Delete organization
+                      </span>{" "}
+                      <DeleteM
+                        show={showDeleteModal}
+                        setshow={setShowDeleteModal}
+                        orgID={OrganizationId}
+                        redirect={setredirectD}
+                      />
                     </Button>
                   ) : null}
 
-                  {showModal ? (
-                    <DeleteM
-                      show={showModal}
-                      setshow={setShowModal}
-                      closeshow={handleClose}
-                      showM={handleShow}
-                      orgID={OrganizationId}
-                      redirect={setredirectD}
-                    />
-                  ) : null}
+                  {/* Button used to see join requests of users */}
+                  {ustate?.user.u_id ===
+                    organizationData.administrators[0].u_id && (
+                    <Button variant="btn organization-heading-button" size="lg">
+                      <JoinM
+                        show={showJoinRequestsModal}
+                        setshow={setShowJoinRequestsModal}
+                        orgID={OrganizationId}
+                        setrequeststatus={setRequestStatus}
+                        type="JoinRequests"
+                      />
+                      <span
+                        className="blue-text modal-text"
+                        onClick={(e) => handleShow("JoinRequests", e)}
+                      >
+                        Check join requests
+                      </span>
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -121,7 +201,7 @@ function OrganizationProfile() {
                   <span className="organization-information-wrapper-text">
                     Tags:{" "}
                   </span>
-                  <p>{organizationData.tags + ""}</p>
+                  <span>{organizationData.tags + ""}</span>
                 </p>
               </div>
             </div>

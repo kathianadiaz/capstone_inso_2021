@@ -52,6 +52,13 @@ const organizationSchema = Yup.object()
     status: Yup.string().optional("Status needed"),
   })
   .required();
+
+const joinSchema = Yup.object()
+  .shape({
+    message: Yup.string().required("Message Required"),
+  })
+  .required();
+
 function EditModal(props) {
   const [show, setShow] = useState(false);
   const [state, setState] = useContext(AuthContext);
@@ -74,6 +81,8 @@ function EditModal(props) {
         ? memberSchema
         : props.type === "Organization"
         ? organizationSchema
+        : props.type === "Join"
+        ? joinSchema
         : highlightSchema
     ),
   });
@@ -287,6 +296,19 @@ function EditModal(props) {
             placeholder={"status"}
           /> */}
           <p className="error-message">{errors.status?.message}</p>
+        </Modal.Body>
+      );
+    } else if (props.type === "Join") {
+      return (
+        <Modal.Body>
+          <Form.Label>{props.type} message: </Form.Label>
+          <Form.Control
+            type="text"
+            as="textarea"
+            {...register("message")}
+            placeholder={"message"}
+          />
+          <p className="error-message">{errors.message?.message}</p>
         </Modal.Body>
       );
     } else if (props.type === "User") {

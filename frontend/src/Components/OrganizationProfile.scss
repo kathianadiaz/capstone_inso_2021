@@ -219,3 +219,9 @@
   width: 6rem;
   height: 6rem;
 }
+
+.blue-text {
+  &:hover {
+    color: white;
+  }
+}

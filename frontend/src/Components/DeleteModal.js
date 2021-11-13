@@ -12,19 +12,21 @@ function DeleteModal(props) {
       .delete(`http://localhost:8000/organization/${props.orgID}`)
       .then((response) => {
         console.log(response);
-        props.setshow(false);
         props.redirect(true);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  const handleClose = () => {
+    props.setshow(false);
+  };
   return (
     <>
       <Modal
         show={props.show}
-        onHide={props.closeshow}
         backdrop="static"
+        onHide={handleClose}
         keyboard={false}
       >
         <Modal.Header closeButton>
@@ -37,7 +39,7 @@ function DeleteModal(props) {
           <Button variant="primary" onClick={deleteOrganization}>
             Yes
           </Button>
-          <Button variant="secondary" onClick={props.closeshow}>
+          <Button variant="secondary" onClick={handleClose}>
             No
           </Button>
         </Modal.Footer>

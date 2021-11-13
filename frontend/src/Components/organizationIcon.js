@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function organizationIcon(props) {
   return (
     <div className="organization-wrapper">
-      {props.type === "organization" && (
+      {props.type === "Organization" && (
         <Card className="organization-card" style={{ width: "11rem" }}>
           <Card.Img variant="top" src={props.imageLocation} roundedCircle />
           <Card.Body className="organization-card">
@@ -13,7 +13,7 @@ function organizationIcon(props) {
               className="organization-card-name card-name-color"
               to={`/organization-profile/${props.organizationId}`}
             >
-              <p className="organization-card-name">{props.organizationName}</p>
+              {props.organizationName}
             </Link>
           </Card.Body>
         </Card>
