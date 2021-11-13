@@ -31,7 +31,11 @@ function Homepage() {
         </div>
         <div className="service-information">
           <h2>
-            What do <span>we</span> do?
+            What do{" "}
+            <span span className="green-text ">
+              we
+            </span>{" "}
+            do?
           </h2>
           <p className="service-text">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex
@@ -45,7 +49,10 @@ function Homepage() {
       </div>
       <div className="features" id="feature">
         <h2 className="features-h2">
-          <span>Features</span> <span className="blue-text"> Provided </span>
+          <span span className="green-text ">
+            Features
+          </span>{" "}
+          <span className="blue-text"> Provided </span>
         </h2>
         <div className="features-wrapper">
           <div className="features-box">
@@ -76,7 +83,7 @@ function Homepage() {
       </div>
       <div className="before-footer">
         <h2>
-          Start joining <span>others</span> today
+          Start joining <span className="green-text ">others</span> today
         </h2>
         <div className="welcome-buttons">
           <Button variant="link-btn search-button" size="lg">
