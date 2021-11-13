@@ -174,7 +174,12 @@
 .card {
   text-align: center;
 }
-
+.organization-card {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .organization-card-name {
   color: var(--t-bright-green);
   text-align: center;
@@ -183,7 +188,7 @@
   position: relative;
   text-decoration: none;
   font-size: 25px;
-
+  width: 100%;
   &::after {
     position: absolute;
     height: 2px;

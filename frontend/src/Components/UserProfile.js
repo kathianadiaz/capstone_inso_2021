@@ -127,14 +127,10 @@ function UserProfile(props) {
                         organizationName={org.name}
                         imageLocation="/defaultorganization.png"
                         organizationId={org.o_id}
-                        type={"organization"}
+                        type="Organization"
                       />
                     ))
-                  : Spinner && (
-                      <h2 className="green-text organization-join-message">
-                        Join organizations today!
-                      </h2>
-                    )}
+                  : spinner && <h1>No results found!</h1>}
               </div>
             </div>
           </div>
