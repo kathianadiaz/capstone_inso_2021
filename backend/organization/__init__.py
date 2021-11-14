@@ -9,8 +9,6 @@ class MemberInformation(BaseModel):
     name: str
     email: str
     links: Optional[List[str]]
-    resume: Optional[bytes] 
-    picture: Optional[bytes] 
 
     class Config:
         orm_mode = True
@@ -21,7 +19,6 @@ class OrganizationHighlight(BaseModel):
     date: Optional[date]
     title: str
     description: str
-    attachment: Optional[bytes] 
 
     class Config:
         orm_mode = True
