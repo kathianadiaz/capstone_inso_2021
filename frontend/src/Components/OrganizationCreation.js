@@ -42,9 +42,10 @@ function OrganizationCreation(props) {
     // parameters.append("email", data.email);
     // parameters.append("password", data.password);
     let json = {
-      name: data.name,
-      description: data.description,
-      department: data.department,
+      name: data.name.toLowerCase(),
+      description: data.description.toLowerCase(),
+      department: data.department.toLowerCase(),
+      email: data.email.toLowerCase(),
       tags: data.tags,
     };
     axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
