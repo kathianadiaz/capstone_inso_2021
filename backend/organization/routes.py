@@ -85,7 +85,14 @@ def connect_member_information(o_id: str, m_id: str, user: User = Depends(get_cu
 
     return organization
 
-@router.post("organization/keyword/{keywords}", response_model=List[Organization])
-def search_organizations(keywords: str, db: Session = Depends(get_db)):
-    return OrganizationRepository.search_organizations(keywords, db)
+@router.post("/organization/keywords/{keywords}", response_model=List[Organization])
+def get_organizations_by_keywords(keywords: str, db: Session = Depends(get_db)):
+    return OrganizationRepository.get_organizations_by_keywords(keywords, db)
 
+@router.post("/organization/tags/{tags}", response_model=List[Organization])
+def get_organizations_by_tags(tags: str, db: Session = Depends(get_db)):
+    return OrganizationRepository.get_organizations_by_tags(tags, db)
+
+@router.post("/organization/tags/{tags}/keywords/{keywords}", response_model=List[Organization])
+def search_organizations(tags: str, keywords:str, db: Session = Depends(get_db)):
+    return OrganizationRepository.search_organizations(tags, keywords, db)
