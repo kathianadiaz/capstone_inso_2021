@@ -236,7 +236,7 @@ def test_edit_organization():
     o_id = response.json()['o_id']
 
     response = client.put(
-        '/organization',
+        f'/organization/{o_id}',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
         json={'o_id':o_id,'name':'test_edit', 'email':'test4edit@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO', 'status': True}
     ) 
