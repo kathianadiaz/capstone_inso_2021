@@ -115,23 +115,24 @@ class OrganizationRepository:
         return organization
 
     @staticmethod
-    def edit_organization(new_organization: Organization, user: User, db: Session) -> Optional[Organization]:
+    def edit_organization(o_id: str, new_organization: Organization, user: User, db: Session) -> Optional[Organization]:
         '''Edit the information for a specific `Organization`'''
         organization = db.query(models.Organization).\
             join(models.organization_administrator_assoc_table).\
             filter(models.organization_administrator_assoc_table.columns.user_id == user.u_id).\
-            filter(models.organization_administrator_assoc_table.columns.organization_id == new_organization.o_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == o_id).\
             first()
 
         if not organization:
             return None
 
-        # NOTE: error prone. There might be a better way to implement it
+
         setattr(organization,"name",new_organization.name)
         setattr(organization,"description",new_organization.description)
         setattr(organization,"tags",new_organization.tags)
         setattr(organization,"status",new_organization.status)
         setattr(organization,"highlights",new_organization.highlights)
+
         db.commit()
 
         return new_organization
@@ -149,7 +150,7 @@ class OrganizationRepository:
         if not organization:
             return None
 
-        db_highlight = models.OrganizationHighlight(title=highlight.title, description=highlight.description)
+        db_highlight = models.OrganizationHighlight(title=highlight.title, description=highlight.description, date = highlight.date)
         organization.highlights.append(db_highlight)
         db.commit()
 

@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
 import Homepage from "./Components/Homepage";
@@ -8,14 +7,7 @@ import OrgCreation from "./Components/OrganizationCreation";
 import UserPage from "./Components/UserProfile";
 import OrganizationProfile from "./Components/OrganizationProfile";
 import Navbar from "./Components/Navbar";
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  useLocation,
-  Redirect,
-} from "react-router-dom";
-import UserProfile from "./Components/UserProfile";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useState } from "react";
 import { AuthProvider } from "./Components/AuthContext";
 import OrganizationLists from "./Components/OrganizationsList";
@@ -23,7 +15,6 @@ import NotFound from "./Components/NotFound";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
-  const [userdata, setuserdata] = useState("");
   const [navbarhidden, setnavbarhidden] = useState(false);
 
   const queryClient = new QueryClient();
@@ -47,9 +38,10 @@ function App() {
                 <SignUp />
               </Route>
               <Route path="/SignIn">
-                <SignIn userData={setuserdata} navbartoggle={setnavbarhidden} />
+                <SignIn navbartoggle={setnavbarhidden} />
               </Route>
-              <Route path="/UserProfile/:UserId">
+              {/* <Route path="/UserProfile/:UserId"> */}
+              <Route path="/UserProfile">
                 <UserPage />
               </Route>
               <Route path="/OrganizationCreation">

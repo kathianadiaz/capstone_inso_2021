@@ -41,9 +41,9 @@ def delete_organization(id: str, user: User = Depends(get_current_user), db: Ses
 
     return organization
 
-@router.put("/organization", response_model=Organization)
-def edit_organization(organization: Organization, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    organization = OrganizationRepository.edit_organization(organization, user, db)
+@router.put("/organization/{o_id}", response_model=Organization)
+def edit_organization(o_id: str,  organization: Organization, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organization = OrganizationRepository.edit_organization(o_id, organization, user, db)
 
     if not organization:
         raise HTTPException(status_code=404, detail="Organization not found")

@@ -229,17 +229,18 @@ def test_edit_organization():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers4', 'email':'test4@gmail.com', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        json={'name':'testers4', 'email':'test4@gmail.com', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO', 'status': False}
     )
 
     assert response.status_code == 200
     o_id = response.json()['o_id']
 
     response = client.put(
-        '/organization',
+        f'/organization/{o_id}',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'o_id':o_id,'name':'test_edit', 'email':'test4edit@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        json={'o_id':o_id,'name':'test_edit', 'email':'test4edit@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO', 'status': True}
     ) 
+
 
 
     assert response.status_code == 200
