@@ -144,11 +144,11 @@ def connect_member_information(o_id: str, m_id: str, user: User = Depends(get_cu
 
     return organization
 
-@router.get("/organization/keywords/{keywords}", response_model=List[Organization])
+@router.get("/organization/keywords/{keywords}", response_model=set[Organization])
 def get_organizations_by_keywords(keywords: str, db: Session = Depends(get_db)):
     return OrganizationRepository.get_organizations_by_keywords(keywords, db)
 
-@router.get("/organization/tags/{tags}", response_model=List[Organization])
+@router.get("/organization/tags/{tags}", response_model=set[Organization])
 def get_organizations_by_tags(tags: str, db: Session = Depends(get_db)):
     return OrganizationRepository.get_organizations_by_tags(tags, db)
 

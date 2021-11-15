@@ -1,4 +1,4 @@
-from typing import Optional,List
+from typing import Optional,List, Set
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import Select,select
 from sqlalchemy import func
@@ -54,7 +54,7 @@ class OrganizationRepository:
             filter(models.organization_administrator_assoc_table.columns.user_id == u_id).all()
 
     @staticmethod
-    def get_organizations_by_keywords(keywords:str, db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+    def get_organizations_by_keywords(keywords:str, db:Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
         '''Get all organizations that contain a specific keyword in their description or name'''
         keywords = keywords.split(',')
         organizations=set()
@@ -66,7 +66,7 @@ class OrganizationRepository:
         return organizations if len(organizations) > 0 else None
 
     @staticmethod
-    def get_organizations_by_tags(tags:str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+    def get_organizations_by_tags(tags:str, db: Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
         '''Get all organizations that contain the given tags'''
         tags = tags.split(',')
         organizations = set()
@@ -76,7 +76,7 @@ class OrganizationRepository:
         return organizations if len(organizations) > 0 else None
     
     @staticmethod
-    def search_organizations(keywords:str, tags:str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+    def search_organizations(keywords:str, tags:str, db: Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
         '''Get all organizations that contain the given tags and keywords'''
         if keywords:
             org_list_keywords = OrganizationRepository.get_organizations_by_keywords(keywords, db)
@@ -85,7 +85,7 @@ class OrganizationRepository:
             org_list_tags = OrganizationRepository.get_organizations_by_keywords(tags, db)
         
         if org_list_keywords and org_list_tags:
-            org_list = list(set(org_list_keywords) | set(org_list_tags))
+            org_list = list(org_list_keywords | org_list_tags)
         elif org_list_tags:
             org_list = org_list_tags
         elif org_list_keywords:
