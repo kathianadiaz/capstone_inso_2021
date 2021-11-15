@@ -9,6 +9,7 @@ from typing import List
 from database import get_db
 from authentication.authentication import get_current_user
 from io import BytesIO
+from typing import Optional
 
 router = APIRouter(
     tags=["organizations"]
@@ -142,3 +143,15 @@ def connect_member_information(o_id: str, m_id: str, user: User = Depends(get_cu
         raise HTTPException(status_code=404, detail="Organization or member information not found")
 
     return organization
+
+@router.get("/organization/keywords/{keywords}", response_model=set[Organization])
+def get_organizations_by_keywords(keywords: str, db: Session = Depends(get_db)):
+    return OrganizationRepository.get_organizations_by_keywords(keywords, db)
+
+@router.get("/organization/tags/{tags}", response_model=set[Organization])
+def get_organizations_by_tags(tags: str, db: Session = Depends(get_db)):
+    return OrganizationRepository.get_organizations_by_tags(tags, db)
+
+@router.get("/organization/tags/{tags}/keywords/{keywords}", response_model=List[Organization])
+def search_organizations(tags: str, keywords:str, db: Session = Depends(get_db)):
+    return OrganizationRepository.search_organizations(tags, keywords, db)

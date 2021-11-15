@@ -1,6 +1,7 @@
-from typing import Optional,List
+from typing import Optional,List, Set
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import Select,select
+from sqlalchemy import func
 from organization import Organization, OrganizationHighlight, MemberInformation
 from user import User
 import models
@@ -53,14 +54,46 @@ class OrganizationRepository:
             filter(models.organization_administrator_assoc_table.columns.user_id == u_id).all()
 
     @staticmethod
-    def get_organization_by_keyword(keywords:List[str], db:Session, skip: int = 0, limit: int = 25) -> List[Organization]:
-        '''Get all organizations that conatain a specific keyword in their description or name'''
-        pass
+    def get_organizations_by_keywords(keywords:str, db:Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
+        '''Get all organizations that contain a specific keyword in their description or name'''
+        keywords = keywords.split(',')
+        organizations=set()
+        for keyword in keywords:
+            keyword.lower()
+            organizations.update(db.query(models.Organization).filter(models.Organization.name.contains(f'%{keyword}%')).offset(skip).limit(limit).all())
+            organizations.update(db.query(models.Organization).filter(models.Organization.description.contains(f'%{keyword}%')).offset(skip).limit(limit).all())
+            
+        return organizations if len(organizations) > 0 else None
 
     @staticmethod
-    def get_organization_by_tags(tags: List[str], db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
+    def get_organizations_by_tags(tags:str, db: Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
         '''Get all organizations that contain the given tags'''
-        pass
+        tags = tags.split(',')
+        organizations = set()
+        for tag in tags:
+            tag.lower()
+            organizations.update(db.query(models.Organization).filter(models.Organization.tags.contains([tag])).offset(skip).limit(limit).all())
+        return organizations if len(organizations) > 0 else None
+    
+    @staticmethod
+    def search_organizations(keywords:str, tags:str, db: Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
+        '''Get all organizations that contain the given tags and keywords'''
+        if keywords:
+            org_list_keywords = OrganizationRepository.get_organizations_by_keywords(keywords, db)
+
+        if tags:
+            org_list_tags = OrganizationRepository.get_organizations_by_keywords(tags, db)
+        
+        if org_list_keywords and org_list_tags:
+            org_list = list(org_list_keywords | org_list_tags)
+        elif org_list_tags:
+            org_list = org_list_tags
+        elif org_list_keywords:
+            org_list = org_list_keywords
+        else:
+            return None
+
+        return org_list
 
     @staticmethod
     def delete_organization(o_id: str, user: User, db: Session) -> Optional[Organization]:
@@ -93,14 +126,13 @@ class OrganizationRepository:
         if not organization:
             return None
 
-        # NOTE: error prone. There might be a better way to implement it
-        organization.name = new_organization.name
-        organization.description = new_organization.description
-        organization.tags = new_organization.tags
-        organization.status = new_organization.status
-        organization.email = new_organization.email
-        organization.department = new_organization.department
-        
+
+        setattr(organization,"name",new_organization.name)
+        setattr(organization,"description",new_organization.description)
+        setattr(organization,"tags",new_organization.tags)
+        setattr(organization,"status",new_organization.status)
+        setattr(organization,"highlights",new_organization.highlights)
+
         db.commit()
 
         return new_organization
@@ -187,3 +219,11 @@ class OrganizationRepository:
         db.commit()
 
         return db_organization
+
+    #end of class
+
+
+
+
+
+

@@ -14,9 +14,9 @@ function InputTag(props) {
         return;
       }
 
-      setTags([...tags, e.target.value]);
+      setTags([...tags, e.target.value.toLowerCase()]);
       if (props.tagsType === "Tags") {
-        SendTagdata([...tags, e.target.value]);
+        SendTagdata([...tags, e.target.value.toLowerCase()]);
       } else {
         SendLinkdata([...tags, e.target.value]);
       }
