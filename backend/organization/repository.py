@@ -84,9 +84,13 @@ class OrganizationRepository:
         if tags:
             org_list_tags = OrganizationRepository.get_organizations_by_keywords(tags, db)
         
-        org_list = set.union(org_list_keywords,org_list_tags)
-        
-        if not org_list:
+        if org_list_keywords and org_list_tags:
+            org_list = list(set(org_list_keywords) | set(org_list_tags))
+        elif org_list_tags:
+            org_list = org_list_tags
+        elif org_list_keywords:
+            org_list = org_list_keywords
+        else:
             return None
 
         return org_list
