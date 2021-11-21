@@ -7,9 +7,11 @@
 .green-text {
   color: var(--t-bright-green);
 }
+
 .blue-text {
   color: var(--t-royal-blue);
 }
+
 .navigation-logo {
   height: 100%;
   width: 50px;
@@ -35,9 +37,13 @@
   max-width: 50%;
   background-color: var(--t-bright-green);
   border-radius: 15px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--t-royal-blue);
   font-weight: bold;
+
+  &:hover {
+    background-color: var(--t-royal-blue);
+  }
 }
 
 .learn-button {

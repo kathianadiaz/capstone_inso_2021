@@ -31,11 +31,7 @@ function Homepage() {
         </div>
         <div className="service-information">
           <h2>
-            What do{" "}
-            <span span className="green-text ">
-              we
-            </span>{" "}
-            do?
+            What do <span className="green-text ">we</span> do?
           </h2>
           <p className="service-text">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex

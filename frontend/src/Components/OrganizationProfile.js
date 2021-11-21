@@ -114,10 +114,10 @@ function OrganizationProfile() {
                         type="Join"
                       />
                       {requestStatus === true ? (
-                        <span className="blue-text">Request sent</span>
+                        <span className="blue-text-org">Request sent</span>
                       ) : (
                         <span
-                          className="blue-text modal-text"
+                          className="blue-text-org modal-text"
                           onClick={(e) => handleShow("Join", e)}
                         >
                           Request to join
@@ -135,7 +135,7 @@ function OrganizationProfile() {
                       size="lg"
                     >
                       <span
-                        className="blue-text modal-text"
+                        className="blue-text-org modal-text"
                         onClick={(e) => handleShow("Delete", e)}
                       >
                         Delete organization
@@ -161,7 +161,7 @@ function OrganizationProfile() {
                         type="JoinRequests"
                       />
                       <span
-                        className="blue-text modal-text"
+                        className="blue-text-org modal-text"
                         onClick={(e) => handleShow("JoinRequests", e)}
                       >
                         Check join requests

@@ -68,14 +68,22 @@
 
 .btn-continue-btn {
   background: white;
-  color: black;
-  border: 5px solid var(--t-bright-green);
+  color: var(--t-royal-blue);
+  border: 1px solid var(--t-bright-green);
   border-radius: 10px;
   max-width: 150px;
   width: 100%;
   margin: 0 auto;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: var(--t-royal-blue);
+    color: white;
+    border-color: var(--t-royal-blue);
+  }
 }
 
 .error-message {
