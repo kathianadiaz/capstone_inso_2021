@@ -63,20 +63,20 @@ class OrganizationRepository:
             organizations.update(db.query(models.Organization).filter(models.Organization.name.contains(f'%{keyword}%')).offset(skip).limit(limit).all())
             organizations.update(db.query(models.Organization).filter(models.Organization.description.contains(f'%{keyword}%')).offset(skip).limit(limit).all())
             
-        return organizations if len(organizations) > 0 else None
+        return list(organizations) if len(organizations) > 0 else None
 
     @staticmethod
-    def get_organizations_by_tags(tags:str, db: Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
+    def get_organizations_by_tags(tags:str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all organizations that contain the given tags'''
         tags = tags.split(',')
         organizations = set()
         for tag in tags:
             tag.lower()
             organizations.update(db.query(models.Organization).filter(models.Organization.tags.contains([tag])).offset(skip).limit(limit).all())
-        return organizations if len(organizations) > 0 else None
+        return list(organizations) if len(organizations) > 0 else None
     
     @staticmethod
-    def search_organizations(keywords:str, tags:str, db: Session, skip: int = 0, limit: int = 25) -> Set[Organization]:
+    def search_organizations(keywords:str, tags:str, db: Session, skip: int = 0, limit: int = 25) -> List[Organization]:
         '''Get all organizations that contain the given tags and keywords'''
         if keywords:
             org_list_keywords = OrganizationRepository.get_organizations_by_keywords(keywords, db)
@@ -85,7 +85,7 @@ class OrganizationRepository:
             org_list_tags = OrganizationRepository.get_organizations_by_keywords(tags, db)
         
         if org_list_keywords and org_list_tags:
-            org_list = list(org_list_keywords | org_list_tags)
+            org_list = list(set(org_list_keywords) | set(org_list_tags))
         elif org_list_tags:
             org_list = org_list_tags
         elif org_list_keywords:
