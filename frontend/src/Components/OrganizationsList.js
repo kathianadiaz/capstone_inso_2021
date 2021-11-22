@@ -38,19 +38,47 @@ function OrganizationsList() {
   // };
   const handleInputValue = (e) => {
     setInputValue(e.target.value);
-    console.log(e.target.value);
     if (e.key === "Enter") {
       setSpinner(true);
       if (filtering === "All") {
         let searchjson = {
-          tags: inputvalue,
-          keywords: inputvalue,
+          tag: inputvalue.toLowerCase(),
+          keyword: inputvalue.toLowerCase(),
         };
         axios
           .get(
-            `http://localhost:8000/organization/tags/${inputvalue}/keywords/${inputvalue}`,
-            searchjson
+            `http://localhost:8000/organization/tags/${searchjson.tag}/keywords/${searchjson.keyword}`
           )
+          .then((response) => {
+            setOrganizations(response.data);
+            setSpinner(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      if (filtering === "Keywords") {
+        let searchjson = {
+          keyword: inputvalue.toLowerCase(),
+        };
+        axios
+          .get(
+            `http://localhost:8000/organization/keywords/${searchjson.keyword}`
+          )
+          .then((response) => {
+            setOrganizations(response.data);
+            setSpinner(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      if (filtering === "Tags") {
+        let searchjson = {
+          tag: inputvalue.toLowerCase(),
+        };
+        axios
+          .get(`http://localhost:8000/organization/tags/${searchjson.tag}`)
           .then((response) => {
             setOrganizations(response.data);
             setSpinner(false);
@@ -71,18 +99,49 @@ function OrganizationsList() {
     setFiltering(e);
   };
   const onClickFilter = () => {
+    setSpinner(true);
     if (filtering === "All") {
       let searchjson = {
-        tags: inputvalue,
-        keywords: inputvalue,
+        tag: inputvalue.toLowerCase(),
+        keyword: inputvalue.toLowerCase(),
       };
       axios
         .get(
-          `http://localhost:8000/organization/tags/${inputvalue}/keywords/${inputvalue}`,
-          searchjson
+          `http://localhost:8000/organization/tags/${searchjson.tag}/keywords/${searchjson.keyword}`
         )
         .then((response) => {
           setOrganizations(response.data);
+          setSpinner(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (filtering === "Keywords") {
+      let searchjson = {
+        keyword: inputvalue.toLowerCase(),
+      };
+      axios
+        .get(
+          `http://localhost:8000/organization/keywords/${searchjson.keyword}`
+        )
+        .then((response) => {
+          setOrganizations(response.data);
+          setSpinner(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (filtering === "Tags") {
+      let searchjson = {
+        tag: inputvalue.toLowerCase(),
+      };
+      axios
+        .get(`http://localhost:8000/organization/tags/${searchjson.tag}`)
+        .then((response) => {
+          setOrganizations(response.data);
+          setSpinner(false);
         })
         .catch((error) => {
           console.log(error);
