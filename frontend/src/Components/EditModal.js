@@ -36,12 +36,15 @@ const userProfileSchema = Yup.object()
   })
   .required();
 
-const memberSchema = Yup.object()
-  .shape({
-    name: Yup.string().optional("Name required"),
-    email: Yup.string().email().optional("Email required"),
-  })
-  .required();
+const memberSchema = Yup.object().shape({
+  name: Yup.string().required("Name required"),
+  email: Yup.string().email().required("Email required"),
+  resume: Yup.object()
+    .nullable(true)
+    .shape({
+      file: Yup.mixed().nullable(true),
+    }),
+});
 
 const organizationSchema = Yup.object()
   .shape({
@@ -70,6 +73,7 @@ function EditModal(props) {
   const {
     register,
     handleSubmit,
+    handleChange,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(
@@ -112,6 +116,7 @@ function EditModal(props) {
         });
     }
     if (props.type === "Member") {
+      // ADD RESUME here
       sendModalData([...props.mdata, data]);
       let hjson = {
         name: data.name,
@@ -233,6 +238,17 @@ function EditModal(props) {
             placeholder={"Email"}
           />
           <p className="error-message">{errors.email?.message}</p>
+
+          <Form.Label>Resume (Optional):</Form.Label>
+          <Form.Control
+            type="file"
+            name="resume"
+            {...register("resume")}
+            onChange={handleChange}
+          />
+          <p className="error-message">
+            {errors.resume?.message !== null ? errors.resume?.message : null}
+          </p>
         </Modal.Body>
       );
     } else if (props.type === "Organization") {
