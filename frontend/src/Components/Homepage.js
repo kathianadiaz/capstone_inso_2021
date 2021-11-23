@@ -36,11 +36,11 @@ function Homepage() {
           <p className="service-text">
             Our goal is to give students a way to join student organizations or
             any other kind of professional organization in a simple but
-            straightforward way. This means getting of the need of visiting
-            multiple sites to get organization information and doing it all in
-            one single space. These organizations will help students explore
-            different interests in their field of study and inspire them to
-            pursue those interests in their future careers.
+            straightforward way. This means getting rid of the need of visiting
+            multiple sites to get organization information and instead doing it
+            all in one single space. These organizations will help students
+            explore different interests in their field of study and inspire them
+            to pursue those interests in their future careers.
           </p>
         </div>
       </div>
@@ -121,7 +121,9 @@ function Homepage() {
         </div>
       </footer>
       <div className="credits-section">
-        <p className="attribution">Icons and images credits to:</p>
+        <p className="attribution">
+          Icons and images used in this web-app credits to:
+        </p>
         <p className="attribution">
           Illustrations used in this web-app are by{" "}
           <a href="https://icons8.com/illustrations/author/5c07e68d82bcbc0092519bb6">
@@ -130,7 +132,7 @@ function Homepage() {
           from <a href="https://icons8.com/illustrations">Ouch!</a>
         </p>
         <p className="attribution">
-          Icons made by{" "}
+          Icons used in this web-app are made by{" "}
           <a href="https://www.freepik.com" title="Freepik">
             Freepik
           </a>{" "}
