@@ -34,12 +34,13 @@ function Homepage() {
             What do <span className="green-text ">we</span> do?
           </h2>
           <p className="service-text">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex
-            quibusdam impedit delectus ea. Alias, beatae perferendis repellat
-            nesciunt laudantium illum, fugit suscipit odio odit esse hic, at
-            quod magni vero error a! Sint harum provident id odio ullam ex dolor
-            aliquam facilis, rem vitae, suscipit nobis repellendus dicta
-            expedita labore.
+            Our goal is to give students a way to join student organizations or
+            any other kind of professional organization in a simple but
+            straightforward way. This means getting of the need of visiting
+            multiple sites to get organization information and doing it all in
+            one single space. These organizations will help students explore
+            different interests in their field of study and inspire them to
+            pursue those interests in their future careers.
           </p>
         </div>
       </div>
@@ -53,26 +54,30 @@ function Homepage() {
         <div className="features-wrapper">
           <div className="features-box">
             <img src="/settings.png" alt="" className="feature-image" />
-            <h3 className="features-name">lorem</h3>
+            <h3 className="features-name">Filter search</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-              tempore dolor, recusandae velit enim aut?
+              Our web-application has the feature of being able to search for
+              the organizations that you are interested in, by giving you the
+              option of searching for what you are interested in.
             </p>
           </div>
           <div className="features-box">
             <img src="/settings.png" alt="" className="feature-image" />
-            <h3 className="features-name">lorem</h3>
+            <h3 className="features-name">No account needed</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-              tempore dolor, recusandae velit enim aut?
+              Want to search organizations without the need of a account? With
+              this web-application you can do exactly that. Aditionally,
+              organization leaders have the option of adding members to their
+              organization.
             </p>
           </div>
           <div className="features-box">
             <img src="/settings.png" alt="" className="feature-image" />
-            <h3 className="features-name">lorem</h3>
+            <h3 className="features-name">Join requests</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-              tempore dolor, recusandae velit enim aut?
+              Our web-application also features join requests that users that
+              have created an account can utilize to join the organizations they
+              are interested in.
             </p>
           </div>
         </div>
@@ -110,12 +115,31 @@ function Homepage() {
             </a>
           </div>
         </div>
-
         <div className="creators-notes">
           <p>Copyright © 2021</p>
-          <img src="/TempLogo.png" className="navigation-logo" alt="" />
+          <img src="/TempLogo.png" className="navigation-logo-footer" alt="" />
         </div>
       </footer>
+      <div className="credits-section">
+        <p className="attribution">Icons and images credits to:</p>
+        <p className="attribution">
+          Illustrations used in this web-app are by{" "}
+          <a href="https://icons8.com/illustrations/author/5c07e68d82bcbc0092519bb6">
+            Icons 8
+          </a>{" "}
+          from <a href="https://icons8.com/illustrations">Ouch!</a>
+        </p>
+        <p className="attribution">
+          Icons made by{" "}
+          <a href="https://www.freepik.com" title="Freepik">
+            Freepik
+          </a>{" "}
+          from{" "}
+          <a href="https://www.flaticon.com/" title="Flaticon">
+            www.flaticon.com
+          </a>
+        </p>
+      </div>
     </div>
   );
 }

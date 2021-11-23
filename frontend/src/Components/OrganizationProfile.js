@@ -104,6 +104,7 @@ function OrganizationProfile() {
                   </Button>
                   {ustate?.user.u_id !==
                     organizationData.administrators[0].u_id &&
+                  ustate !== null &&
                   organizationData.status === true ? (
                     <Button variant="btn organization-heading-button" size="lg">
                       <JoinM
