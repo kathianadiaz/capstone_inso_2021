@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router";
 import { AuthContext } from "./AuthContext";
 
@@ -29,10 +29,12 @@ const OrganizationHighlight = (props) => {
       <div className="highlight-delete">
         <h3>{props.award}</h3>
       </div>
-      <a className="highlight-anchor" onClick={deleteHighlight}>
-        Delete Highlight
-      </a>
-      {/* <h4 className="event-time"> {"Date: " + props.date} </h4> */}
+      {state?.user.u_id === props.admins[0].u_id ? (
+        <a className="highlight-anchor" onClick={deleteHighlight}>
+          Delete Highlight
+        </a>
+      ) : null}
+      <h4 className="event-time"> {"Date: " + props.date} </h4>
       <p>{props.description}</p>
     </div>
   );

@@ -179,7 +179,6 @@ def test_get_organization_by_id():
         'date': organization['highlights'][0]['date'],
         'title': 'test',
         'description':'test',
-        'attachment': None
       } 
     ]
 
@@ -230,17 +229,18 @@ def test_edit_organization():
     response = client.post(
         '/organization',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'name':'testers4', 'email':'test4@gmail.com', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        json={'name':'testers4', 'email':'test4@gmail.com', 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO', 'status': False}
     )
 
     assert response.status_code == 200
     o_id = response.json()['o_id']
 
     response = client.put(
-        '/organization',
+        f'/organization/{o_id}',
         headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
-        json={'o_id':o_id,'name':'test_edit', 'email':'test4edit@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO'}
+        json={'o_id':o_id,'name':'test_edit', 'email':'test4edit@gmail.com' , 'description':'testing org4', 'tags':['software','testing'], 'department': 'INSO', 'status': True}
     ) 
+
 
 
     assert response.status_code == 200
@@ -274,7 +274,6 @@ def test_add_hightlight():
         'date': organization['highlights'][0]['date'],
         'title': 'test',
         'description':'test',
-        'attachment': None
       } 
     ]
 
@@ -320,8 +319,6 @@ def test_add_member_information():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
@@ -342,15 +339,11 @@ def test_add_member_info_as_user():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
     assert response.status_code == 200
     assert response.json()['m_id'] != None 
-
-    
 
 def test_connect_member_to_organization():
     response = client.post(
@@ -362,8 +355,6 @@ def test_connect_member_to_organization():
             "links": [
                 "string"
             ],
-            "resume": "string",
-            "picture": "string"
         }
     )
 
@@ -390,4 +381,88 @@ def test_get_organizations_by_member():
     assert response.status_code == 200
     assert len(response.json()) == 1
 
+def test_request_to_join():
+    organization = create_testing_organization('new_org','org@manl.com')
 
+    response = client.post(
+        f'/organization/{organization["o_id"]}/join',
+        headers= {"Authorization" : f"Bearer {TOKENS[1]}"},
+        json="test1"
+    )
+
+    print(response.json())
+    assert response.status_code == 200
+    join_request = response.json()
+    assert 'r_id' in join_request
+    assert join_request['o_id'] != None
+    assert join_request['u_id'] != None
+    assert join_request['message'] == 'test1'
+
+def test_get_join_requests():
+    organization = create_testing_organization('request_test2','req2@manl.com')
+
+    response = client.get(
+        f'/organization/{organization["o_id"]}/request',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()) == 0
+
+    response = client.post(
+        f'/organization/{organization["o_id"]}/join',
+        headers= {"Authorization" : f"Bearer {TOKENS[1]}"},
+        json="test2"
+    )
+
+    assert response.status_code == 200
+
+    response = client.get(
+        f'/organization/{organization["o_id"]}/request',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+
+def test_accept_join_request():
+    organization = create_testing_organization('request_test3','req3@manl.com')
+
+    response = client.post(
+        f'/organization/{organization["o_id"]}/join',
+        headers= {"Authorization" : f"Bearer {TOKENS[1]}"},
+        json="test3"
+    )
+    assert response.status_code == 200
+    request = response.json()
+
+    response = client.post(
+        f'/organization/{organization["o_id"]}/request/{request["r_id"]}/accept',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+    )
+    assert response.status_code == 200
+    
+    response = client.get(f'/organization/{organization["o_id"]}') 
+    assert response.status_code == 200
+    assert len(response.json()['members']) == 1
+
+def test_decline_join_request():
+    organization = create_testing_organization('request_test4','req4@manl.com')
+
+    response = client.post(
+        f'/organization/{organization["o_id"]}/join',
+        headers= {"Authorization" : f"Bearer {TOKENS[1]}"},
+        json="test4"
+    )
+    assert response.status_code == 200
+    request = response.json()
+
+    response = client.post(
+        f'/organization/{organization["o_id"]}/request/{request["r_id"]}/decline',
+        headers= {"Authorization" : f"Bearer {TOKENS[0]}"},
+    )
+    assert response.status_code == 200
+    
+    response = client.get(f'/organization/{organization["o_id"]}') 
+    assert response.status_code == 200
+    assert len(response.json()['members']) == 0

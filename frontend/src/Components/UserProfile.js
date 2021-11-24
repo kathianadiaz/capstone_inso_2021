@@ -5,7 +5,6 @@ import OrgIcon from "./organizationIcon.js";
 import EditM from "./EditModal.js";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
-import { useParams } from "react-router";
 
 function UserProfile(props) {
   const [resume, setresume] = useState("");
@@ -17,8 +16,6 @@ function UserProfile(props) {
   const [spinner, setSpinner] = useState(true);
   const [username, setUsername] = useState("");
 
-  const { UserId } = useParams();
-  // console.log(state);
   const openFiles = () => {
     inputRef.current.click();
   };
@@ -37,7 +34,7 @@ function UserProfile(props) {
         console.log(error);
       });
     axios
-      .get(`http://localhost:8000/user/${UserId}`)
+      .get(`http://localhost:8000/user/${ustate.user.u_id}`)
       .then((response) => {
         setUserData(response.data);
         setUsername(response.data.username);
@@ -77,7 +74,7 @@ function UserProfile(props) {
             <div className="user-info">
               <Image
                 className="user-info-photo"
-                src="/testPerson.jpg"
+                src="/defaultProfile.png"
                 roundedCircle
               />
               <h1 className="user-info-name text-color">{userData.name}</h1>
@@ -93,7 +90,9 @@ function UserProfile(props) {
                 <p className="white-text">{"Username: " + username}</p>
                 <p className="white-text">{"Email: " + userData.email}</p>
                 <p className="white-text">
-                  {"Phone number: " + userData.phone_number}
+                  {userData.phone_number === null
+                    ? "Phone number: " + "Add a phone number"
+                    : "Phone number: " + userData.phone_number}
                 </p>
               </div>
             </div>
@@ -126,8 +125,9 @@ function UserProfile(props) {
                       <OrgIcon
                         key={i}
                         organizationName={org.name}
-                        imageLocation="/testPerson.jpg"
+                        imageLocation="/defaultorganization.png"
                         organizationId={org.o_id}
+                        type="Organization"
                       />
                     ))
                   : spinner && <h1>No results found!</h1>}
@@ -138,7 +138,7 @@ function UserProfile(props) {
       )}
       {spinner && (
         <div className="spinner-container">
-          <Spinner animation="grow" variant="success">
+          <Spinner animation="grow" variant="dark">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>

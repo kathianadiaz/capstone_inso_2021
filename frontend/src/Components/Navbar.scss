@@ -39,16 +39,19 @@
 
 .logout-button {
   width: 90px;
-  background-color: var(--t-bright-green);
-  border-color: white;
-  color: white;
+  border: 2px solid;
+  background-color: white;
+  border-color: var(--t-bright-green);
+  color: var(--t-royal-blue);
+  font-weight: 700;
+  font-size: 15px;
   margin: 0 auto;
   margin-bottom: 0.5rem;
 
   &:hover {
-    background-color: var(--t-bright-green);
-    border-color: white;
-    color: black;
+    background-color: var(--t-blue-purple);
+    color: white;
+    border-color: var(--t-blue-purple);
   }
 
   @media (min-width: 700px) {

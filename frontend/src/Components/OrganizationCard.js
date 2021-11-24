@@ -1,13 +1,13 @@
 import React from "react";
 import { Image } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 function OrganizationCard(props) {
   return (
     <div className="organization-cards">
       <div className="organization-cards-logo">
         <Image
           className="organization-cards-image"
-          src="/testPerson.jpg"
+          src="/defaultorganization.png"
           fluid
         />
       </div>

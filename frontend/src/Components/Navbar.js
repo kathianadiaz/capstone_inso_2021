@@ -1,18 +1,15 @@
 import { React, useState, useContext } from "react";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import "./Navbar.scss";
-import { Router, Link, Redirect } from "react-router-dom";
-import SignIn from "./Sign-in";
+import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 
 function NavigationBar(props) {
   const [loggedIn, setloggedIn] = useState(true);
   const [state, setState] = useContext(AuthContext);
   const changeNavbartoggle = () => {
-    // props.navbarchange(false);
     setState(null);
   };
-  // if (props.navbartoggle === false) {
   if (state === null) {
     return (
       <Navbar collapseOnSelect expand="lg" bg="light">
@@ -31,7 +28,7 @@ function NavigationBar(props) {
           <Nav className="me-auto">
             <Nav.Link href="#about">About us</Nav.Link>
             <Nav.Link href="#feature">Features</Nav.Link>
-            <Nav.Link href="#pricing">Contact us</Nav.Link>
+            {/* <Nav.Link href="#pricing">Contact us</Nav.Link> */}
           </Nav>
           <Nav>
             <Nav.Link as={Link} to="/SignUp">
@@ -75,7 +72,8 @@ function NavigationBar(props) {
             {/* <Nav.Link as={Link} to="/organization-profile">
               My organization
             </Nav.Link> */}
-            <Nav.Link as={Link} to={`/UserProfile/${state?.user.u_id}`}>
+            {/* <Nav.Link as={Link} to={`/UserProfile/${state?.user.u_id}`}> */}
+            <Nav.Link as={Link} to="/UserProfile">
               User Profile
             </Nav.Link>
             <Link to="/">
