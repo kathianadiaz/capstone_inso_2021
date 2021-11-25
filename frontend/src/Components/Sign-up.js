@@ -16,7 +16,7 @@ const schema = Yup.object()
     username: Yup.string().required("Username required"),
     email: Yup.string()
       .email()
-      .matches("edu")
+      .matches(/edu$/, "Only University emails accepted")
       .required("Educational email required"),
     password: Yup.string()
       .min(6, "Password has to be of atleast 6 characters")
