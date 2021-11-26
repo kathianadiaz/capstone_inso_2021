@@ -7,14 +7,17 @@ import axios from "axios";
 import * as Yup from "yup";
 import "./Form.scss";
 import { useMutation } from "react-query";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 const schema = Yup.object()
   .shape({
     name: Yup.string().required("Name required"),
     username: Yup.string().required("Username required"),
-    email: Yup.string().email().required("Email required"),
+    email: Yup.string()
+      .email()
+      .matches(/edu$/, "Only University emails accepted")
+      .required("Educational email required"),
     password: Yup.string()
       .min(6, "Password has to be of atleast 6 characters")
       .max(15, "Password can not be more than 15 characters")
@@ -44,21 +47,20 @@ function Signup(props) {
       password: data.password,
     };
 
-    return await axios
-      .post("http://localhost:8000/register", json)
+    return await axios.post("http://localhost:8000/register", json);
   };
 
-  const handleSignUpData= useMutation(data => postNewUser(data), {
+  const handleSignUpData = useMutation((data) => postNewUser(data), {
     onSuccess: async () => {
       setToggleRedirect(true);
     },
     onError: async (error) => {
       if (error.response.status === 400) {
-        toggleShowA()
+        toggleShowA();
       }
-    }
-  })
- 
+    },
+  });
+
   const onSubmission = (data) => {
     console.log(data);
     handleSignUpData.mutate(data);
@@ -67,13 +69,16 @@ function Signup(props) {
   return (
     <>
       {toggleRedirect && <Redirect to="/" />}
-        <ToastContainer position="top-end" className="m-3">
-          <Toast show={showA} onClose={toggleShowA} bg="danger">
-            <Toast.Header className="py-4">
-                <strong className="me-auto"><FontAwesomeIcon icon={faExclamationTriangle}/> Username or Email already in use</strong>
-            </Toast.Header>
-          </Toast> 
-        </ToastContainer>
+      <ToastContainer position="top-end" className="m-3">
+        <Toast show={showA} onClose={toggleShowA} bg="danger">
+          <Toast.Header className="py-4">
+            <strong className="me-auto">
+              <FontAwesomeIcon icon={faExclamationTriangle} /> Username or Email
+              already in use
+            </strong>
+          </Toast.Header>
+        </Toast>
+      </ToastContainer>
       <div className="Formcontainer">
         <div className="Formcontainer-logo">
           <img
@@ -103,7 +108,7 @@ function Signup(props) {
           />
           <p className="error-message">{errors.username?.message}</p>
 
-          <Form.Label>Email:</Form.Label>
+          <Form.Label>University Email:</Form.Label>
           <Form.Control
             type="Email"
             {...register("email")}

@@ -36,12 +36,15 @@ const userProfileSchema = Yup.object()
   })
   .required();
 
-const memberSchema = Yup.object()
-  .shape({
-    name: Yup.string().optional("Name required"),
-    email: Yup.string().email().optional("Email required"),
-  })
-  .required();
+const memberSchema = Yup.object().shape({
+  name: Yup.string().required("Name required"),
+  email: Yup.string().email().required("Email required"),
+  resume: Yup.object()
+    .nullable(true)
+    .shape({
+      file: Yup.mixed().nullable(true),
+    }),
+});
 
 const organizationSchema = Yup.object()
   .shape({
@@ -59,6 +62,16 @@ const joinSchema = Yup.object()
   })
   .required();
 
+const pictureSchema = Yup.object()
+  .shape({
+    resume: Yup.object()
+      .nullable(true)
+      .shape({
+        file: Yup.mixed().nullable(true),
+      }),
+  })
+  .required();
+
 function EditModal(props) {
   const [show, setShow] = useState(false);
   const [state, setState] = useContext(AuthContext);
@@ -70,6 +83,7 @@ function EditModal(props) {
   const {
     register,
     handleSubmit,
+    handleChange,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(
@@ -83,6 +97,8 @@ function EditModal(props) {
         ? organizationSchema
         : props.type === "Join"
         ? joinSchema
+        : props.type === "picture"
+        ? pictureSchema
         : highlightSchema
     ),
   });
@@ -112,6 +128,7 @@ function EditModal(props) {
         });
     }
     if (props.type === "Member") {
+      // ADD RESUME here
       sendModalData([...props.mdata, data]);
       let hjson = {
         name: data.name,
@@ -233,6 +250,17 @@ function EditModal(props) {
             placeholder={"Email"}
           />
           <p className="error-message">{errors.email?.message}</p>
+
+          <Form.Label>Resume (Optional):</Form.Label>
+          <Form.Control
+            type="file"
+            name="resume"
+            {...register("resume")}
+            onChange={handleChange}
+          />
+          <p className="error-message">
+            {errors.resume?.message !== null ? errors.resume?.message : null}
+          </p>
         </Modal.Body>
       );
     } else if (props.type === "Organization") {
@@ -311,6 +339,14 @@ function EditModal(props) {
           <p className="error-message">{errors.message?.message}</p>
         </Modal.Body>
       );
+    } else if (props.type === "picture") {
+      return (
+        <Modal.Body>
+          <Form.Label>Change profile picture: </Form.Label>
+          <Form.Control type="file" name="picture" {...register("picture")} />
+          <p className="error-message">{errors.picture?.message}</p>
+        </Modal.Body>
+      );
     } else if (props.type === "User") {
       return (
         <Modal.Body>
@@ -381,7 +417,9 @@ function EditModal(props) {
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit(getModalData)}>
           <Modal.Header closeButton>
-            {props.type !== "User" && props.type !== "Organization" ? (
+            {props.type !== "User" &&
+            props.type !== "Organization" &&
+            props.type !== "OrgPicture" ? (
               <Modal.Title>Add a new {props.type}</Modal.Title>
             ) : (
               <Modal.Title>

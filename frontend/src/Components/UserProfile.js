@@ -28,6 +28,7 @@ function UserProfile(props) {
 
   const myOrgsQuery = useQuery('my-orgs', async () => {
     axios.defaults.headers.get["Authorization"] = `Bearer ${ustate?.token}`;
+
     const {data} = await axios.get("http://localhost:8000/my-organizations")
     return data
   });
@@ -36,6 +37,7 @@ function UserProfile(props) {
     const {data} = await axios.get(`http://localhost:8000/user/${ustate.user.u_id}`)
     return data
   })
+
 
   const handleResume = (e) => {
     const resumefile = e.target.files[0];

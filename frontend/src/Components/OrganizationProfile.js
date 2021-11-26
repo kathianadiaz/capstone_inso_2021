@@ -85,6 +85,22 @@ function OrganizationProfile() {
             <div className="organization-heading">
               <div className="organization-heading-logo">
                 <Image src="/defaultorganization.png" fluid />
+                {console.log(organizationData)}
+                <div className="organization-heading-logo-edit">
+                  {" "}
+                  <p className="organization-heading-logo-edit-text">
+                    Change organization picture:{" "}
+                  </p>
+                  {/* Change mdata and setdata to replace image */}
+                  {ustate?.user.u_id ===
+                  organizationData.administrators[0].u_id ? (
+                    <EditM
+                      mdata={organizationData}
+                      setdata={SetOrganizationData}
+                      type="picture"
+                    />
+                  ) : null}
+                </div>
               </div>
               <div className="organization-heading-info">
                 {/* {console.log(organizationData.name)} */}
@@ -104,6 +120,7 @@ function OrganizationProfile() {
                   </Button>
                   {ustate?.user.u_id !==
                     organizationData.administrators[0].u_id &&
+                  ustate !== null &&
                   organizationData.status === true ? (
                     <Button variant="btn organization-heading-button" size="lg">
                       <JoinM
@@ -114,10 +131,10 @@ function OrganizationProfile() {
                         type="Join"
                       />
                       {requestStatus === true ? (
-                        <span className="blue-text">Request sent</span>
+                        <span className="blue-text-org">Request sent</span>
                       ) : (
                         <span
-                          className="blue-text modal-text"
+                          className="blue-text-org modal-text"
                           onClick={(e) => handleShow("Join", e)}
                         >
                           Request to join
@@ -135,7 +152,7 @@ function OrganizationProfile() {
                       size="lg"
                     >
                       <span
-                        className="blue-text modal-text"
+                        className="blue-text-org modal-text"
                         onClick={(e) => handleShow("Delete", e)}
                       >
                         Delete organization
@@ -161,7 +178,7 @@ function OrganizationProfile() {
                         type="JoinRequests"
                       />
                       <span
-                        className="blue-text modal-text"
+                        className="blue-text-org modal-text"
                         onClick={(e) => handleShow("JoinRequests", e)}
                       >
                         Check join requests
