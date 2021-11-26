@@ -85,6 +85,22 @@ function OrganizationProfile() {
             <div className="organization-heading">
               <div className="organization-heading-logo">
                 <Image src="/defaultorganization.png" fluid />
+                {console.log(organizationData)}
+                <div className="organization-heading-logo-edit">
+                  {" "}
+                  <p className="organization-heading-logo-edit-text">
+                    Change organization picture:{" "}
+                  </p>
+                  {/* Change mdata and setdata to replace image */}
+                  {ustate?.user.u_id ===
+                  organizationData.administrators[0].u_id ? (
+                    <EditM
+                      mdata={organizationData}
+                      setdata={SetOrganizationData}
+                      type="picture"
+                    />
+                  ) : null}
+                </div>
               </div>
               <div className="organization-heading-info">
                 {/* {console.log(organizationData.name)} */}
