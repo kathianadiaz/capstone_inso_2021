@@ -21,7 +21,7 @@ class UserImage:
     @staticmethod
     def download_image(u_id: str, db: Session):
         db_user = db.query(models.User).filter(models.User.u_id == u_id)
-        db_image= db.query(models.Image).filter(models.Image.i_id == db_image.i_id).first()
+        db_image= db.query(models.Image).filter(models.Image.i_id == db_user.i_id).first()
 
         if not db_image:
             return None
