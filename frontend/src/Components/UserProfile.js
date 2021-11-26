@@ -27,8 +27,7 @@ function UserProfile(props) {
       .get("http://localhost:8000/my-organizations")
       .then((response) => {
         setUserOrganizations(response.data);
-        // console.log(userOrganizations);
-        // console.log(response);
+        setSpinner(false);
       })
       .catch((error) => {
         console.log(error);
@@ -38,7 +37,6 @@ function UserProfile(props) {
       .then((response) => {
         setUserData(response.data);
         setUsername(response.data.username);
-        setSpinner(false);
       })
       .catch((error) => {
         console.log(error);

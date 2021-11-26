@@ -81,6 +81,16 @@
   &-logo {
     width: 80%;
     min-width: 150px;
+
+    &-edit {
+      display: flex;
+      justify-content: center;
+
+      &-text {
+        margin-top: 0.5rem;
+        font-weight: bold;
+      }
+    }
   }
 
   &-info {
@@ -220,7 +230,7 @@
   height: 6rem;
 }
 
-.blue-text {
+.blue-text-org {
   &:hover {
     color: white;
   }
