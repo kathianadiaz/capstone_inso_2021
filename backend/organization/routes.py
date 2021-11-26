@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from fastapi.responses import StreamingResponse
 from organization import Organization, OrganizationHighlight, MemberInformation
 from organization.repository import OrganizationRepository
-from organization.services.file_upload import HighlightAttachment, MemberInformationAttachment
+from organization.services.file_upload import HighlightAttachment, MemberInformationAttachment, OrganizationImage
 from user import User
 from sqlalchemy.orm import Session
 from typing import List
@@ -49,6 +49,25 @@ def edit_organization(o_id: str,  organization: Organization, user: User = Depen
         raise HTTPException(status_code=404, detail="Organization not found")
 
     return organization
+
+@router.post("/organization/{o_id}/image")
+def upload_organization_image(o_id: str, image: UploadFile = File(...), user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if not OrganizationImage.upload_image(o_id,user.u_id,image,db):
+        raise HTTPException(status_code=404, detail="Organization not found")
+    return {"message":"File uploaded"}
+
+@router.get("/organization/{o_id}/image")
+def download_member_image(o_id: str, m_id: str, db: Session = Depends(get_db)):
+    data = OrganizationImage.download_image(o_id,db)
+
+    if not data:
+        raise HTTPException(status_code=404, detail="file not found")
+
+    memfile = BytesIO(data['data'])
+
+    response = StreamingResponse(memfile, media_type=f'{data["content_type"]}')
+    response.headers["Content-Disposition"] = f"inline; filename={data['filename']}"
+    return response
 
 @router.post("/organization/{o_id}/highlight", response_model=Organization)
 def add_organization_highlight(o_id: str, highlight: OrganizationHighlight, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
