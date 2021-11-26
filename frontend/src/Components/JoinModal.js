@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Form, Modal, Button, Image } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { Form, Modal, Button,Alert } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import JoinRequest from "./JoinRequest";
+import { useMutation } from "react-query";
 
 function JoinModal(props) {
   const [joinRequests, setJoinRequests] = useState([]);
@@ -16,6 +18,7 @@ function JoinModal(props) {
       message: Yup.string().required("Message Required"),
     })
     .required();
+
   const {
     register,
     handleSubmit,
@@ -23,25 +26,49 @@ function JoinModal(props) {
   } = useForm({
     resolver: yupResolver(joinSchema),
   });
-  const sendJoinRequest = (data) => {
+
+  const postJoinRequest = async (message) => {
     axios.defaults.headers.post["Authorization"] = `Bearer ${ustate?.token}`;
-    let rjson = {
-      message: data.message,
-    };
-    axios
-      .post(`/${props.orgID}/join`, rjson)
-      .then((response) => {
-        console.log(response);
-        props.setrequeststatus(true);
-        props.setshow(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+    return await axios.post(`http://localhost:8000/organization/${props.orgID}/join`, message, {headers: {"Content-Type": "text/plain"}})
+  }
+
+  const handleSendJoinRequest = useMutation(message => postJoinRequest(message), {
+    onSuccess: async () => {
+      //TODO
+    },
+    // onError: async (error) => {
+      // if (error.response.status === 404) {
+        // console.log(error.response.data.detail)
+      // }
+    // }
+  })
+
+  const onSubmission = (data) => {
+    handleSendJoinRequest.mutate(data.message)
+  }
+
+  // const sendJoinRequest = (data) => {
+    // axios.defaults.headers.post["Authorization"] = `Bearer ${ustate?.token}`;
+    // axios
+      // .post(`http://localhost:8000/organization/${props.orgID}/join`, data.message,{headers: {"Content-Type": "text/plain"}})
+      // .then((response) => {
+        // console.log(response);
+        // props.setrequeststatus(true);
+        // props.setshow(false);
+      // })
+      // .catch((error) => {
+        // console.log(error);
+      // });
+  // };
+
   const displayInputs = () => {
     return (
       <Modal.Body>
+        {handleSendJoinRequest.isError && 
+          <Alert variant="danger">
+            Member information not found. Click <Alert.Link as={Link} to="/UserProfile">here</Alert.Link> to create your member information
+          </Alert>
+        }
         <Form.Label>Join message: </Form.Label>
         <Form.Control
           type="text"
@@ -53,6 +80,7 @@ function JoinModal(props) {
       </Modal.Body>
     );
   };
+
   useEffect(() => {
     axios
       .get(`http://localhost:8000/user`)
@@ -67,6 +95,7 @@ function JoinModal(props) {
   const handleClose = () => {
     props.setshow(false);
   };
+
   return (
     <>
       {props.type === "Join" ? (
@@ -81,7 +110,7 @@ function JoinModal(props) {
           </Modal.Header>
           {displayInputs()}
           <Modal.Footer>
-            <Button variant="primary" onClick={handleSubmit(sendJoinRequest)}>
+            <Button variant="primary" onClick={handleSubmit(onSubmission)}>
               Send Join Request
             </Button>
             <Button variant="secondary" onClick={handleClose}>
