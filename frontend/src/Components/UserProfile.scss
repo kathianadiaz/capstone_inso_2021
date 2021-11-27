@@ -52,6 +52,7 @@
   background-color: white;
   height: 100%;
   margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
 }
 .user-resume {
   display: flex;
@@ -225,4 +226,28 @@
 .organization-join-message {
   display: flex;
   align-items: center;
+}
+
+.member-information-button {
+  width: 90%;
+  border: 2px solid;
+  background-color: white;
+  border-color: var(--t-bright-green);
+  color: var(--t-royal-blue);
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 auto;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  &:hover {
+    background-color: var(--t-blue-purple);
+    color: white;
+    border-color: var(--t-blue-purple);
+  }
+
+  &:focus {
+    background-color: white;
+    border-color: var(--t-bright-green);
+    color: var(--t-royal-blue);
+  }
 }

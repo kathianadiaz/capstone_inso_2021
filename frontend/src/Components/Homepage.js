@@ -46,9 +46,7 @@ function Homepage() {
       </div>
       <div className="features" id="feature">
         <h2 className="features-h2">
-          <span span className="green-text ">
-            Features
-          </span>{" "}
+          <span className="green-text ">Features</span>{" "}
           <span className="blue-text"> Provided </span>
         </h2>
         <div className="features-wrapper">
