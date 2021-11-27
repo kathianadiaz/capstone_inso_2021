@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import InputTag from "./InputTag";
 import { useForm } from "react-hook-form";
@@ -27,6 +27,7 @@ function OrganizationCreation(props) {
   // const [toggleRedirect, setToggleRedirect] = useState(false);
   const [organizationData, SetOrganizationData] = useState([]);
   const [stockImage, setStockImage] = useState("");
+  const [redirect, setRedirect] = useState(false);
   const {
     register,
     handleSubmit,
@@ -36,6 +37,10 @@ function OrganizationCreation(props) {
     resolver: yupResolver(schema),
   });
   console.log(tagData);
+  useEffect(() => {
+    createStockImage();
+  }, []);
+
   const createOrganization = async (data) => {
     // const parameters = new URLSearchParams();
     // parameters.append("name", data.name);
@@ -50,48 +55,49 @@ function OrganizationCreation(props) {
       tags: data.tags,
     };
     axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
-    await axios
+    axios
       .post("http://localhost:8000/organization", json)
       .then((response) => {
-        // console.log(response);
-        // setToggleRedirect(true);
         SetOrganizationData(response);
-        console.log(organizationData.data);
-        // console.log(toggleRedirect);
+        // console.log(organizationData.data);
+        console.log(response);
+        console.log(stockImage);
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+
+        axios
+          .post(
+            `http://localhost:8000/organization/${response.data.o_id}/image`,
+            stockImage,
+            config
+          )
+          .then((response) => {
+            console.log(response);
+            setRedirect(true);
+            console.log(redirect);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
         // If error notify user
       });
-    // const config = {
-    //   responseType: "blob",
-    // };
-    // fetch("/defaultorganization.png")
-    //   .then((response) => response.text())
-    //   .then((text) => setStockImage(text));
-    // axios.defaults.headers.get["Authorization"] = `Bearer ${state.token}`;
-    // axios
-    //   .get(
-    //     `http://localhost:8000/organization/${organizationData.data.o_id}/image`,
-    //     config
-    //   )
-    //   .then((response) => {
-    //     if (response !== null) {
-    //       let binaryData = [];
-    //       binaryData.push(response.data);
-    //       let image = window.URL.createObjectURL(
-    //         new Blob(binaryData, { type: "application/zip" })
-    //       );
-    //       setImageData(image);
-    //       console.log(response);
-    //       setImageSpinner(false);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   };
 
+  async function createStockImage() {
+    let response = await fetch("/defaultorganization.png");
+    let data = await response.blob();
+    let file = new File([data], "stockimage.jpg");
+    const imageDatas = new FormData();
+    imageDatas.append("image", file);
+    // console.log(image);
+    setStockImage(imageDatas);
+  }
   const onSubmission = (data) => {
     // append tagData data
     data.tags = tagData;
@@ -104,11 +110,10 @@ function OrganizationCreation(props) {
   const checkKeyDown = (e) => {
     if (e.key === "Enter") e.preventDefault();
   };
-
-  // console.log(linkData);
+  console.log(stockImage);
   return (
     <div className="Formcontainer">
-      {organizationData.length === 0 ? null : (
+      {redirect !== true ? null : (
         <Redirect to={`/organization-profile/${organizationData.data.o_id}`} />
       )}
 
@@ -120,7 +125,12 @@ function OrganizationCreation(props) {
         />{" "}
       </div>
       <Form onSubmit={handleSubmit(onSubmission)} onKeyDown={checkKeyDown}>
-        <Form.Label className="form-name" column="lg" lg={2}>
+        <Form.Label
+          onClick={createStockImage}
+          className="form-name"
+          column="lg"
+          lg={2}
+        >
           Create an organization
         </Form.Label>
         {/* <FormInput type="text" inputName="Name" />

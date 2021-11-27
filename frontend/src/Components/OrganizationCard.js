@@ -39,9 +39,7 @@ function OrganizationCard(props) {
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         )}
-        {!imageSpinner && imageData.length === 0 ? (
-          <Image src="/defaultorganization.png" fluid />
-        ) : (
+        {!imageSpinner && imageData.length !== 0 && (
           <Image src={imageData} fluid />
         )}
       </div>
@@ -51,11 +49,13 @@ function OrganizationCard(props) {
             className="organization-card-name card-name-color"
             to={`/organization-profile/${props.organizationId}`}
           >
-            {props.organizationName}
+            {props.organizationName.charAt(0).toUpperCase() +
+              props.organizationName.slice(1)}
           </Link>
         </h3>
         <p className="organization-cards-info-description">
-          {props.organizationInfo}
+          {props.organizationInfo.charAt(0).toUpperCase() +
+            props.organizationInfo.slice(1)}
         </p>
       </div>
     </div>

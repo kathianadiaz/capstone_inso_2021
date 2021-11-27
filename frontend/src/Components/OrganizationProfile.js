@@ -63,7 +63,9 @@ function OrganizationProfile() {
   const [memberData, setMemberData] = useState([]);
   const [imageSpinner, setImageSpinner] = useState(true);
   const [requestStatus, setRequestStatus] = useState(false);
-  console.log(imageData);
+  // const [imgs, setImgs] = useState([]);
+
+  // console.log(imageData);
 
   // console.log(showJoinRequestsModal);
 
@@ -83,7 +85,18 @@ function OrganizationProfile() {
         : setShowJoinModal(false);
     }
   };
+  // async function createFile() {
+  //   let response = await fetch("/defaultorganization.png");
+  //   let data = await response.blob();
+  //   let file = new File([data], "stockimage.jpg");
+  //   const imageDatas = new FormData();
+  //   imageDatas.append("image", file);
+  //   // console.log(image);
+  //   setImgs(imageDatas);
 
+  //   console.log(imgs);
+  // }
+  // createFile();
   return (
     <div className="organizationpage-wrapper">
       {!spinner && (
@@ -91,16 +104,10 @@ function OrganizationProfile() {
           <div className="organization-container">
             <div className="organization-heading">
               <div className="organization-heading-logo">
-                {imageSpinner && (
-                  <Spinner animation="border" role="status" size="bg">
-                    <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-                )}
-                {!imageSpinner && imageData.length === 0 ? (
-                  <Image src="/defaultorganization.png" fluid />
-                ) : (
+                {!imageSpinner && imageData.length !== 0 && (
                   <Image src={imageData} fluid />
                 )}
+
                 <div className="organization-heading-logo-edit">
                   {ustate?.user.u_id ===
                   organizationData?.administrators[0].u_id ? (
