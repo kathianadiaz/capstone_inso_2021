@@ -28,12 +28,11 @@ function OrganizationProfile() {
           );
           setImageData(image);
           console.log(response);
-          setImageSpinner(false);
+          console.log(image);
         }
       })
       .catch((error) => {
         console.log(error);
-        setImageSpinner(false);
       });
 
     axios
@@ -61,7 +60,7 @@ function OrganizationProfile() {
   const [redirectD, setredirectD] = useState(false);
   const [spinner, setSpinner] = useState(true);
   const [memberData, setMemberData] = useState([]);
-  const [imageSpinner, setImageSpinner] = useState(true);
+  // const [imageSpinner, setImageSpinner] = useState(true);
   const [requestStatus, setRequestStatus] = useState(false);
   // const [imgs, setImgs] = useState([]);
 
@@ -104,9 +103,7 @@ function OrganizationProfile() {
           <div className="organization-container">
             <div className="organization-heading">
               <div className="organization-heading-logo">
-                {!imageSpinner && imageData.length !== 0 && (
-                  <Image src={imageData} fluid />
-                )}
+                <Image src={imageData} fluid />
 
                 <div className="organization-heading-logo-edit">
                   {ustate?.user.u_id ===
@@ -118,11 +115,7 @@ function OrganizationProfile() {
                   {/* Change mdata and setdata to replace image */}
                   {ustate?.user.u_id ===
                   organizationData?.administrators[0].u_id ? (
-                    <EditM
-                      mdata={organizationData}
-                      setdata={SetOrganizationData}
-                      type="picture"
-                    />
+                    <EditM imgData={setImageData} type="picture" />
                   ) : null}
                 </div>
               </div>

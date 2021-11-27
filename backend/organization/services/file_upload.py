@@ -2,6 +2,7 @@ from fastapi import UploadFile
 from typing import Optional,List
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import Select,select
+from sqlalchemy.sql.elements import Null
 from organization import Organization, OrganizationHighlight, MemberInformation
 from user import User
 import models
@@ -19,11 +20,17 @@ class OrganizationImage:
         if not db_organization:
             return None
 
-        db_image= models.Image(i_id=uuid.uuid4() ,data=image.file.read(), filename=image.filename, content_type=image.content_type)
-        db.add(db_image)
-        db_organization.i_id = db_image.i_id
-
-        db.commit()
+        if ( db_organization.i_id == None):
+            db_image= models.Image(i_id=uuid.uuid4() ,data=image.file.read(), filename=image.filename, content_type=image.content_type)
+            db.add(db_image)
+            db_organization.i_id = db_image.i_id
+            db.commit()
+        else:
+            db.delete(db.query(models.Image).filter(models.Image.i_id == db_organization.i_id).first())
+            db_image= models.Image(i_id=uuid.uuid4() ,data=image.file.read(), filename=image.filename, content_type=image.content_type)
+            db.add(db_image)
+            db_organization.i_id = db_image.i_id
+            db.commit()
 
         return db_organization
 

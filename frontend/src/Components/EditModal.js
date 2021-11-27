@@ -107,7 +107,7 @@ function EditModal(props) {
     // setEventData([...eventdata, data]);
     // console.log(JSON.stringify(data, null, 2));
     setShow(false);
-    console.log(props.mdata);
+    // console.log(props.mdata);
     if (props.type === "User") {
       sendModalData(data);
       let ujson = {
@@ -200,7 +200,7 @@ function EditModal(props) {
     if (props.type === "picture") {
       const imageData = new FormData();
       const imageSize = data.picture[0].size / 250;
-      if (imageSize > 250) {
+      if (imageSize > 700) {
         alert("Image size too big");
       } else {
         imageData.append("image", data.picture[0]);
@@ -217,7 +217,12 @@ function EditModal(props) {
             config
           )
           .then((response) => {
-            console.log(response);
+            let binaryData = [];
+            binaryData.push(data.picture[0]);
+            let image = window.URL.createObjectURL(
+              new Blob(binaryData, { type: "application/zip" })
+            );
+            props.imgData(image);
           })
           .catch((error) => {
             console.log(error);
