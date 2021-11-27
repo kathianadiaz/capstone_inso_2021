@@ -8,43 +8,48 @@ import EditM from "./EditModal.js";
 import DeleteM from "./DeleteModal";
 import JoinM from "./JoinModal";
 import axios from "axios";
+import { config } from "@fortawesome/fontawesome-svg-core";
 function OrganizationProfile() {
   const { OrganizationId } = useParams();
+  let s = sessionStorage.getItem("state");
+  let ustate = JSON.parse(s);
   useEffect(() => {
+    const config = {
+      responseType: "blob",
+    };
+    axios
+      .get(`http://localhost:8000/organization/${OrganizationId}/image`, config)
+      .then((response) => {
+        if (response !== null) {
+          let binaryData = [];
+          binaryData.push(response.data);
+          let image = window.URL.createObjectURL(
+            new Blob(binaryData, { type: "application/zip" })
+          );
+          setImageData(image);
+          console.log(response);
+          setImageSpinner(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setImageSpinner(false);
+      });
+
     axios
       .get(`http://localhost:8000/organization/${OrganizationId}`)
       .then((response) => {
         SetOrganizationData(response.data);
         setHighlightData(response.data.highlights);
+
         setSpinner(false);
-        // console.log(response);
-        // console.log(organizationData);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
 
-  let s = sessionStorage.getItem("state");
-  let ustate = JSON.parse(s);
-
-  // const sendJoinRequest = () => {
-  //   axios.defaults.headers.post["Authorization"] = `Bearer ${ustate?.token}`;
-  //   let rjson = {
-  //     message: "I am interested in joining your organization",
-  //   };
-  //   axios
-  //     .post(`/${OrganizationId}/join`, rjson)
-  //     .then((response) => {
-  //       console.log(response);
-  //       setRequestStatus(true);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  const [eventData, setEventData] = useState([]);
+  const [imageData, setImageData] = useState([]);
   const [highlightData, setHighlightData] = useState([]);
   const [organizationData, SetOrganizationData] = useState([]);
   const [deletedHighlight, setDeletedHighlight] = useState(false);
@@ -56,9 +61,11 @@ function OrganizationProfile() {
   const [redirectD, setredirectD] = useState(false);
   const [spinner, setSpinner] = useState(true);
   const [memberData, setMemberData] = useState([]);
+  const [imageSpinner, setImageSpinner] = useState(true);
   const [requestStatus, setRequestStatus] = useState(false);
+  console.log(imageData);
 
-  console.log(showJoinRequestsModal);
+  // console.log(showJoinRequestsModal);
 
   const handleShow = (e) => {
     if (e === "JoinRequests") {
@@ -84,16 +91,26 @@ function OrganizationProfile() {
           <div className="organization-container">
             <div className="organization-heading">
               <div className="organization-heading-logo">
-                <Image src="/defaultorganization.png" fluid />
-                {console.log(organizationData)}
+                {imageSpinner && (
+                  <Spinner animation="border" role="status" size="bg">
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                )}
+                {!imageSpinner && imageData.length === 0 ? (
+                  <Image src="/defaultorganization.png" fluid />
+                ) : (
+                  <Image src={imageData} fluid />
+                )}
                 <div className="organization-heading-logo-edit">
-                  {" "}
-                  <p className="organization-heading-logo-edit-text">
-                    Change organization picture:{" "}
-                  </p>
+                  {ustate?.user.u_id ===
+                  organizationData?.administrators[0].u_id ? (
+                    <p className="organization-heading-logo-edit-text">
+                      Change organization picture:{" "}
+                    </p>
+                  ) : null}
                   {/* Change mdata and setdata to replace image */}
                   {ustate?.user.u_id ===
-                  organizationData.administrators[0].u_id ? (
+                  organizationData?.administrators[0].u_id ? (
                     <EditM
                       mdata={organizationData}
                       setdata={SetOrganizationData}
@@ -224,7 +241,10 @@ function OrganizationProfile() {
             </div>
             <div className="organization-description organization-layout">
               <h3 className="section-heading">Organization Description: </h3>
-              <p>{organizationData.description}</p>
+              <p>
+                {organizationData.description.charAt(0).toUpperCase() +
+                  organizationData.description.slice(1)}
+              </p>
             </div>
             <div className="organization-highlights organization-layout">
               <h3 className="section-heading">
@@ -239,18 +259,6 @@ function OrganizationProfile() {
                 ) : null}
               </h3>
 
-              {/* {organizationData.highlights &&
-            organizationData.highlights.length > 0
-              ? organizationData.highlights.map((data, i) => (
-                  <OrgHighlight
-                    key={i}
-                    award={data.title}
-                    // date={data.date.toLocaleDateString()}
-                    description={data.description}
-                    hData={data.oh_id}
-                  />
-                ))
-              : null} */}
               {highlightData.map((data, i) => (
                 <OrgHighlight
                   key={i}
@@ -265,34 +273,12 @@ function OrganizationProfile() {
                 />
               ))}
             </div>
-            {/* EVENTS PENDING? */}
-            {/* <div className="organization-events organization-layout">
-              <h3 className="section-heading">
-                Organization's Events:{" "}
-                {ustate?.user.u_id ===
-                organizationData.administrators[0].u_id ? (
-                  <EditM
-                    mdata={eventData}
-                    setdata={setEventData}
-                    type="Event"
-                  />
-                ) : null}
-              </h3>
 
-              {eventData.map((data, i) => (
-                <OrgEvent
-                  key={i}
-                  eventname={data.event}
-                  date={data.date.toLocaleDateString()}
-                  description={data.description}
-                />
-              ))}
-            </div> */}
             <div className="organization-members organization-layout">
               <h3 className="section-heading">
                 Organization's Members:{" "}
                 {ustate?.user.u_id ===
-                organizationData.administrators[0].u_id ? (
+                organizationData?.administrators[0].u_id ? (
                   <EditM
                     mdata={memberData}
                     setdata={setMemberData}

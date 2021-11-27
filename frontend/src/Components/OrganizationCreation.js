@@ -26,6 +26,7 @@ function OrganizationCreation(props) {
   const [linkData, setLinkData] = useState([]);
   // const [toggleRedirect, setToggleRedirect] = useState(false);
   const [organizationData, SetOrganizationData] = useState([]);
+  const [stockImage, setStockImage] = useState("");
   const {
     register,
     handleSubmit,
@@ -62,13 +63,39 @@ function OrganizationCreation(props) {
         console.log(error);
         // If error notify user
       });
+    // const config = {
+    //   responseType: "blob",
+    // };
+    // fetch("/defaultorganization.png")
+    //   .then((response) => response.text())
+    //   .then((text) => setStockImage(text));
+    // axios.defaults.headers.get["Authorization"] = `Bearer ${state.token}`;
+    // axios
+    //   .get(
+    //     `http://localhost:8000/organization/${organizationData.data.o_id}/image`,
+    //     config
+    //   )
+    //   .then((response) => {
+    //     if (response !== null) {
+    //       let binaryData = [];
+    //       binaryData.push(response.data);
+    //       let image = window.URL.createObjectURL(
+    //         new Blob(binaryData, { type: "application/zip" })
+    //       );
+    //       setImageData(image);
+    //       console.log(response);
+    //       setImageSpinner(false);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   const onSubmission = (data) => {
     // append tagData data
     data.tags = tagData;
     data.links = linkData;
-    console.log("WORKS");
     createOrganization(data);
     console.log(JSON.stringify(data, null, 2));
     // setToggleRedirect(true);

@@ -197,6 +197,33 @@ function EditModal(props) {
           console.log(error);
         });
     }
+    if (props.type === "picture") {
+      const imageData = new FormData();
+      const imageSize = data.picture[0].size / 250;
+      if (imageSize > 250) {
+        alert("Image size too big");
+      } else {
+        imageData.append("image", data.picture[0]);
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+        axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+        axios
+          .post(
+            `http://localhost:8000/organization/${OrganizationId}/image`,
+            imageData,
+            config
+          )
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
   };
 
   const sendModalData = (data) => {

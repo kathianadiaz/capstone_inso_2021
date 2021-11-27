@@ -57,7 +57,7 @@ def upload_organization_image(o_id: str, image: UploadFile = File(...), user: Us
     return {"message":"File uploaded"}
 
 @router.get("/organization/{o_id}/image")
-def download_member_image(o_id: str, m_id: str, db: Session = Depends(get_db)):
+def download_organization_image(o_id: str, db: Session = Depends(get_db)):
     data = OrganizationImage.download_image(o_id,db)
 
     if not data:
