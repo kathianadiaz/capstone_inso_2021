@@ -107,7 +107,7 @@ function EditModal(props) {
     // setEventData([...eventdata, data]);
     // console.log(JSON.stringify(data, null, 2));
     setShow(false);
-    console.log(props.mdata);
+    // console.log(props.mdata);
     if (props.type === "User") {
       sendModalData(data);
       let ujson = {
@@ -196,6 +196,38 @@ function EditModal(props) {
         .catch((error) => {
           console.log(error);
         });
+    }
+    if (props.type === "picture") {
+      const imageData = new FormData();
+      const imageSize = data.picture[0].size / 250;
+      if (imageSize > 700) {
+        alert("Image size too big");
+      } else {
+        imageData.append("image", data.picture[0]);
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+        axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+        axios
+          .post(
+            `http://localhost:8000/organization/${OrganizationId}/image`,
+            imageData,
+            config
+          )
+          .then(() => {
+            let binaryData = [];
+            binaryData.push(data.picture[0]);
+            let image = window.URL.createObjectURL(
+              new Blob(binaryData, { type: data.picture[0].type })
+            );
+            props.imgData(image);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
   };
 

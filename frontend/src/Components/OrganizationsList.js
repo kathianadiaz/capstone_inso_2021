@@ -42,8 +42,8 @@ function OrganizationsList() {
       setSpinner(true);
       if (filtering === "All") {
         let searchjson = {
-          tag: inputvalue.toLowerCase(),
-          keyword: inputvalue.toLowerCase(),
+          tag: inputvalue,
+          keyword: inputvalue,
         };
         axios
           .get(
@@ -148,6 +148,7 @@ function OrganizationsList() {
         });
     }
   };
+
   return (
     <div className="org-list-wrapper">
       <div className="org-search-wrapper">
@@ -192,7 +193,6 @@ function OrganizationsList() {
             <span className="green-text">organizations</span>:
           </h3>
         )}
-
         <div className="organizations-list-wrapper">
           {spinner && (
             <Spinner animation="border" role="status" size="bg">
