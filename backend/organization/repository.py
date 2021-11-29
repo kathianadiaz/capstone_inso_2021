@@ -220,7 +220,14 @@ class OrganizationRepository:
 
         return db_organization
 
-    #end of class
+    @staticmethod
+    def get_member_info(m_id: str, db: Session) -> MemberInformation:
+        db_member_info = db.query(models.MemberInformation).filter(models.MemberInformation.m_id == m_id).first()
+
+        if not db_member_info:
+            return None
+
+        return db_member_info
 
 
 

@@ -174,3 +174,12 @@ def get_organizations_by_tags(tags: str, db: Session = Depends(get_db)):
 @router.get("/organization/tags/{tags}/keywords/{keywords}", response_model=List[Organization])
 def search_organizations(tags: str, keywords:str, db: Session = Depends(get_db)):
     return OrganizationRepository.search_organizations(tags, keywords, db)
+
+@router.get("/member-information/{m_id}", response_model=MemberInformation)
+def get_member_information(m_id: str, db: Session = Depends(get_db)):
+    member_info = OrganizationRepository.get_member_info(m_id, db)
+
+    if not member_info:
+        raise HTTPException(status_code=404, detail="Organization or member information not found")
+
+    return member_info

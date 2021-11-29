@@ -345,6 +345,12 @@ def test_add_member_info_as_user():
     assert response.status_code == 200
     assert response.json()['m_id'] != None 
 
+    response = client.get(f'/member-information/{response.json()["m_id"]}')
+
+    assert response.status_code == 200
+    assert response.json()['name'] == 'string'
+    assert response.json()['email'] == 'string2'
+
 def test_connect_member_to_organization():
     response = client.post(
         f'/user/member-information',
@@ -396,6 +402,7 @@ def test_request_to_join():
     assert 'r_id' in join_request
     assert join_request['o_id'] != None
     assert join_request['u_id'] != None
+    assert join_request['name'] == 'tester2'
     assert join_request['message'] == 'test1'
 
 def test_get_join_requests():

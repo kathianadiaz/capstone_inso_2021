@@ -9,7 +9,9 @@ class JoinRequest(BaseModel):
     u_id: uuid.UUID
     m_id: uuid.UUID
     date: Optional[date]
+    name: str
     message: str
+
 
     class Config:
         orm_mode = True

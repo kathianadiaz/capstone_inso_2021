@@ -90,4 +90,5 @@ class JoinRequest(Base):
     u_id = Column(UUID(as_uuid=True), ForeignKey('user.u_id'))
     m_id = Column(UUID(as_uuid=True), ForeignKey('member_information.m_id'))
     date = Column(Date, default=datetime.date.today())
+    name = Column(String)
     message = Column(String, nullable=False)

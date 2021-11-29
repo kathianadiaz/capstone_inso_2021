@@ -24,7 +24,7 @@ class JoinRequestRepository:
 
     @staticmethod
     def add_join_request(mesage: str, o_id: str, user: User, db: Session) -> JoinRequest:
-        db_join_request = models.JoinRequest(message=mesage, o_id=o_id, u_id=user.u_id, m_id=user.m_id)
+        db_join_request = models.JoinRequest(name=user.name, message=mesage, o_id=o_id, u_id=user.u_id, m_id=user.m_id)
 
         db.add(db_join_request)
         db.commit()
