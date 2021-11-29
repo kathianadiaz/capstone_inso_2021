@@ -16,7 +16,7 @@ function MemberInfoModal(props) {
 
     const handlePostMemberInformation = useMutation(data => postMemberInformation(data), {
         onSuccess: async () => {
-            //TODO
+            handleClose()
         }
     }) 
 

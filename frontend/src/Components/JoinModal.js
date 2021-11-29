@@ -10,6 +10,7 @@ import { useMutation } from "react-query";
 
 function JoinModal(props) {
   const [joinRequests, setJoinRequests] = useState([]);
+  const [deleteRequest, setDeleteRequest] = useState("");
   const s = sessionStorage.getItem("state");
   const ustate = JSON.parse(s);
 
@@ -104,9 +105,18 @@ function JoinModal(props) {
       });
   }, []);
 
+  useEffect(() => {
+   if (deleteRequest !== "") {
+    setJoinRequests(joinRequests.filter((request) => request.r_id !== deleteRequest))
+    setDeleteRequest("")
+    console.log("YAY")
+   }
+  }, [deleteRequest]);
+
   const handleClose = () => {
     props.setshow(false);
   };
+  console.log(deleteRequest)
 
   return (
     <>
@@ -146,10 +156,14 @@ function JoinModal(props) {
             {joinRequests.map((request, i) => (
               <JoinRequest
                 key={i}
-                name={request.u_id}
+                name={request.name}
                 email={request.email}
                 message="Hey really interested in joining your org!"
                 image="/defaultProfile.png"
+                o_id = {props.orgID}
+                r_id = {request.r_id}
+                token = {ustate.token}
+                requestDeleted = {setDeleteRequest} 
               />
             ))}
           </Modal.Body>
