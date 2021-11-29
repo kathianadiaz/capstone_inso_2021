@@ -24,7 +24,7 @@ function OrganizationProfile() {
           let binaryData = [];
           binaryData.push(response.data);
           let image = window.URL.createObjectURL(
-            new Blob(binaryData, { type: "application/zip" })
+            new Blob(binaryData, { type: response.data.type })
           );
           setImageData(image);
           console.log(response);

@@ -216,11 +216,11 @@ function EditModal(props) {
             imageData,
             config
           )
-          .then((response) => {
+          .then(() => {
             let binaryData = [];
             binaryData.push(data.picture[0]);
             let image = window.URL.createObjectURL(
-              new Blob(binaryData, { type: "application/zip" })
+              new Blob(binaryData, { type: data.picture[0].type })
             );
             props.imgData(image);
           })
