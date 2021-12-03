@@ -64,3 +64,10 @@ jobs:
         cd backend
         python -m pytest tests/
 
+    -name: E2E Testing
+     run: |
+        cd frontend
+        node E2ETest-chromium.js
+        node E2ETest-chromium.js
+
+
