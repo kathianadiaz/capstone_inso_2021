@@ -5,8 +5,8 @@ import OrgIcon from "./organizationIcon.js";
 import EditM from "./EditModal.js";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import MemberInfoModal from "./memberInfoModal";
 import { useQuery } from "react-query";
 
