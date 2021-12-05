@@ -56,6 +56,11 @@ def upload_organization_image(o_id: str, image: UploadFile = File(...), user: Us
         raise HTTPException(status_code=404, detail="Organization not found")
     return {"message":"File uploaded"}
 
+@router.delete("/organization/{o_id}/image")
+def delete_organization(o_id: str,  user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    organizationImage = OrganizationImage.delete_image(o_id,user.u_id,db)
+    return organizationImage
+
 @router.get("/organization/{o_id}/image")
 def download_organization_image(o_id: str, db: Session = Depends(get_db)):
     data = OrganizationImage.download_image(o_id,db)

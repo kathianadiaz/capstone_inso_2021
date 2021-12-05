@@ -35,6 +35,22 @@ class OrganizationImage:
         return db_organization
 
     @staticmethod
+    def delete_image(o_id: str, u_id: str, db: Session):
+        db_organization = db.query(models.Organization).\
+            join(models.organization_administrator_assoc_table).\
+            filter(models.organization_administrator_assoc_table.columns.user_id == u_id).\
+            filter(models.organization_administrator_assoc_table.columns.organization_id == o_id).\
+            first()
+
+        if not db_organization:
+            return None
+
+        db.delete(db.query(models.Image).filter(models.Image.i_id == db_organization.i_id).first())
+        db.commit()
+
+        return db_organization
+
+    @staticmethod
     def download_image(o_id: str, db: Session):
         db_organization = db.query(models.Organization).filter(models.Organization.o_id == o_id).first()
         db_image= db.query(models.Image).filter(models.Image.i_id == db_organization.i_id).first()

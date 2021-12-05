@@ -25,10 +25,17 @@ class JoinRequestRepository:
     @staticmethod
     def add_join_request(mesage: str, o_id: str, user: User, db: Session) -> JoinRequest:
         db_join_request = models.JoinRequest(name=user.name, message=mesage, o_id=o_id, u_id=user.u_id, m_id=user.m_id)
+        db_request = db.query(models.JoinRequest).filter(models.JoinRequest.o_id == o_id).first()
 
-        db.add(db_join_request)
-        db.commit()
-        db.refresh(db_join_request)
+        if(db_request == None):
+            db.add(db_join_request)
+            db.commit()
+            db.refresh(db_join_request)
+        else:
+            db.delete(db_request)
+            db.add(db_join_request)
+            db.commit()
+            db.refresh(db_join_request)
 
         return db_join_request
 

@@ -5,7 +5,6 @@ import OrganizationCard from "./OrganizationCard";
 import axios from "axios";
 function OrganizationsList() {
   const [organizations, setOrganizations] = useState([]);
-  const [organizationsFilter, setorganizationsFilter] = useState([]);
   const [inputvalue, setInputValue] = useState("");
   const [spinner, setSpinner] = useState(true);
   const [filtering, setFiltering] = useState("All");
@@ -13,9 +12,8 @@ function OrganizationsList() {
     axios
       .get("http://localhost:8000/organization")
       .then((response) => {
-        setorganizationsFilter(response.data);
         setOrganizations(response.data);
-        console.log(response);
+        // console.log(response);
         setSpinner(false);
       })
       .catch((error) => {
@@ -40,10 +38,11 @@ function OrganizationsList() {
     setInputValue(e.target.value);
     if (e.key === "Enter") {
       setSpinner(true);
-      if (filtering === "All") {
+      // console.log(e.target.value);
+      if (filtering === "All" && e.target.value !== "") {
         let searchjson = {
-          tag: inputvalue,
-          keyword: inputvalue,
+          tag: inputvalue.toLowerCase(),
+          keyword: inputvalue.toLowerCase(),
         };
         axios
           .get(
@@ -52,12 +51,13 @@ function OrganizationsList() {
           .then((response) => {
             setOrganizations(response.data);
             setSpinner(false);
+            e.target.value = "";
           })
           .catch((error) => {
             console.log(error);
           });
       }
-      if (filtering === "Keywords") {
+      if (filtering === "Keywords" && e.target.value !== "") {
         let searchjson = {
           keyword: inputvalue.toLowerCase(),
         };
@@ -68,12 +68,13 @@ function OrganizationsList() {
           .then((response) => {
             setOrganizations(response.data);
             setSpinner(false);
+            e.target.value = "";
           })
           .catch((error) => {
             console.log(error);
           });
       }
-      if (filtering === "Tags") {
+      if (filtering === "Tags" && e.target.value !== "") {
         let searchjson = {
           tag: inputvalue.toLowerCase(),
         };
@@ -82,13 +83,23 @@ function OrganizationsList() {
           .then((response) => {
             setOrganizations(response.data);
             setSpinner(false);
+            e.target.value = "";
           })
           .catch((error) => {
             console.log(error);
           });
       }
-    } else {
-      setOrganizations(organizationsFilter);
+      if (e.target.value === "" && e.key === "Enter") {
+        axios
+          .get("http://localhost:8000/organization")
+          .then((response) => {
+            setOrganizations(response.data);
+            setSpinner(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
   };
   const onChangeInput = (e) => {
