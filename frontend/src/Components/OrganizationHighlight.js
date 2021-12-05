@@ -7,7 +7,7 @@ const OrganizationHighlight = (props) => {
   const { OrganizationId } = useParams();
   const [state, setState] = useContext(AuthContext);
 
-  console.log(OrganizationId);
+  // console.log(OrganizationId);
   const deleteHighlight = () => {
     axios.defaults.headers.delete["Authorization"] = `Bearer ${state.token}`;
     axios
@@ -16,7 +16,7 @@ const OrganizationHighlight = (props) => {
       )
       .then((response) => {
         // console.log(response);
-        console.log(response.data.highlights);
+        // console.log(response.data.highlights);
         props.sethighlight(response.data.highlights);
         // console.log(props.highlightdata);
       })
@@ -34,8 +34,13 @@ const OrganizationHighlight = (props) => {
           Delete Highlight
         </a>
       ) : null}
-      <h4 className="event-time"> {"Date: " + props.date} </h4>
-      <p>{props.description}</p>
+      <h4 className="event-time organization-information-wrapper-paragraph">
+        {" "}
+        {"Date: " + props.date}{" "}
+      </h4>
+      <p className="organization-information-wrapper-paragraph">
+        {props.description}
+      </p>
     </div>
   );
 };
