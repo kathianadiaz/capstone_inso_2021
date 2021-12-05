@@ -20,7 +20,10 @@ const highlightSchema = Yup.object()
   .shape({
     title: Yup.string().required("Award name required"),
     description: Yup.string().required("Highlight description required"),
-    date: Yup.date().required("Date required"),
+    date: Yup.date()
+      .required("Date required")
+      .nullable()
+      .transform((v) => (v instanceof Date && !isNaN(v) ? v : null)),
   })
   .required();
 
@@ -159,7 +162,6 @@ function EditModal(props) {
         members: props.mdata.members,
         administrators: props.mdata.administrators,
       };
-      console.log(ojson);
       axios.defaults.headers.put["Authorization"] = `Bearer ${state.token}`;
       axios
         .put(`http://localhost:8000/organization/${OrganizationId}`, ojson)
@@ -346,8 +348,8 @@ function EditModal(props) {
 
           <Form.Label>{props.type} status: </Form.Label>
           <Form.Select {...register("status")} size="md">
-            <option>Recruiting</option>
             <option>Not Recruiting</option>
+            <option>Recruiting</option>
           </Form.Select>
           {/* <Form.Control
             type="text"
@@ -432,7 +434,7 @@ function EditModal(props) {
           <Form.Control
             type="date"
             {...register("date")}
-            placeholder={"Date"}
+            placeholder={"date"}
           />
           <p className="error-message">{errors.date?.message}</p>
         </Modal.Body>
@@ -466,7 +468,11 @@ function EditModal(props) {
               Close
             </Button>
             {props.type != "Organization" ? (
-              <Button variant="primary" onClick={handleSubmit(getModalData)}>
+              <Button
+                className=" modal-accept-btn"
+                variant="primary"
+                onClick={handleSubmit(getModalData)}
+              >
                 Add {props.type}
               </Button>
             ) : (
