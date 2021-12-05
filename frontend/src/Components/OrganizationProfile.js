@@ -138,6 +138,7 @@ function OrganizationProfile() {
                   organizationData.members.filter(
                     (member) => member.m_id === ustate?.user.m_id
                   ).length === 0 &&
+                  ustate?.user.m_id !== null &&
                   ustate !== null &&
                   organizationData.status === true ? (
                     <Button variant="btn organization-heading-button" size="lg">
