@@ -32,8 +32,9 @@ const userProfileSchema = Yup.object()
     name: Yup.string().optional("Name required"),
     email: Yup.string().email().optional("Email required"),
     phone_number: Yup.string()
-      .optional()
       .matches(/^[0-9]+$/, "Must be only digits")
+      .nullable(true)
+      .transform((v, o) => (o === "" ? null : v))
       .min(10, "Phone number mininum is 10 digits")
       .max(10, "Phone number maximum is 10 digits"),
   })
@@ -116,7 +117,7 @@ function EditModal(props) {
       let ujson = {
         username: state?.user.username,
         email: data.email,
-        phone_number: data.phone_number,
+        phone_number: data.phone_number === null ? null : data.phone_number,
         name: data.name,
       };
       axios.defaults.headers.put["Authorization"] = `Bearer ${state?.token}`;
