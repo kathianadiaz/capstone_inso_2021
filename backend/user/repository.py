@@ -80,9 +80,11 @@ class UserRepository:
             db_user.member_information = db_member_information
             db.commit()
         else:
-            db.delete(db_memberinfo)
-            db.add(db_member_information)
-            db_user.member_information = db_member_information
+            # db.delete(db_memberinfo)
+            # db.add(db_member_information)
+            db_memberinfo.name = db_member_information.name
+            db_memberinfo.email = db_member_information.email
+            db_memberinfo.a_id = db_member_information.a_id
             db.commit()
 
   #   if ( db_organization.i_id == None):
