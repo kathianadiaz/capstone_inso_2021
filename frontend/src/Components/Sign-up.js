@@ -62,7 +62,7 @@ function Signup(props) {
   });
 
   const onSubmission = (data) => {
-    console.log(data);
+    // console.log(data);
     handleSignUpData.mutate(data);
   };
 

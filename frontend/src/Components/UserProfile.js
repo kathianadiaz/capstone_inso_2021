@@ -51,23 +51,23 @@ function UserProfile(props) {
     return data;
   });
 
-  const handleResume = (e) => {
-    const resumefile = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(resumefile);
-    reader.onload = () => {
-      setresume(e.target.files[0]);
-      setfileuploaded(true);
-    };
-    reader.onerror = () => {
-      console.log("file errors", reader.error);
-    };
-  };
+  // const handleResume = (e) => {
+  //   const resumefile = e.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(resumefile);
+  //   reader.onload = () => {
+  //     setresume(e.target.files[0]);
+  //     setfileuploaded(true);
+  //   };
+  //   reader.onerror = () => {
+  //     console.log("file errors", reader.error);
+  //   };
+  // };
 
-  let resumeDoc = "";
-  if (fileuploaded) {
-    resumeDoc = URL.createObjectURL(resume);
-  }
+  // let resumeDoc = "";
+  // if (fileuploaded) {
+  //   resumeDoc = URL.createObjectURL(resume);
+  // }
 
   if (myOrgsQuery.isLoading || userQuery.isLoading) {
     return (

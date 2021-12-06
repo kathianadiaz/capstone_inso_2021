@@ -36,7 +36,7 @@ function OrganizationCreation(props) {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  console.log(tagData);
+  // console.log(tagData);
   useEffect(() => {
     createStockImage();
   }, []);
@@ -60,8 +60,8 @@ function OrganizationCreation(props) {
       .then((response) => {
         SetOrganizationData(response);
         // console.log(organizationData.data);
-        console.log(response);
-        console.log(stockImage);
+        // console.log(response);
+        // console.log(stockImage);
         const config = {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -75,9 +75,9 @@ function OrganizationCreation(props) {
             config
           )
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             setRedirect(true);
-            console.log(redirect);
+            // console.log(redirect);
           })
           .catch((error) => {
             console.log(error);
@@ -103,7 +103,7 @@ function OrganizationCreation(props) {
     data.tags = tagData;
     data.links = linkData;
     createOrganization(data);
-    console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(data, null, 2));
     // setToggleRedirect(true);
     // console.log(JSON.stringify(tagData));
   };

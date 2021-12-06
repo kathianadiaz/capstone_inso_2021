@@ -23,7 +23,7 @@ function OrganizationIcon(props) {
             new Blob(binaryData, { type: response.data.type })
           );
           setImageData(image);
-          console.log(response);
+          // console.log(response);
           setImageSpinner(false);
         })
         .catch((error) => {

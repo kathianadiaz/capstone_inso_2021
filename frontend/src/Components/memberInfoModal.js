@@ -34,7 +34,7 @@ function MemberInfoModal(props) {
   );
 
   const onSubmission = (data) => {
-    console.log(data);
+    // console.log(data);
     let resume = data.resume;
     delete data.resume;
     data.links = [];

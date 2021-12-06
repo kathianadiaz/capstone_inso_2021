@@ -6,7 +6,7 @@ function InputTag(props) {
   const [tags, setTags] = useState([]);
 
   function inputKeyDown(e) {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     if (e.key === "Enter" && e.target.value) {
       if (
         tags.find((tag) => tag.toLowerCase() === e.target.value.toLowerCase())

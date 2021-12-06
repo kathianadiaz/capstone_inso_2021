@@ -121,7 +121,7 @@ function JoinModal(props) {
   const handleClose = () => {
     props.setshow(false);
   };
-  console.log(deleteRequest);
+  // console.log(deleteRequest);
 
   return (
     <>
