@@ -5,8 +5,8 @@ import OrgIcon from "./organizationIcon.js";
 import EditM from "./EditModal.js";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import MemberInfoModal from "./memberInfoModal";
 import { useQuery } from "react-query";
 
@@ -16,9 +16,10 @@ function UserProfile(props) {
   const inputRef = useRef();
   const [state, setState] = useContext(AuthContext);
   const [show, setShow] = useState(false);
-
+  const [userData, setUserData] = useState({});
+  const [username, setUsername] = useState("");
+  const [memberInfo, setMemberInfo] = useState(false);
   const handleShow = () => setShow(true);
-
   const openFiles = () => {
     inputRef.current.click();
   };
@@ -32,11 +33,21 @@ function UserProfile(props) {
     const { data } = await axios.get("http://localhost:8000/my-organizations");
     return data;
   });
+  const myJoinedOrgsQuery = useQuery("my-joined-orgs", async () => {
+    axios.defaults.headers.get["Authorization"] = `Bearer ${ustate?.token}`;
 
+    const { data } = await axios.get(
+      "http://localhost:8000/my-organizations-member"
+    );
+    return data;
+  });
   const userQuery = useQuery("user", async () => {
     const { data } = await axios.get(
       `http://localhost:8000/user/${ustate.user.u_id}`
     );
+    setUserData(data);
+    setUsername(data.username);
+
     return data;
   });
 
@@ -79,32 +90,32 @@ function UserProfile(props) {
                 src="/defaultProfile.png"
                 roundedCircle
               />
-              <h1 className="user-info-name text-color">
-                {userQuery.data.name}
-              </h1>
+              <h1 className="user-info-name text-color">{userData.name}</h1>
             </div>
             <div className="user-contact">
               <h2 className="user-contact-header">
                 Contact Information:
-                {/* <EditM mdata={userQuery.data} setdata={setUserData} type="User" /> */}
+                <EditM
+                  mdata={userQuery.data}
+                  setdata={setUserData}
+                  type="User"
+                />
               </h2>
 
               <div className="user-contact-information">
+                <p className="white-text">{"Username: " + username}</p>
+                <p className="white-text">{"Email: " + userData.email}</p>
                 <p className="white-text">
-                  {"Username: " + userQuery.data.username}
-                </p>
-                <p className="white-text">{"Email: " + userQuery.data.email}</p>
-                <p className="white-text">
-                  {userQuery.data.phone_number === null
+                  {userData.phone_number === null
                     ? "Phone number: No phone number"
-                    : "Phone number: " + userQuery.data.phone_number}
+                    : "Phone number: " + userData.phone_number}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="user-options-wrapper">
-            <div className="user-resume">
+            {/* <div className="user-resume">
               <h2 className="user-resume-heading text-color">Resume:</h2>
               <div className="user-resume-upload">
                 <Button
@@ -119,7 +130,7 @@ function UserProfile(props) {
                   Click here to download resume
                 </a>
               </div>
-            </div>
+            </div> */}
             <br />
             <div className="user-organizations">
               <h2 className="user-organizations-heading text-color">
@@ -131,7 +142,6 @@ function UserProfile(props) {
                     <OrgIcon
                       key={i}
                       organizationName={org.name}
-                      imageLocation="/defaultorganization.png"
                       organizationId={org.o_id}
                       type="Organization"
                     />
@@ -139,6 +149,16 @@ function UserProfile(props) {
                 ) : (
                   <h1>No results found!</h1>
                 )}
+                {myJoinedOrgsQuery.data
+                  ? myJoinedOrgsQuery.data.map((org, i) => (
+                      <OrgIcon
+                        key={i}
+                        organizationName={org.name}
+                        organizationId={org.o_id}
+                        type="Organization"
+                      />
+                    ))
+                  : null()}
               </div>
             </div>
             <br />
@@ -156,7 +176,17 @@ function UserProfile(props) {
                   className="member-information-button"
                   onClick={handleShow}
                 >
-                  <FontAwesomeIcon icon={faPlusSquare} /> Add member information
+                  <div className="member-information-button-wrapper">
+                    {memberInfo !== true ? (
+                      <p className="member-information-button-wrapper-text">
+                        Add / Update member information
+                      </p>
+                    ) : (
+                      <p className="member-information-button-wrapper-text">
+                        Member information changed
+                      </p>
+                    )}
+                  </div>
                 </Button>
               </Container>
             </div>

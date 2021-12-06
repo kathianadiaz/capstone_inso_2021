@@ -22,7 +22,6 @@ function OrganizationCard(props) {
           new Blob(binaryData, { type: response.data.type })
         );
         setImageData(image);
-        console.log(response);
         setImageSpinner(false);
       })
       .catch((error) => {

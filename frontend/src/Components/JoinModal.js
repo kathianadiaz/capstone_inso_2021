@@ -10,6 +10,7 @@ import { useMutation } from "react-query";
 
 function JoinModal(props) {
   const [joinRequests, setJoinRequests] = useState([]);
+  const [deleteRequest, setDeleteRequest] = useState("");
   const s = sessionStorage.getItem("state");
   const ustate = JSON.parse(s);
 
@@ -52,6 +53,8 @@ function JoinModal(props) {
 
   const onSubmission = (data) => {
     handleSendJoinRequest.mutate(data.message);
+    props.setrequeststatus(true);
+    handleClose();
   };
 
   // const sendJoinRequest = (data) => {
@@ -93,20 +96,32 @@ function JoinModal(props) {
   };
 
   useEffect(() => {
-    axios.defaults.headers.get["Authorization"] = `Bearer ${ustate?.token}`;
-    axios
-      .get(`http://localhost:8000/organization/${props.orgID}/request`)
-      .then((response) => {
-        setJoinRequests(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (ustate?.user.u_id === props.orgAdminID) {
+      axios.defaults.headers.get["Authorization"] = `Bearer ${ustate?.token}`;
+      axios
+        .get(`http://localhost:8000/organization/${props.orgID}/request`)
+        .then((response) => {
+          setJoinRequests(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, []);
+
+  useEffect(() => {
+    if (deleteRequest !== "") {
+      setJoinRequests(
+        joinRequests.filter((request) => request.r_id !== deleteRequest)
+      );
+      setDeleteRequest("");
+    }
+  }, [deleteRequest]);
 
   const handleClose = () => {
     props.setshow(false);
   };
+  console.log(deleteRequest);
 
   return (
     <>
@@ -146,10 +161,12 @@ function JoinModal(props) {
             {joinRequests.map((request, i) => (
               <JoinRequest
                 key={i}
-                name={request.u_id}
-                email={request.email}
-                message="Hey really interested in joining your org!"
+                requestinfo={request}
                 image="/defaultProfile.png"
+                o_id={props.orgID}
+                r_id={request.r_id}
+                token={ustate.token}
+                requestDeleted={setDeleteRequest}
               />
             ))}
           </Modal.Body>

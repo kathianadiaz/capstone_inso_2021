@@ -27,8 +27,8 @@ function OrganizationProfile() {
             new Blob(binaryData, { type: response.data.type })
           );
           setImageData(image);
-          console.log(response);
-          console.log(image);
+          // console.log(response);
+          // console.log(image);
         }
       })
       .catch((error) => {
@@ -65,7 +65,6 @@ function OrganizationProfile() {
   // const [imgs, setImgs] = useState([]);
 
   // console.log(imageData);
-
   // console.log(showJoinRequestsModal);
 
   const handleShow = (e) => {
@@ -120,8 +119,7 @@ function OrganizationProfile() {
                 </div>
               </div>
               <div className="organization-heading-info">
-                {/* {console.log(organizationData.name)} */}
-                <h1>
+                <h1 className="organization-name">
                   {organizationData.name[0].toUpperCase() +
                     organizationData.name.slice(1).toLowerCase()}
                 </h1>
@@ -137,6 +135,10 @@ function OrganizationProfile() {
                   </Button>
                   {ustate?.user.u_id !==
                     organizationData.administrators[0].u_id &&
+                  organizationData.members.filter(
+                    (member) => member.m_id === ustate?.user.m_id
+                  ).length === 0 &&
+                  ustate?.user.m_id !== null &&
                   ustate !== null &&
                   organizationData.status === true ? (
                     <Button variant="btn organization-heading-button" size="lg">
@@ -193,6 +195,7 @@ function OrganizationProfile() {
                         orgID={OrganizationId}
                         setrequeststatus={setRequestStatus}
                         type="JoinRequests"
+                        orgAdminID={organizationData.administrators[0].u_id}
                       />
                       <span
                         className="blue-text-org modal-text"
@@ -218,30 +221,30 @@ function OrganizationProfile() {
                 ) : null}
               </h3>
               <div className="organization-information-wrapper">
-                <p>
+                <p className="organization-information-wrapper-paragraph">
                   {" "}
                   <span className="organization-information-wrapper-text">
                     Contact email:{" "}
                   </span>{" "}
                   {organizationData.email}
                 </p>
-                <p>
+                <p className="organization-information-wrapper-paragraph">
                   <span className="organization-information-wrapper-text">
                     Department:{" "}
                   </span>
                   {organizationData.department}
                 </p>
-                <p>
+                <p className="organization-information-wrapper-paragraph">
                   <span className="organization-information-wrapper-text">
                     Tags:{" "}
                   </span>
-                  <span>{organizationData.tags + ""}</span>
+                  {organizationData.tags + ""}
                 </p>
               </div>
             </div>
             <div className="organization-description organization-layout">
               <h3 className="section-heading">Organization Description: </h3>
-              <p>
+              <p className="organization-information-wrapper-paragraph">
                 {organizationData.description.charAt(0).toUpperCase() +
                   organizationData.description.slice(1)}
               </p>
