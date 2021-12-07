@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import InputTag from "./InputTag";
 import { useForm } from "react-hook-form";
@@ -26,6 +26,8 @@ function OrganizationCreation(props) {
   const [linkData, setLinkData] = useState([]);
   // const [toggleRedirect, setToggleRedirect] = useState(false);
   const [organizationData, SetOrganizationData] = useState([]);
+  const [stockImage, setStockImage] = useState("");
+  const [redirect, setRedirect] = useState(false);
   const {
     register,
     handleSubmit,
@@ -34,7 +36,11 @@ function OrganizationCreation(props) {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  console.log(tagData);
+  // console.log(tagData);
+  useEffect(() => {
+    createStockImage();
+  }, []);
+
   const createOrganization = async (data) => {
     // const parameters = new URLSearchParams();
     // parameters.append("name", data.name);
@@ -49,14 +55,33 @@ function OrganizationCreation(props) {
       tags: data.tags,
     };
     axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
-    await axios
+    axios
       .post("http://localhost:8000/organization", json)
       .then((response) => {
-        // console.log(response);
-        // setToggleRedirect(true);
         SetOrganizationData(response);
-        console.log(organizationData.data);
-        // console.log(toggleRedirect);
+        // console.log(organizationData.data);
+        // console.log(response);
+        // console.log(stockImage);
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+
+        axios
+          .post(
+            `http://localhost:8000/organization/${response.data.o_id}/image`,
+            stockImage,
+            config
+          )
+          .then((response) => {
+            // console.log(response);
+            setRedirect(true);
+            // console.log(redirect);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -64,24 +89,31 @@ function OrganizationCreation(props) {
       });
   };
 
+  async function createStockImage() {
+    let response = await fetch("/defaultorganization.png");
+    let data = await response.blob();
+    let file = new File([data], "stockimage.jpg");
+    const imageDatas = new FormData();
+    imageDatas.append("image", file);
+    // console.log(image);
+    setStockImage(imageDatas);
+  }
   const onSubmission = (data) => {
     // append tagData data
     data.tags = tagData;
     data.links = linkData;
-    console.log("WORKS");
     createOrganization(data);
-    console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(data, null, 2));
     // setToggleRedirect(true);
     // console.log(JSON.stringify(tagData));
   };
   const checkKeyDown = (e) => {
     if (e.key === "Enter") e.preventDefault();
   };
-
-  // console.log(linkData);
+  console.log(stockImage);
   return (
     <div className="Formcontainer">
-      {organizationData.length === 0 ? null : (
+      {redirect !== true ? null : (
         <Redirect to={`/organization-profile/${organizationData.data.o_id}`} />
       )}
 
@@ -93,7 +125,12 @@ function OrganizationCreation(props) {
         />{" "}
       </div>
       <Form onSubmit={handleSubmit(onSubmission)} onKeyDown={checkKeyDown}>
-        <Form.Label className="form-name" column="lg" lg={2}>
+        <Form.Label
+          onClick={createStockImage}
+          className="form-name"
+          column="lg"
+          lg={2}
+        >
           Create an organization
         </Form.Label>
         {/* <FormInput type="text" inputName="Name" />

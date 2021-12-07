@@ -11,8 +11,17 @@ function DeleteModal(props) {
     axios
       .delete(`http://localhost:8000/organization/${props.orgID}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         props.redirect(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios
+      .delete(`http://localhost:8000/organization/${props.orgID}/image`)
+      .then((response) => {
+        // console.log(response);
       })
       .catch((error) => {
         console.log(error);

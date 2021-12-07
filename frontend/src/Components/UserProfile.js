@@ -1,74 +1,87 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
-import { Button, Image, Spinner } from "react-bootstrap";
+import React, { useState, useRef, useContext } from "react";
+import { Button, Image, Spinner, Container } from "react-bootstrap";
 import "./UserProfile.scss";
 import OrgIcon from "./organizationIcon.js";
 import EditM from "./EditModal.js";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
+import MemberInfoModal from "./memberInfoModal";
+import { useQuery } from "react-query";
 
 function UserProfile(props) {
   const [resume, setresume] = useState("");
   const [fileuploaded, setfileuploaded] = useState(false);
   const inputRef = useRef();
   const [state, setState] = useContext(AuthContext);
+  const [show, setShow] = useState(false);
   const [userData, setUserData] = useState({});
-  const [userOrganizations, setUserOrganizations] = useState([]);
-  const [spinner, setSpinner] = useState(true);
   const [username, setUsername] = useState("");
-
+  const [memberInfo, setMemberInfo] = useState(false);
+  const handleShow = () => setShow(true);
   const openFiles = () => {
     inputRef.current.click();
   };
+
   let s = sessionStorage.getItem("state");
   let ustate = JSON.parse(s);
-  useEffect(() => {
+
+  const myOrgsQuery = useQuery("my-orgs", async () => {
     axios.defaults.headers.get["Authorization"] = `Bearer ${ustate?.token}`;
-    axios
-      .get("http://localhost:8000/my-organizations")
-      .then((response) => {
-        setUserOrganizations(response.data);
-        // console.log(userOrganizations);
-        // console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    axios
-      .get(`http://localhost:8000/user/${ustate.user.u_id}`)
-      .then((response) => {
-        setUserData(response.data);
-        setUsername(response.data.username);
-        setSpinner(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
-  const handleResume = (e) => {
-    const resumefile = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(resumefile);
-    reader.onload = () => {
-      setresume(e.target.files[0]);
-      setfileuploaded(true);
-    };
-    reader.onerror = () => {
-      console.log("file errors", reader.error);
-    };
-  };
+    const { data } = await axios.get("http://localhost:8000/my-organizations");
+    return data;
+  });
+  const myJoinedOrgsQuery = useQuery("my-joined-orgs", async () => {
+    axios.defaults.headers.get["Authorization"] = `Bearer ${ustate?.token}`;
 
-  let resumeDoc = "";
-  if (fileuploaded) {
-    resumeDoc = URL.createObjectURL(resume);
-  }
-  // console.log(state.token);
-  // console.log(resume);
-  // console.log(resumeDoc);
-  console.log(userData);
-  return (
-    <div className="user-page-wrapper">
-      {!spinner && (
+    const { data } = await axios.get(
+      "http://localhost:8000/my-organizations-member"
+    );
+    return data;
+  });
+  const userQuery = useQuery("user", async () => {
+    const { data } = await axios.get(
+      `http://localhost:8000/user/${ustate.user.u_id}`
+    );
+    setUserData(data);
+    setUsername(data.username);
+
+    return data;
+  });
+
+  // const handleResume = (e) => {
+  //   const resumefile = e.target.files[0];
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(resumefile);
+  //   reader.onload = () => {
+  //     setresume(e.target.files[0]);
+  //     setfileuploaded(true);
+  //   };
+  //   reader.onerror = () => {
+  //     console.log("file errors", reader.error);
+  //   };
+  // };
+
+  // let resumeDoc = "";
+  // if (fileuploaded) {
+  //   resumeDoc = URL.createObjectURL(resume);
+  // }
+
+  if (myOrgsQuery.isLoading || userQuery.isLoading) {
+    return (
+      <div className="spinner-container">
+        <Spinner animation="grow" variant="dark">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    );
+  } else if (myOrgsQuery.isError || userQuery.isError) {
+    return <div>error</div>;
+  } else {
+    return (
+      <div className="user-page-wrapper">
         <div className="user-page">
           <div className="user-info-wrapper">
             <div className="user-info">
@@ -79,11 +92,14 @@ function UserProfile(props) {
               />
               <h1 className="user-info-name text-color">{userData.name}</h1>
             </div>
-            {/* {console.log(state)} */}
             <div className="user-contact">
               <h2 className="user-contact-header">
                 Contact Information:
-                <EditM mdata={userData} setdata={setUserData} type="User" />
+                <EditM
+                  mdata={userQuery.data}
+                  setdata={setUserData}
+                  type="User"
+                />
               </h2>
 
               <div className="user-contact-information">
@@ -91,7 +107,7 @@ function UserProfile(props) {
                 <p className="white-text">{"Email: " + userData.email}</p>
                 <p className="white-text">
                   {userData.phone_number === null
-                    ? "Phone number: " + "Add a phone number"
+                    ? "Phone number: No phone number"
                     : "Phone number: " + userData.phone_number}
                 </p>
               </div>
@@ -99,7 +115,7 @@ function UserProfile(props) {
           </div>
 
           <div className="user-options-wrapper">
-            <div className="user-resume">
+            {/* <div className="user-resume">
               <h2 className="user-resume-heading text-color">Resume:</h2>
               <div className="user-resume-upload">
                 <Button
@@ -114,37 +130,71 @@ function UserProfile(props) {
                   Click here to download resume
                 </a>
               </div>
-            </div>
+            </div> */}
+            <br />
             <div className="user-organizations">
               <h2 className="user-organizations-heading text-color">
                 My Organizations:
               </h2>
               <div className="user-organizations-cards">
-                {userOrganizations
-                  ? userOrganizations.map((org, i) => (
+                {myOrgsQuery.data ? (
+                  myOrgsQuery.data.map((org, i) => (
+                    <OrgIcon
+                      key={i}
+                      organizationName={org.name}
+                      organizationId={org.o_id}
+                      type="Organization"
+                    />
+                  ))
+                ) : (
+                  <h1>No results found!</h1>
+                )}
+                {myJoinedOrgsQuery.data
+                  ? myJoinedOrgsQuery.data.map((org, i) => (
                       <OrgIcon
                         key={i}
                         organizationName={org.name}
-                        imageLocation="/defaultorganization.png"
                         organizationId={org.o_id}
                         type="Organization"
                       />
                     ))
-                  : spinner && <h1>No results found!</h1>}
+                  : null()}
               </div>
+            </div>
+            <br />
+            <div>
+              <MemberInfoModal
+                show={show}
+                setShow={setShow}
+                token={ustate?.token}
+              />
+              <h2 className="user-organizations-heading text-color">
+                Member Information:
+              </h2>
+              <Container>
+                <Button
+                  className="member-information-button"
+                  onClick={handleShow}
+                >
+                  <div className="member-information-button-wrapper">
+                    {memberInfo !== true ? (
+                      <p className="member-information-button-wrapper-text">
+                        Add / Update member information
+                      </p>
+                    ) : (
+                      <p className="member-information-button-wrapper-text">
+                        Member information changed
+                      </p>
+                    )}
+                  </div>
+                </Button>
+              </Container>
             </div>
           </div>
         </div>
-      )}
-      {spinner && (
-        <div className="spinner-container">
-          <Spinner animation="grow" variant="dark">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default UserProfile;

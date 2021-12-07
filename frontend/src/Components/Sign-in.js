@@ -52,7 +52,7 @@ function SignForm(props) {
   });
 
   const onSubmission = (data) => {
-    console.log(JSON.stringify(data, null, 2));
+    // console.log(JSON.stringify(data, null, 2));
     handleLogin.mutate(data);
   };
 

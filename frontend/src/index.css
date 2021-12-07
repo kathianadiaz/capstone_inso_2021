@@ -39,6 +39,10 @@ a:active {
   text-decoration: none;
   color: white;
 }
+
+.custom-link:hover {
+  color: white;
+}
 h1,
 h2,
 h3 {

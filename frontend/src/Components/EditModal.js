@@ -20,7 +20,10 @@ const highlightSchema = Yup.object()
   .shape({
     title: Yup.string().required("Award name required"),
     description: Yup.string().required("Highlight description required"),
-    date: Yup.date().required("Date required"),
+    date: Yup.date()
+      .required("Date required")
+      .nullable()
+      .transform((v) => (v instanceof Date && !isNaN(v) ? v : null)),
   })
   .required();
 
@@ -29,19 +32,23 @@ const userProfileSchema = Yup.object()
     name: Yup.string().optional("Name required"),
     email: Yup.string().email().optional("Email required"),
     phone_number: Yup.string()
-      .optional()
       .matches(/^[0-9]+$/, "Must be only digits")
+      .nullable(true)
+      .transform((v, o) => (o === "" ? null : v))
       .min(10, "Phone number mininum is 10 digits")
       .max(10, "Phone number maximum is 10 digits"),
   })
   .required();
 
-const memberSchema = Yup.object()
-  .shape({
-    name: Yup.string().optional("Name required"),
-    email: Yup.string().email().optional("Email required"),
-  })
-  .required();
+const memberSchema = Yup.object().shape({
+  name: Yup.string().required("Name required"),
+  email: Yup.string().email().required("Email required"),
+  resume: Yup.object()
+    .nullable(true)
+    .shape({
+      file: Yup.mixed().nullable(true),
+    }),
+});
 
 const organizationSchema = Yup.object()
   .shape({
@@ -59,6 +66,16 @@ const joinSchema = Yup.object()
   })
   .required();
 
+const pictureSchema = Yup.object()
+  .shape({
+    resume: Yup.object()
+      .nullable(true)
+      .shape({
+        file: Yup.mixed().nullable(true),
+      }),
+  })
+  .required();
+
 function EditModal(props) {
   const [show, setShow] = useState(false);
   const [state, setState] = useContext(AuthContext);
@@ -70,6 +87,7 @@ function EditModal(props) {
   const {
     register,
     handleSubmit,
+    handleChange,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(
@@ -83,6 +101,8 @@ function EditModal(props) {
         ? organizationSchema
         : props.type === "Join"
         ? joinSchema
+        : props.type === "picture"
+        ? pictureSchema
         : highlightSchema
     ),
   });
@@ -91,13 +111,13 @@ function EditModal(props) {
     // setEventData([...eventdata, data]);
     // console.log(JSON.stringify(data, null, 2));
     setShow(false);
-    console.log(props.mdata);
+    // console.log(props.mdata);
     if (props.type === "User") {
       sendModalData(data);
       let ujson = {
         username: state?.user.username,
         email: data.email,
-        phone_number: data.phone_number,
+        phone_number: data.phone_number === null ? null : data.phone_number,
         name: data.name,
       };
       axios.defaults.headers.put["Authorization"] = `Bearer ${state?.token}`;
@@ -105,13 +125,14 @@ function EditModal(props) {
         .put("http://localhost:8000/user", ujson)
         .then((response) => {
           props.setdata(response.data);
-          console.log(response);
+          // console.log(response);
         })
         .catch((error) => {
           console.log(error);
         });
     }
     if (props.type === "Member") {
+      // ADD RESUME here
       sendModalData([...props.mdata, data]);
       let hjson = {
         name: data.name,
@@ -124,7 +145,7 @@ function EditModal(props) {
           hjson
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -142,13 +163,12 @@ function EditModal(props) {
         members: props.mdata.members,
         administrators: props.mdata.administrators,
       };
-      console.log(ojson);
       axios.defaults.headers.put["Authorization"] = `Bearer ${state.token}`;
       axios
         .put(`http://localhost:8000/organization/${OrganizationId}`, ojson)
         .then((response) => {
           props.setdata(response.data);
-          console.log(response);
+          // console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -172,13 +192,45 @@ function EditModal(props) {
           hjson
         )
         .then((response) => {
-          console.log(response.data.highlights);
-          console.log(response);
+          // console.log(response.data.highlights);
+          // console.log(response);
           props.setdata([...response.data.highlights]);
         })
         .catch((error) => {
           console.log(error);
         });
+    }
+    if (props.type === "picture") {
+      const imageData = new FormData();
+      const imageSize = data.picture[0].size / 250;
+      if (imageSize > 700) {
+        alert("Image size too big");
+      } else {
+        imageData.append("image", data.picture[0]);
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+        axios.defaults.headers.post["Authorization"] = `Bearer ${state.token}`;
+        axios
+          .post(
+            `http://localhost:8000/organization/${OrganizationId}/image`,
+            imageData,
+            config
+          )
+          .then(() => {
+            let binaryData = [];
+            binaryData.push(data.picture[0]);
+            let image = window.URL.createObjectURL(
+              new Blob(binaryData, { type: data.picture[0].type })
+            );
+            props.imgData(image);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
   };
 
@@ -233,6 +285,17 @@ function EditModal(props) {
             placeholder={"Email"}
           />
           <p className="error-message">{errors.email?.message}</p>
+
+          <Form.Label>Resume (Optional):</Form.Label>
+          <Form.Control
+            type="file"
+            name="resume"
+            {...register("resume")}
+            onChange={handleChange}
+          />
+          <p className="error-message">
+            {errors.resume?.message !== null ? errors.resume?.message : null}
+          </p>
         </Modal.Body>
       );
     } else if (props.type === "Organization") {
@@ -286,8 +349,8 @@ function EditModal(props) {
 
           <Form.Label>{props.type} status: </Form.Label>
           <Form.Select {...register("status")} size="md">
-            <option>Recruiting</option>
             <option>Not Recruiting</option>
+            <option>Recruiting</option>
           </Form.Select>
           {/* <Form.Control
             type="text"
@@ -309,6 +372,14 @@ function EditModal(props) {
             placeholder={"message"}
           />
           <p className="error-message">{errors.message?.message}</p>
+        </Modal.Body>
+      );
+    } else if (props.type === "picture") {
+      return (
+        <Modal.Body>
+          <Form.Label>Change profile picture: </Form.Label>
+          <Form.Control type="file" name="picture" {...register("picture")} />
+          <p className="error-message">{errors.picture?.message}</p>
         </Modal.Body>
       );
     } else if (props.type === "User") {
@@ -364,7 +435,7 @@ function EditModal(props) {
           <Form.Control
             type="date"
             {...register("date")}
-            placeholder={"Date"}
+            placeholder={"date"}
           />
           <p className="error-message">{errors.date?.message}</p>
         </Modal.Body>
@@ -381,7 +452,9 @@ function EditModal(props) {
       <Modal show={show} onHide={handleClose}>
         <Form onSubmit={handleSubmit(getModalData)}>
           <Modal.Header closeButton>
-            {props.type !== "User" && props.type !== "Organization" ? (
+            {props.type !== "User" &&
+            props.type !== "Organization" &&
+            props.type !== "OrgPicture" ? (
               <Modal.Title>Add a new {props.type}</Modal.Title>
             ) : (
               <Modal.Title>
@@ -396,7 +469,11 @@ function EditModal(props) {
               Close
             </Button>
             {props.type != "Organization" ? (
-              <Button variant="primary" onClick={handleSubmit(getModalData)}>
+              <Button
+                className=" modal-accept-btn"
+                variant="primary"
+                onClick={handleSubmit(getModalData)}
+              >
                 Add {props.type}
               </Button>
             ) : (

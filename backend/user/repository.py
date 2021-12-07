@@ -72,9 +72,30 @@ class UserRepository:
     def create_member_information(member_info: MemberInformation, user: User, db: Session) -> User:
         db_member_information = models.MemberInformation(m_id=uuid.uuid4(), name=member_info.name, email=member_info.email, links=member_info.links)
         # db.add(db_member_information)
-
         db_user = db.query(models.User).filter(models.User.u_id== user.u_id).first()
-        db_user.member_information = db_member_information
-        db.commit()
+        db_memberinfo = db.query(models.MemberInformation).filter(models.MemberInformation.m_id == user.m_id).first()
+        
+        if(user.m_id == None):
+            db.add(db_member_information)
+            db_user.member_information = db_member_information
+            db.commit()
+        else:
+            # db.delete(db_memberinfo)
+            # db.add(db_member_information)
+            db_memberinfo.name = db_member_information.name
+            db_memberinfo.email = db_member_information.email
+            db_memberinfo.a_id = db_member_information.a_id
+            db.commit()
 
+  #   if ( db_organization.i_id == None):
+        #     db_image= models.Image(i_id=uuid.uuid4() ,data=image.file.read(), filename=image.filename, content_type=image.content_type)
+        #     db.add(db_image)
+        #     db_organization.i_id = db_image.i_id
+        #     db.commit()
+        # else:
+        #     db.delete(db.query(models.Image).filter(models.Image.i_id == db_organization.i_id).first())
+        #     db_image= models.Image(i_id=uuid.uuid4() ,data=image.file.read(), filename=image.filename, content_type=image.content_type)
+        #     db.add(db_image)
+        #     db_organization.i_id = db_image.i_id
+        #     db.commit()
         return db_user

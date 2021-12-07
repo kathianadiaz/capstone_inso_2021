@@ -34,7 +34,12 @@
   border-bottom: black 1px solid;
   padding-left: 25px;
 }
-
+.organization-name {
+  font-size: 2.5rem;
+  @media (min-width: 780px) {
+    font-size: 3.5rem;
+  }
+}
 .organization-members {
   border-bottom: none;
   &-layout {
@@ -81,6 +86,16 @@
   &-logo {
     width: 80%;
     min-width: 150px;
+
+    &-edit {
+      display: flex;
+      justify-content: center;
+
+      &-text {
+        margin-top: 0.5rem;
+        font-weight: bold;
+      }
+    }
   }
 
   &-info {
@@ -103,7 +118,7 @@
   &-button {
     padding: 0.2rem;
     font-weight: bold;
-    width: 150px;
+    width: 80%;
     text-decoration: none;
     border-radius: 15px;
     font-weight: bold;
@@ -154,6 +169,13 @@
   &-text {
     font-weight: bold;
     color: var(--t-royal-blue);
+    font-size: 1.3rem;
+  }
+  &-paragraph {
+    font-size: 1rem;
+    @media (min-width: 780px) {
+      font-size: 1.3rem;
+    }
   }
 }
 
@@ -220,8 +242,30 @@
   height: 6rem;
 }
 
-.blue-text {
+.blue-text-org {
   &:hover {
     color: white;
+  }
+}
+
+.modal-accept-btn {
+  padding: 0.375rem 0.75rem;
+  background-color: white;
+  font-size: 1rem;
+  color: var(--t-royal-blue);
+  font-weight: bold;
+  border-color: var(--t-bright-green);
+
+  &:hover {
+    background-color: var(--t-royal-blue);
+    color: white;
+    font-weight: bold;
+    border-color: var(--t-royal-blue);
+  }
+  &:active {
+    background-color: var(--t-royal-blue);
+  }
+  &:focus {
+    background-color: var(--t-royal-blue);
   }
 }

@@ -1,13 +1,55 @@
-import React from "react";
-import { Card } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Spinner, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-function organizationIcon(props) {
+function OrganizationIcon(props) {
+  const [imageSpinner, setImageSpinner] = useState(true);
+  const [imageData, setImageData] = useState([]);
+  useEffect(() => {
+    if (props.type === "Organization") {
+      const config = {
+        responseType: "blob",
+      };
+      axios
+        .get(
+          `http://localhost:8000/organization/${props.organizationId}/image`,
+          config
+        )
+        .then((response) => {
+          let binaryData = [];
+          binaryData.push(response.data);
+          let image = window.URL.createObjectURL(
+            new Blob(binaryData, { type: response.data.type })
+          );
+          setImageData(image);
+          // console.log(response);
+          setImageSpinner(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setImageSpinner(false);
+        });
+    }
+  }, []);
+
   return (
     <div className="organization-wrapper">
       {props.type === "Organization" && (
         <Card className="organization-card" style={{ width: "11rem" }}>
-          <Card.Img variant="top" src={props.imageLocation} roundedCircle />
+          {imageSpinner && (
+            <Spinner animation="border" role="status" size="bg">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          )}
+          {!imageSpinner && imageData.length !== 0 && (
+            <Card.Img
+              className="card-userorgs-image"
+              variant="top"
+              src={imageData}
+            />
+          )}
+
           <Card.Body className="organization-card">
             <Link
               className="organization-card-name card-name-color"
@@ -43,4 +85,4 @@ function organizationIcon(props) {
   );
 }
 
-export default organizationIcon;
+export default OrganizationIcon;

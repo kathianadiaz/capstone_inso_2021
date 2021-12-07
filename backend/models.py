@@ -15,6 +15,7 @@ class User(Base):
     password = Column(String)
     phone_number = Column(String,unique=True)
     m_id= Column(UUID(as_uuid=True), ForeignKey('member_information.m_id'), nullable=True) 
+    i_id = Column(UUID(as_uuid=True), ForeignKey('image.i_id'))
 
     member_information= relationship("MemberInformation", back_populates="user" )
 
@@ -79,6 +80,7 @@ class Organization(Base):
     highlights = relationship('OrganizationHighlight', cascade="all, delete")
     administrators = relationship('User',  secondary=organization_administrator_assoc_table)
     members = relationship('MemberInformation', secondary=organization_members_assoc_table)
+    i_id = Column(UUID(as_uuid=True), ForeignKey('image.i_id'))
 
 class JoinRequest(Base):
     __tablename__ = "join_request"
@@ -88,4 +90,5 @@ class JoinRequest(Base):
     u_id = Column(UUID(as_uuid=True), ForeignKey('user.u_id'))
     m_id = Column(UUID(as_uuid=True), ForeignKey('member_information.m_id'))
     date = Column(Date, default=datetime.date.today())
+    name = Column(String)
     message = Column(String, nullable=False)
