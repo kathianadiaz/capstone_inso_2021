@@ -41,7 +41,7 @@ const playwright = require('playwright');
 
 
     //navigate to the home page
-    await page2.goto("http://localhost:3000/")
+    await page2.goto("http://localhost:3000/login")
 
     await browser2.close();
 

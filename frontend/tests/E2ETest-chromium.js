@@ -20,9 +20,6 @@ const playwright = require('playwright');
     await page.goto("http://localhost:3000/");
 
     //press start searching now
-
-    //navigate search for organizations
-
     
     await browser.close();
 
@@ -41,7 +38,7 @@ const playwright = require('playwright');
 
 
     //navigate to the home page
-    await page2.goto("http://localhost:3000/")
+    await page2.goto("http://localhost:3000/login")
 
     await browser2.close();
 
