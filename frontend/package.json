@@ -15,6 +15,7 @@
     "bootstrap": "^5.1.1",
     "js-cookie": "^3.0.1",
     "node-sass": "^6.0.1",
+    "playwright": "^1.17.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.0-beta.6",
     "react-dom": "^17.0.2",
@@ -29,7 +30,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "e2e": "cd e2e && jest"
   },
   "eslintConfig": {
     "extends": [
@@ -48,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.16.3"
   }
 }
